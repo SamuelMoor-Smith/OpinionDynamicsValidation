@@ -39,7 +39,7 @@ class DeffuantModel(Model):
                 output[i] += update_to_i
                 output[j] += update_to_j
 
-        return output
+        return np.array(output)
 
     def get_random_params(self):
         return {
@@ -50,4 +50,11 @@ class DeffuantModel(Model):
     
     def get_opinion_range(self):
         return (0, 1)
+    
+    def set_normalized_params(self, params):
+        self.params = {
+            'mu': 0.5 * params['mu'],
+            'epsilon': 0.8 * params['epsilon'] + 0.1,
+            'interactions': int(400 * params['interactions'] + 300)
+        }
 

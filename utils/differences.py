@@ -2,6 +2,13 @@ import numpy as np
 from scipy.stats import wasserstein_distance, ks_2samp
 from scipy.spatial.distance import jensenshannon
 
+def calculate_mean_std(true, datasets, type, method="wasserstein"):
+    diffs = [dataset_difference(true, d, method=method) for d in datasets]
+    mean_diff = np.mean(diffs)
+    std_diff = np.std(diffs)
+    print(f"{type} score: {mean_diff} +/- {std_diff}")
+    return mean_diff, std_diff
+
 def snapshot_difference(s1, s2, method='wasserstein'):
     """
     Compare two snapshots using the given method.

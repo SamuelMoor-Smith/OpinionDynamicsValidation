@@ -1,0 +1,6 @@
+Initial parameters: {'mu': 0.0564071468484027, 'epsilon': 0.6032666373673131, 'interactions': 428}
+Baseline score: 0.04089701519748621 +/- 0.0032345805556283844
+Best parameters: {'epsilon': np.float64(0.6352112204492565), 'interactions': np.float64(0.09264083478920282), 'mu': np.float64(0.1423777746898917)}
+Optimizer score: 0.04283759574710127 +/- 0.0037941601641410046
+No significant difference detected.
+

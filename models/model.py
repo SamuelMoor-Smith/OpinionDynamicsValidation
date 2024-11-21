@@ -20,3 +20,9 @@ class Model:
         Return the range of opinions for the model.
         """
         raise NotImplementedError
+    
+    def set_normalized_params(self, params):
+        """
+        Set the parameters of the model to the normalized values.
+        """
+        raise NotImplementedError
