@@ -3,6 +3,8 @@ from scipy.stats import wasserstein_distance, ks_2samp
 from scipy.spatial.distance import jensenshannon
 
 def calculate_mean_std(true, datasets, type, method="wasserstein"):
+    """
+    Calculate the mean and standard deviation of the differences between the true dataset and the given datasets."""
     diffs = [dataset_difference(true, d, method=method) for d in datasets]
     mean_diff = np.mean(diffs)
     std_diff = np.std(diffs)

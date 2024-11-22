@@ -5,6 +5,7 @@ def write_results_to_file(initial_params, best_params,
                           avg_score_base, std_dev_base, 
                           avg_score_opt, std_dev_opt, 
                           path):
+    """Write the results of the optimizer tests to a file."""
     # Create the directory if it doesn't exist
     if not os.path.exists(path):
         os.makedirs(path)

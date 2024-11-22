@@ -12,9 +12,16 @@ def generate_multiple_random_pairs(max_val, num_pairs):
     """
     return np.random.randint(0, max_val, (int(num_pairs), 2))
 
-def create_random_opinion_distribution(N=1000, min_val=-1, max_val=1, seed=42):
-    # Generate random initial opinions (between -1 and 1) for N agents
-    np.random.seed(seed)  # Set a seed value
-    ops = np.random.uniform(min_val, max_val, N)  # Random distribution between min_val and max_val
-    np.random.seed(None)  # Reset the seed to None to return randomness to the system clock or entropy source
+def create_random_opinion_distribution(N=1000, min_val=0, max_val=1, seed=None):
+    """Generate random initial opinions for N agents."""
+
+    # Set a seed value for reproducibility
+    np.random.seed(seed)
+
+    # Random distribution between min_val and max_val
+    ops = np.random.uniform(min_val, max_val, N)
+
+    # Reset the seed to None to return randomness to the system clock or entropy source
+    np.random.seed(None) 
+    
     return ops

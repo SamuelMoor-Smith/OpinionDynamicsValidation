@@ -4,16 +4,13 @@ from utils.noise import add_noise
 class Dataset:
 
     def __init__(self, data, model=None):
+        """Initialize a dataset with data and an optional model."""
         self.data = data
         self.model = model
-        if self.model is None:
-            self.params = None
-        else:
-            self.params = self.model.params
 
     def create_from_data(data):
         """
-        Create a dataset from a list of data.
+        Create a dataset from a list of data. No model required.
         """
         return Dataset(data)
 
@@ -39,7 +36,8 @@ class Dataset:
     
     def create_with_model_from_true(model, true_data):
         """
-        Create a dataset from true data and a model.
+        Create a dataset from true data and a model. 
+        This one runs the model using the true data as input at each step.
         """
         data = [true_data[0]]
         for i in range(1, len(true_data)):
@@ -48,12 +46,17 @@ class Dataset:
         return Dataset(data, model)
     
     def get_data(self):
+        """Get the data of the dataset."""
         return self.data
     
     def get_params(self):
-        return self.params
+        """Get the parameters of the model if the model exists."""
+        if self.model is None:
+            return None
+        return self.model.params
     
     def get_opinion_range(self):
+        """Get the opinion range of the model if the model exists."""
         if self.model is None:
             return (0,1)
         return self.model.get_opinion_range()

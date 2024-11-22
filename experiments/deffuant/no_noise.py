@@ -24,9 +24,10 @@ datasets = [Dataset.create_with_model_from_initial(base_model, initial_opinions,
 # Calculate mean and std of differences between the first dataset and the rest
 base_mean_diff, base_std_diff = calculate_mean_std(true, datasets, "Baseline", method="wasserstein")
 
+# Plot the true dataset and the first of the rest
 plot_2_datasets_snapshots(true, datasets[0], difference="wasserstein", path="plots/deffuant/no_noise/same/")
 
-# Time the optimization process
+# Optimization process and time it
 start = time.time()
 comparison_model = DeffuantModel()
 optimizer = optimizers.get_optimizer()
@@ -40,12 +41,13 @@ comparison_model.set_normalized_params(best_params)
 print("Baseline model params: ", base_model.params)
 print("Optimized model params: ", comparison_model.params)
 
-# Now create 10 more datasets with the same model and initial opinions
+# Now create 10 more datasets with the optimized model and initial opinions
 opt_datasets = [Dataset.create_with_model_from_initial(comparison_model, initial_opinions, num_steps=9) for _ in range(10)]
 
 # Calculate mean and std of differences between the first dataset and the rest
 opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
 
+# Plot the true dataset and the first of the optimized
 plot_2_datasets_snapshots(true, opt_datasets[0], difference="wasserstein", path="plots/deffuant/no_noise/diff/")
 
 # Write the results to a file

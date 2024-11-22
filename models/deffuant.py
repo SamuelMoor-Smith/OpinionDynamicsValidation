@@ -20,20 +20,29 @@ class DeffuantModel(Model):
         """  
 
         p = self.params
-
         n = len(input)
+
+        # Create a copy of the input to avoid modifying it
         output = np.copy(input)
 
+        # Number of steps will be the number of desired interactions divided by epsilon
+        # E[interactions] = steps * epsilon
         steps = int(p['interactions']/p['epsilon'])
+
+        # Genrate random pairs of interactors beforehand to save time
         random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
 
         for idx in range(steps):
+
+            # Select two random interactors
             i, j = random_pairs[idx]
             while j == i:  # Ensure i and j are different
                 j = np.random.randint(0, n)
 
+            # Calculate the difference between the opinions
             opinion_difference = abs(output[i] - output[j])
             if opinion_difference <= p['epsilon']:
+                # If the difference is smaller than epsilon, update the opinions
                 update_to_i = p['mu'] * (output[j] - output[i])
                 update_to_j = p['mu'] * (output[i] - output[j])
                 output[i] += update_to_i
@@ -42,6 +51,7 @@ class DeffuantModel(Model):
         return np.array(output)
 
     def get_random_params(self):
+        """Get random feasible parameters for the model."""
         return {
             'mu': np.random.uniform(0, 0.5),
             'epsilon': np.random.uniform(0.1, 0.9),
@@ -49,9 +59,14 @@ class DeffuantModel(Model):
         }
     
     def get_opinion_range(self):
+        """Get the opinion range of the model. ie. the range of possible opinion values."""
         return (0, 1)
     
     def set_normalized_params(self, params):
+        """
+        The optimizer will return values between 0 and 1.
+        This function will convert them to the actual parameter values.
+        """
         self.params = {
             'mu': 0.5 * params['mu'],
             'epsilon': 0.8 * params['epsilon'] + 0.1,

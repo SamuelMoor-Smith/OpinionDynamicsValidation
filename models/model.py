@@ -11,7 +11,7 @@ class Model:
     
     def get_random_params(self):
         """
-        Get the default parameters for the model.
+        Get some random feasible parameters for the model.
         """
         raise NotImplementedError
     
@@ -23,6 +23,7 @@ class Model:
     
     def set_normalized_params(self, params):
         """
-        Set the parameters of the model to the normalized values.
+        The optimizer will return values between 0 and 1.
+        This function will convert them to the actual parameter values.
         """
         raise NotImplementedError
