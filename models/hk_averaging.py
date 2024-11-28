@@ -1,6 +1,7 @@
 import numpy as np
 from models.model import Model
 from utils import rand_gen
+from scipy.spatial import KDTree
 
 def calculate_mean(x, method="arithmetic"):
     """
@@ -17,8 +18,9 @@ def calculate_mean(x, method="arithmetic"):
     
 class HKAveragingModel(Model):
 
-    def __init__(self, params=None):
+    def __init__(self, params=None, method="arithmetic"):
         super().__init__(params)
+        self.method = method
 
     def run(self, input):
         """
@@ -37,22 +39,24 @@ class HKAveragingModel(Model):
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
 
-        # Create an array of agents that will be updated in this run call
+        # Select agents to update
         num_agents = int(p['agents'] * n)
         agents = rand_gen.generate_multiple_random_nums(n, num_agents)
 
-        # Compute pairwise differences only once
-        diffs = np.abs(output[:, None] - output[None, :])
+        output_sorted = np.sort(output)
+        indices = np.argsort(output)
 
-        # Create a mask for elements within epsilon
-        mask = diffs <= p['epsilon']
-
-        # Update opinions with the mean of opinions within epsilon
         for agent in agents:
-            close_opinions = output[mask[agent]]
+            opinion = output[agent]
+            # Find neighbors in the sorted array
+            start = np.searchsorted(output_sorted, opinion - p['epsilon'], side='left')
+            end = np.searchsorted(output_sorted, opinion + p['epsilon'], side='right')
+            neighbors = indices[start:end]
+            
+            close_opinions = output[neighbors]
             if close_opinions.size > 0:
                 output[agent] = calculate_mean(close_opinions, method=self.method)
-        
+
         return output
     
     def get_random_params(self):

@@ -4,3 +4,15 @@ Best parameters: {'epsilon': np.float64(0.6352112204492565), 'interactions': np.
 Optimizer score: 0.04283759574710127 +/- 0.0037941601641410046
 No significant difference detected.
 
+Initial parameters: {'mu': 0.27099134075386067, 'epsilon': 0.8583980646698922, 'interactions': 321}
+Baseline score: 0.05131730367452527 +/- 0.010530269654508921
+Best parameters: {'epsilon': np.float64(0.9635094086693355), 'interactions': np.float64(0.22363483147868568), 'mu': np.float64(0.42477330486166476)}
+Optimizer score: 0.04949793538532336 +/- 0.003762219428734088
+Optimizer improved the score!
+
+Initial parameters: {'epsilon': 0.4636786807276445, 'agents': 0.10558976682234122}
+Baseline score: 0.05850395375691585 +/- 0.01279255591910755
+Best parameters: {'agents': np.float64(0.10917387072689716), 'epsilon': np.float64(0.4394156283547075)}
+Optimizer score: 0.05722457155766023 +/- 0.013024291293476676
+Optimizer improved the score!
+

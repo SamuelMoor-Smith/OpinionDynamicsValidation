@@ -1,10 +1,10 @@
-from models.deffuant import DeffuantModel
+from models.hk_averaging import HKAveragingModel
 from experiments.varying_noise import varying_noise_experiment
 
 for i in range(1, 11):
     # Run the experiment
     varying_noise_experiment(
-        model_class=DeffuantModel,
-        model_type="deffuant",
+        model_class=HKAveragingModel,
+        model_type="hk_averaging",
         i=i
     )

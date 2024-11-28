@@ -2,8 +2,9 @@ from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 import logging
 from datasets.dataset import Dataset
 import numpy as np
-from utils.differences import dataset_difference
+from utils.differences import dataset_difference, snapshot_difference
 from models.model import Model
+import time
 
 # Set Hyperopt logger to display only errors
 logger = logging.getLogger("hyperopt.tpe")
@@ -28,19 +29,36 @@ def hyperopt():
 def hyperopt_objective(true: Dataset, model: Model, params):
     """Objective function for Hyperopt to minimize"""
     model.set_normalized_params(params)
-    datasets = [Dataset.create_with_model_from_initial(model, true.get_data()[0], num_steps=9) for _ in range(10)]
-    diffs = [dataset_difference(true, d, method="wasserstein") for d in datasets]
+    diffs = run_and_score_optimal(true, model)
     return {
         'loss': np.mean(diffs),
         'status': STATUS_OK,
     }
 
-def hyperopt_objective_noisy(true: Dataset, model: Model, params):
+def hyperopt_objective_from_true(true: Dataset, model: Model, params):
     """Objective function for Hyperopt to minimize"""
     model.set_normalized_params(params)
-    datasets = [Dataset.create_with_model_from_true(model, true.get_data()) for _ in range(10)]
-    diffs = [dataset_difference(true, d, method="wasserstein") for d in datasets]
+    diffs = run_and_score_optimal_from_true(true, model)
     return {
         'loss': np.mean(diffs),
         'status': STATUS_OK,
     }
+
+def run_and_score_optimal(true, model):
+    """Run and score the model optimally."""
+    true_data = true.get_data()
+    ops = true_data[0]
+    scores = [0]
+    for i in range(1,9):
+        ops = model.run(ops)
+        scores.append(snapshot_difference(ops, true_data[i], method="wasserstein"))
+    return scores
+
+def run_and_score_optimal_from_true(true, model):
+    """Run and score the model optimally with noise."""
+    true_data = true.get_data()
+    scores = [0]
+    for i in range(1,9):
+        ops = model.run(true_data[i-1])
+        scores.append(snapshot_difference(ops, true.get_data()[i], method="wasserstein"))
+    return scores

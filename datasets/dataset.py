@@ -30,7 +30,7 @@ class Dataset:
         data = [initial_opinions]
         for _ in range(num_steps):
             run_output = model.run(data[-1])
-            noisy_output, variance_basic, variance_noisy = add_noise(data[-1], run_output, noise)
+            noisy_output, variance_basic, variance_noisy = add_noise(data[-1], run_output, noise, model)
             data.append(noisy_output)
         return Dataset(data, model), variance_basic, variance_noisy
     

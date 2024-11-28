@@ -2,6 +2,16 @@ import numpy as np
 from models.model import Model
 from utils import rand_gen
 
+def keep_in_range(value):
+    """
+    Keep a value in the opinion range [-1, 1] by reflecting out-of-range values back into the range.
+    """
+    if value < -1:
+        return (-1 - value) + -1
+    if value > 1:
+        return 1 - (value - 1)
+    return value
+
 class CarpentrasModel(Model):
 
     def __init__(self, params=None):
@@ -45,7 +55,7 @@ class CarpentrasModel(Model):
             output[i] += standard_noises[idx] * noise_sd
             
             # Keep opinion within range
-            output[i] = np.clip(output[i], -1, 1)
+            output[i] = keep_in_range(output[i])
 
             # 2. Agent i flips their opinion with a 4% chance (unless the sign already changed? does this matter?)
             if flip_draws[idx] < p['flip_prob']:
@@ -55,7 +65,7 @@ class CarpentrasModel(Model):
             output[i] += p['shift_amount'] * np.sign(output[j] - output[i])
 
             # Keep opinion within range
-            output[i] = np.clip(output[i], -1, 1)
+            output[i] = keep_in_range(output[i])
 
         return output
     
