@@ -93,5 +93,5 @@ class CarpentrasModel(Model):
             'flip_prob': 0.08 * params['flip_prob'],
             'mob_min': 0.10 * params['mob_min'],
             'mob_max': 0.15 * params['mob_max'] + 0.15,
-            'iterations': int(4000 * params['iterations'] + 1000)
+            'iterations': int(5000 * params['iterations'])
         }

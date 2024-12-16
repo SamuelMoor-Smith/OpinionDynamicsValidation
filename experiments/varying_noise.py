@@ -28,8 +28,9 @@ def varying_noise_experiment(
     # Create the array of explained variances and score differences
     explained_variances = []
     score_diffs = []
+    noises = [0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.15, 0.18, 0.25, 0.3]
     
-    for noise in np.linspace(0, 0.3, 8):
+    for noise in noises:
 
         # Iterate over the noise levels and create the true data with that noise value
         true, basic_var, noisy_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
