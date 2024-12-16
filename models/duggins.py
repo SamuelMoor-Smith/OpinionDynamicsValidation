@@ -77,11 +77,12 @@ def create_agents(P,rng):
 	for i in range(P['popsize']):
 		x=rng.uniform(0,P['gridsize'])
 		y=rng.uniform(0,P['gridsize'])
-		if P['std_init_opinion'] != 0: #opinion
-			o_i=rng.normal(P['mean_init_opinion'],P['std_init_opinion'])
-			if o_i<0: o_i=0
-			if o_i>100: o_i=100
-		else: o_i=P['mean_init_opinion']
+		# if P['std_init_opinion'] != 0: #opinion
+		# 	o_i=rng.normal(P['mean_init_opinion'],P['std_init_opinion'])
+		# 	if o_i<0: o_i=0
+		# 	if o_i>100: o_i=100
+		# else: o_i=P['mean_init_opinion']
+		o_i = rng.uniform(0, 100)
 		if P['std_intolerance'] != 0: #intolerance
 			t_i=rng.normal(P['mean_intolerance'],P['std_intolerance'])
 			if t_i<0: t_i=0
@@ -137,16 +138,24 @@ class DugginsModel(Model):
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-            'shift_amount': np.random.uniform(0, 0.06),
-            'flip_prob': np.random.uniform(0, 0.08),
-            'mob_min': np.random.uniform(0, 0.10),
-            'mob_max': np.random.uniform(0.15, 0.30),
-            'iterations': np.random.randint(1000, 5000)
+			'popsize': 1000,
+			'gridsize': 1000,
+			'iters': 50,
+			# 'mean_init_opinion': 50,
+            # 'std_init_opinion': 50,
+            'mean_intolerance': np.random.uniform(0.4, 1.2), # 0.8,
+            'mean_susceptibility': np.random.uniform(2.5, 7.5), # 5.0,
+            'mean_conformity': np.random.uniform(0.15, 0.45), # 0.3,
+            'std_intolerance': np.random.uniform(0.15, 0.45), # 0.3,
+            'std_susceptibility': np.random.uniform(0.35, 1.05), # 0.7,
+            'std_conformity': np.random.uniform(0.15, 0.45), # 0.3,
+            'mean_social_reach': np.random.uniform(10.0, 30.0), # 22.0,
+            'std_social_reach': np.random.uniform(2, 6), # 4
         }
     
     def get_opinion_range(self):
         """Get the opinion range of the model. ie. the range of possible opinion values."""
-        return (-1, 1)
+        return (0, 100)
     
     def set_normalized_params(self, params):
         """
@@ -154,9 +163,17 @@ class DugginsModel(Model):
         This function will convert them to the actual parameter values.
         """
         self.params = {
-            'shift_amount': 0.06 * params['shift_amount'],
-            'flip_prob': 0.08 * params['flip_prob'],
-            'mob_min': 0.10 * params['mob_min'],
-            'mob_max': 0.15 * params['mob_max'] + 0.15,
-            'iterations': int(5000 * params['iterations'])
+            'popsize': 1000,
+			'gridsize': 1000,
+			'iters': 50,
+			# 'mean_init_opinion': 50,
+            # 'std_init_opinion': 50,
+            'mean_intolerance': 0.4 + 0.8 * params['mean_intolerance'],
+            'mean_susceptibility': 2.5 + 5.0 * params['mean_susceptibility'],
+            'mean_conformity': 0.15 + 0.3 * params['mean_conformity'],
+            'std_intolerance': 0.15 + 0.3 * params['std_intolerance'],
+            'std_susceptibility': 0.35 + 0.7 * params['std_susceptibility'],
+            'std_conformity': 0.15 + 0.3 * params['std_conformity'],
+            'mean_social_reach': 10.0 + 20.0 * params['mean_social_reach'],
+            'std_social_reach': 2 + 4 * params['std_social_reach']
         }
