@@ -6,6 +6,10 @@ from utils import rand_gen
 # August 11, 2016
 # ISC Model
 
+POP_SIZE = 1000
+GRID_SIZE = 1000
+ITERS = 100
+
 import numpy as np
 class agent:
 
@@ -69,7 +73,7 @@ class agent:
 		influence=self.set_influence(elist[1:],wlist[1:]) #calculate dialogue's influence
 		self.set_O(influence) #update opinion after dialogue
 
-def create_agents(P,rng):
+def create_agents(P, initial_opinions, rng):
 	#initialize agents' internal parameters: initial opinion, intolerance, susceptibility,
 	#conformity, social reach. Truncate parameters below zero (or over 100 for O_i)
 	# from agent import agent
@@ -82,7 +86,7 @@ def create_agents(P,rng):
 		# 	if o_i<0: o_i=0
 		# 	if o_i>100: o_i=100
 		# else: o_i=P['mean_init_opinion']
-		o_i = rng.uniform(0, 100)
+		o_i = initial_opinions[i]
 		if P['std_intolerance'] != 0: #intolerance
 			t_i=rng.normal(P['mean_intolerance'],P['std_intolerance'])
 			if t_i<0: t_i=0
@@ -106,8 +110,8 @@ def create_agents(P,rng):
 
 def network_agents(agentdict):
 	#create social networks: if euclidian distance sqrt(dx^2+dy^2)<r_i, add to network
-	for i in agentdict.itervalues():
-		for j in agentdict.itervalues():
+	for i in agentdict.values(): # agentdict.itervalues():
+		for j in agentdict.values(): # agentdict.itervalues():
 			if i != j and ((j.x - i.x)**2 + (j.y - i.y)**2)**(0.5) < min(i.radius,j.radius):
 				i.addtonetwork(j)
 				
@@ -116,31 +120,35 @@ class DugginsModel(Model):
     def __init__(self, params=None):
         super().__init__(params)
 		
-    def create_agents(self, seed=None):
+    def create_agents(self, initial_opinions, seed=None):
         self.rng = np.random.RandomState(seed=seed) #set the simulation seed
-        self.agentdict = create_agents(self.params, self.rng)
+        self.agentdict = create_agents(self.params, initial_opinions, self.rng)
         network_agents(self.agentdict)
+		
+    def get_opinions(self):
+        return [agent.O for agent in self.agentdict.values()]
     
     def run(self, input):
-        """
-        """
         
         p = self.params
 		
         for i in range(p['iters']):
-            order=np.array(self.agentdict.keys())
+			
+            # order = np.array(self.agentdict.keys())
+            order = np.array(list(self.agentdict.keys()))
+			
             self.rng.shuffle(order) #randomize order of dialogue initiation
             for i in order:
                 self.agentdict[i].hold_dialogue(self.rng)
-			
-        return
+		
+        return self.get_opinions()
     
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-			'popsize': 1000,
-			'gridsize': 1000,
-			'iters': 50,
+			'popsize': POP_SIZE,
+			'gridsize': GRID_SIZE,
+			'iters': ITERS,
 			# 'mean_init_opinion': 50,
             # 'std_init_opinion': 50,
             'mean_intolerance': np.random.uniform(0.4, 1.2), # 0.8,
@@ -163,9 +171,9 @@ class DugginsModel(Model):
         This function will convert them to the actual parameter values.
         """
         self.params = {
-            'popsize': 1000,
-			'gridsize': 1000,
-			'iters': 50,
+            'popsize': POP_SIZE,
+			'gridsize': GRID_SIZE,
+			'iters': ITERS,
 			# 'mean_init_opinion': 50,
             # 'std_init_opinion': 50,
             'mean_intolerance': 0.4 + 0.8 * params['mean_intolerance'],

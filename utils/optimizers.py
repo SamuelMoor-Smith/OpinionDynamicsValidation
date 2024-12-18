@@ -5,6 +5,7 @@ import numpy as np
 from utils.differences import dataset_difference, snapshot_difference
 from models.model import Model
 import time
+from models.duggins import DugginsModel
 
 # Set Hyperopt logger to display only errors
 logger = logging.getLogger("hyperopt.tpe")
@@ -46,6 +47,8 @@ def hyperopt_objective_from_true(true: Dataset, model: Model, params):
 
 def run_and_score_optimal(true, model):
     """Run and score the model optimally."""
+    if type(model) == DugginsModel:
+        model.create_agents(true.get_data()[0])
     true_data = true.get_data()
     ops = true_data[0]
     scores = [0]

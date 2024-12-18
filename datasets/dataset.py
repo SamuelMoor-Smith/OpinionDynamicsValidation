@@ -45,6 +45,26 @@ class Dataset:
 
         return Dataset(data, model)
     
+    def create_with_duggins_model(model, num_steps):
+        """
+        Create a dataset from a Duggins model.
+        """
+        data = [model.get_opinions()]
+        for _ in range(num_steps):
+            data.append(model.run(None))
+        return Dataset(data, model)
+    
+    def create_with_duggins_model_from_initial_with_noise(model, initial_opinions, num_steps, noise):
+        """
+        Create a dataset by running the model for num_steps with noise.
+        """
+        data = [model.get_opinions()]
+        for _ in range(num_steps):
+            run_output = model.run(None)
+            noisy_output, variance_basic, variance_noisy = add_noise(data[-1], run_output, noise, model)
+            data.append(noisy_output)
+        return Dataset(data, model), variance_basic, variance_noisy
+    
     def get_data(self):
         """Get the data of the dataset."""
         return self.data

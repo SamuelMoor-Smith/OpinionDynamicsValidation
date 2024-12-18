@@ -1,6 +1,5 @@
 import numpy as np
 from utils.rand_gen import create_random_opinion_distribution
-from models.deffuant import DeffuantModel
 from datasets.dataset import Dataset
 from utils.differences import calculate_mean_std
 from utils.plotting import plot_2_datasets_snapshots

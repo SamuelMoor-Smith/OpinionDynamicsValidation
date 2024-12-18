@@ -1,0 +1,36 @@
+Initial parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 5, 'mean_intolerance': 0.5181556536392887, 'mean_susceptibility': 7.104894217445651, 'mean_conformity': 0.43010954154222014, 'std_intolerance': 0.26420579521903886, 'std_susceptibility': 0.804636085955535, 'std_conformity': 0.16401637293450594, 'mean_social_reach': 24.085836368748787, 'std_social_reach': 5.161274909558868}
+Baseline score: 8.917508681101726 +/- 2.087134013422434
+Best parameters: {'gridsize': np.float64(0.6406519173146931), 'iters': np.float64(0.7808013679626151), 'mean_conformity': np.float64(0.8196278886970686), 'mean_intolerance': np.float64(0.08868124481540873), 'mean_social_reach': np.float64(0.6574931046112751), 'mean_susceptibility': np.float64(0.06742603422656389), 'popsize': np.float64(0.31315363224770076), 'std_conformity': np.float64(0.42038255033781546), 'std_intolerance': np.float64(0.7628733231889189), 'std_social_reach': np.float64(0.0553293149284515), 'std_susceptibility': np.float64(0.2647539760999591)}
+Optimizer score: 11.412359426268818 +/- 1.790026978671457
+Significant difference detected!
+
+Initial parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 5, 'mean_intolerance': 0.6838360412820432, 'mean_susceptibility': 6.65148838678561, 'mean_conformity': 0.3010380707327389, 'std_intolerance': 0.4257224858570523, 'std_susceptibility': 0.819981711041748, 'std_conformity': 0.3339144163460974, 'mean_social_reach': 24.913466544046763, 'std_social_reach': 5.636100355065644}
+Baseline score: 10.703802701096356 +/- 1.8839572589530729
+Best parameters: {'gridsize': np.float64(0.3114178815206194), 'iters': np.float64(0.8867384360885968), 'mean_conformity': np.float64(0.09463255755216493), 'mean_intolerance': np.float64(0.30419733266706056), 'mean_social_reach': np.float64(0.6601724739235765), 'mean_susceptibility': np.float64(0.49230392269654355), 'popsize': np.float64(0.8367445132182744), 'std_conformity': np.float64(0.5317518190484094), 'std_intolerance': np.float64(0.3294832788797146), 'std_social_reach': np.float64(0.754874038800067), 'std_susceptibility': np.float64(0.6307633043416859)}
+Optimizer score: 11.660789060702669 +/- 2.2077503027270016
+No significant difference detected.
+
+Initial parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 5, 'mean_intolerance': 0.6127320835588834, 'mean_susceptibility': 2.839746286405629, 'mean_conformity': 0.2310340605267569, 'std_intolerance': 0.4121458520276835, 'std_susceptibility': 0.3921984085714855, 'std_conformity': 0.17981485655928303, 'mean_social_reach': 25.11904732512412, 'std_social_reach': 4.069301053257036}
+Baseline score: 9.909282042383404 +/- 2.177997448618364
+Best parameters: {'gridsize': np.float64(0.09236171976053159), 'iters': np.float64(0.15355671764671608), 'mean_conformity': np.float64(0.5165990107931177), 'mean_intolerance': np.float64(0.31806169375744753), 'mean_social_reach': np.float64(0.7570819091653669), 'mean_susceptibility': np.float64(0.9627188134855669), 'popsize': np.float64(0.4455417935129727), 'std_conformity': np.float64(0.9342387282390718), 'std_intolerance': np.float64(0.12485907140201358), 'std_social_reach': np.float64(0.47898359427656967), 'std_susceptibility': np.float64(0.5079127772887351)}
+Optimizer score: 9.871608109085003 +/- 2.0365005893220833
+Optimizer improved the score!
+
+Initial parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 25, 'mean_intolerance': 1.083029412456637, 'mean_susceptibility': 7.2477889494741685, 'mean_conformity': 0.40028569350369003, 'std_intolerance': 0.21967796238501663, 'std_susceptibility': 0.6433778690605887, 'std_conformity': 0.4389619293679463, 'mean_social_reach': 17.905413377902722, 'std_social_reach': 2.242342447988654}
+Baseline score: 18.167558898010718 +/- 2.8353829561204105
+Best parameters: {'gridsize': np.float64(0.8905051643337086), 'iters': np.float64(0.6494402744102078), 'mean_conformity': np.float64(0.2969889245508516), 'mean_intolerance': np.float64(0.8735587085741515), 'mean_social_reach': np.float64(0.33158924354094144), 'mean_susceptibility': np.float64(0.8419766529751677), 'popsize': np.float64(0.22772646843690705), 'std_conformity': np.float64(0.6327065885870744), 'std_intolerance': np.float64(0.7559812190052823), 'std_social_reach': np.float64(0.23519560407108586), 'std_susceptibility': np.float64(0.09434032236750664)}
+Optimizer score: 15.9175880797788 +/- 3.3305406911664903
+Optimizer improved the score!
+
+Initial parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 25, 'mean_intolerance': 0.9316755310018285, 'mean_susceptibility': 2.9710128587723283, 'mean_conformity': 0.4278708400993946, 'std_intolerance': 0.29693635296963583, 'std_susceptibility': 1.0107919784146455, 'std_conformity': 0.15616573400739298, 'mean_social_reach': 18.345351661801487, 'std_social_reach': 2.457919209335637}
+Baseline score: 11.21618367789431 +/- 2.341442707556102
+Best parameters: {'gridsize': np.float64(0.517184219429878), 'iters': np.float64(0.5309831902072377), 'mean_conformity': np.float64(0.08351760807383071), 'mean_intolerance': np.float64(0.06397950726658524), 'mean_social_reach': np.float64(0.2718519169558421), 'mean_susceptibility': np.float64(0.39135582003888714), 'popsize': np.float64(0.9693071926579209), 'std_conformity': np.float64(0.4590299232819178), 'std_intolerance': np.float64(0.9982861740615872), 'std_social_reach': np.float64(0.3227263367937376), 'std_susceptibility': np.float64(0.9010117237791555)}
+Optimizer score: 9.674576143420818 +/- 2.0444774891624817
+Optimizer improved the score!
+
+Initial parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 50, 'mean_intolerance': 0.765376605827897, 'mean_susceptibility': 5.848887128358868, 'mean_conformity': 0.3587385130326256, 'std_intolerance': 0.21417423962629578, 'std_susceptibility': 0.7123895283695548, 'std_conformity': 0.3704580954489537, 'mean_social_reach': 23.467012615794722, 'std_social_reach': 4.156425635616031}
+Baseline score: 9.6764722732091 +/- 1.7155176867053616
+Best parameters: {'gridsize': np.float64(0.23565102208818217), 'iters': np.float64(0.8318264113708046), 'mean_conformity': np.float64(0.9789307692521428), 'mean_intolerance': np.float64(0.48705080336068307), 'mean_social_reach': np.float64(0.5542607903725304), 'mean_susceptibility': np.float64(0.5506972570034928), 'popsize': np.float64(0.31422398620142833), 'std_conformity': np.float64(0.3178184261532062), 'std_intolerance': np.float64(0.22394310604396866), 'std_social_reach': np.float64(0.3575727360916466), 'std_susceptibility': np.float64(0.9606530158831527)}
+Optimizer score: 10.032290072006464 +/- 3.607797998571292
+No significant difference detected.
+
