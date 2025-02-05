@@ -36,7 +36,8 @@ def no_noise_experiment(
     start = time.time()
     comparison_model = model_class()
     optimizer = optimizers.get_optimizer()
-    best_params = optimizer(true, comparison_model, optimizers.hyperopt_objective)
+    opt_params = {"from_true": False, "num_snapshots": 10}
+    best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
     print(f"Optimization took {time.time() - start} seconds")
 
     # Set the best parameters

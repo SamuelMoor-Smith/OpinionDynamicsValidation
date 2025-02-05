@@ -6,6 +6,7 @@ from utils.differences import dataset_difference, snapshot_difference
 from models.model import Model
 import time
 from models.duggins import DugginsModel
+from multiprocessing import Pool
 
 # Set Hyperopt logger to display only errors
 logger = logging.getLogger("hyperopt.tpe")
@@ -18,50 +19,38 @@ def hyperopt():
     """
     Get the optimizer function based on the name.
     """
-    return lambda true, model, obj_f=hyperopt_objective: fmin(
-        fn=lambda params: obj_f(true, model, params),
+    best = lambda true, model, opt_params, obj_f=hyperopt_objective: fmin(
+        fn=lambda params: obj_f(true, model, params, opt_params),
         space={param: hp.uniform(param, 0, 1) for param in model.params.keys()},
         algo=tpe.suggest,
-        max_evals=300,
+        max_evals=250,
         trials=Trials(),
         show_progressbar=True
     )
+    return best
 
-def hyperopt_objective(true: Dataset, model: Model, params):
+def hyperopt_objective(true: Dataset, model: Model, model_params, opt_params):
     """Objective function for Hyperopt to minimize"""
-    model.set_normalized_params(params)
-    diffs = run_and_score_optimal(true, model)
+    model.set_normalized_params(model_params)
+    diffs = []
+    for _ in range(3):
+        scores = run_and_score_optimal(true, model, opt_params)
+        diffs.append(np.sum(scores))
     return {
         'loss': np.mean(diffs),
         'status': STATUS_OK,
     }
 
-def hyperopt_objective_from_true(true: Dataset, model: Model, params):
-    """Objective function for Hyperopt to minimize"""
-    model.set_normalized_params(params)
-    diffs = run_and_score_optimal_from_true(true, model)
-    return {
-        'loss': np.mean(diffs),
-        'status': STATUS_OK,
-    }
-
-def run_and_score_optimal(true, model):
+def run_and_score_optimal(true, model, opt_params):
     """Run and score the model optimally."""
     if type(model) == DugginsModel:
-        model.create_agents(true.get_data()[0])
+        model.update_agents(None, true.get_data()[0])
     true_data = true.get_data()
+    end_index = min(len(true_data) - 1, opt_params["num_snapshots"])
     ops = true_data[0]
     scores = [0]
-    for i in range(1,9):
-        ops = model.run(ops)
+    for i in range(1,end_index):
+        if opt_params["from_true"]: ops = model.run(true_data[i-1])
+        else: ops = model.run(ops)
         scores.append(snapshot_difference(ops, true_data[i], method="wasserstein"))
-    return scores
-
-def run_and_score_optimal_from_true(true, model):
-    """Run and score the model optimally with noise."""
-    true_data = true.get_data()
-    scores = [0]
-    for i in range(1,9):
-        ops = model.run(true_data[i-1])
-        scores.append(snapshot_difference(ops, true.get_data()[i], method="wasserstein"))
     return scores

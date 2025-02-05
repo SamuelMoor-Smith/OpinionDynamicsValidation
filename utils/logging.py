@@ -16,10 +16,12 @@ def write_results_to_file(initial_params, best_params,
         f.write(f"Baseline score: {avg_score_base} +/- {std_dev_base}\n")
         f.write(f"Best parameters: {best_params}\n")
         f.write(f"Optimizer score: {avg_score_opt} +/- {std_dev_opt}\n")
-        if avg_score_opt < avg_score_base:
+        if avg_score_base is not None and avg_score_opt < avg_score_base:
             f.write("Optimizer improved the score!\n")
         else:
-            if avg_score_opt < avg_score_base + std_dev_base:
+            if avg_score_base is None:
+                f.write("No baseline score to compare with.\n")
+            elif avg_score_opt < avg_score_base + std_dev_base:
                 f.write("No significant difference detected.\n")
             else:
                 f.write("Significant difference detected!\n")

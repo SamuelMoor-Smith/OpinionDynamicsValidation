@@ -69,7 +69,10 @@ def difference_sorted(x, y):
 def difference_wasserstein(x, y):
     """
     Compare distributions using Wasserstein distance (Earth Mover's Distance).
+    Normalize distributions to [0, 1] before comparison.
     """
+    x = (x - np.min(x)) / (np.max(x) - np.min(x))
+    y = (y - np.min(y)) / (np.max(y) - np.min(y))
     return wasserstein_distance(x, y)
 
 def difference_js(x, y, bins=100, range=(0, 1)):

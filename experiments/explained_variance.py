@@ -18,7 +18,7 @@ base_model = DeffuantModel()
 print("Model created with random parameters: ", base_model.params)
 
 # # Run this model with noise for 10 steps and create dataset
-true, _, _ = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=0.15)
+true, _ = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=0.15)
 
 # Create the array of noise levels and of explained variances
 noises = np.linspace(0, 0.5, 50)
@@ -28,10 +28,10 @@ explained_variances = []
 for noise in noises:
     explained_variance = 0
     for _ in range(10):
-        true, basic_var, noisy_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
-        explained_variance += basic_var / noisy_var
+        true, explained_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
+        explained_variance += explained_var
     explained_variances.append(explained_variance / 10)
-    print(f"Explained variance for noise {noise}: {basic_var / noisy_var}")
+    print(f"Explained variance for noise {noise}: {explained_var}")
 
 # Plot the explained variances
 plt.plot(noises, explained_variances)

@@ -8,11 +8,11 @@ class Dataset:
         self.data = data
         self.model = model
 
-    def create_from_data(data):
+    def create_from_data(data, model=None):
         """
         Create a dataset from a list of data. No model required.
         """
-        return Dataset(data)
+        return Dataset(data, model)
 
     def create_with_model_from_initial(model, initial_opinions, num_steps):
         """
@@ -32,7 +32,9 @@ class Dataset:
             run_output = model.run(data[-1])
             noisy_output, variance_basic, variance_noisy = add_noise(data[-1], run_output, noise, model)
             data.append(noisy_output)
-        return Dataset(data, model), variance_basic, variance_noisy
+
+        explained_var = variance_basic / variance_noisy
+        return Dataset(data, model), explained_var
     
     def create_with_model_from_true(model, true_data):
         """
@@ -44,26 +46,6 @@ class Dataset:
             data.append(model.run(true_data[i-1]))
 
         return Dataset(data, model)
-    
-    def create_with_duggins_model(model, num_steps):
-        """
-        Create a dataset from a Duggins model.
-        """
-        data = [model.get_opinions()]
-        for _ in range(num_steps):
-            data.append(model.run(None))
-        return Dataset(data, model)
-    
-    def create_with_duggins_model_from_initial_with_noise(model, initial_opinions, num_steps, noise):
-        """
-        Create a dataset by running the model for num_steps with noise.
-        """
-        data = [model.get_opinions()]
-        for _ in range(num_steps):
-            run_output = model.run(None)
-            noisy_output, variance_basic, variance_noisy = add_noise(data[-1], run_output, noise, model)
-            data.append(noisy_output)
-        return Dataset(data, model), variance_basic, variance_noisy
     
     def get_data(self):
         """Get the data of the dataset."""
@@ -77,6 +59,7 @@ class Dataset:
     
     def get_opinion_range(self):
         """Get the opinion range of the model if the model exists."""
-        if self.model is None:
+        if np.array([value < 0 for value in self.data]).any():
+            return (-1,1)
+        else:
             return (0,1)
-        return self.model.get_opinion_range()

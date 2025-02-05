@@ -1,0 +1,48 @@
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9975085045678866), 'iterations': np.float64(0.9752063712523679), 'mob_max': np.float64(0.5615882121359103), 'mob_min': np.float64(0.22402416286917692), 'shift_amount': np.float64(0.9678735509256979)}
+Optimizer score: 1.039793863709282 +/- 0.056872463609254284
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.8718084474018772), 'iterations': np.float64(0.1174444116965033), 'mob_max': np.float64(0.3953116398472165), 'mob_min': np.float64(0.4612414650818792), 'shift_amount': np.float64(0.2922530267881077)}
+Optimizer score: 0.7492069382252462 +/- 0.025810884582501945
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9375431129781366), 'iterations': np.float64(0.30701569241146004), 'mob_max': np.float64(0.10290273093154864), 'mob_min': np.float64(0.07473979852141582), 'shift_amount': np.float64(0.47773620971166963)}
+Optimizer score: 0.7284459102220688 +/- 0.02350682033428392
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9572414534449063), 'iterations': np.float64(0.11459236794931077), 'mob_max': np.float64(0.0793737421639585), 'mob_min': np.float64(0.7525860473142418), 'shift_amount': np.float64(0.15092295381313486)}
+Optimizer score: 0.7336777730978291 +/- 0.020363022748099712
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9586793511634265), 'iterations': np.float64(0.112758388834303), 'mob_max': np.float64(0.0008978316860523416), 'mob_min': np.float64(0.8731832862668883), 'shift_amount': np.float64(0.08980507501079452)}
+Optimizer score: 0.7327133277355964 +/- 0.019839116885722055
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9975240263390154), 'iterations': np.float64(0.22770722627099527), 'mob_max': np.float64(0.26858655741387527), 'mob_min': np.float64(0.044286740646603096), 'shift_amount': np.float64(0.3934984852460324)}
+Optimizer score: 0.7189845330850385 +/- 0.014841703188755209
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9944809239734685), 'iterations': np.float64(0.08859630144778147), 'mob_max': np.float64(0.34991211566097846), 'mob_min': np.float64(0.5378023891680153), 'shift_amount': np.float64(0.2852376751556791)}
+Optimizer score: 0.6495146920464021 +/- 0.015749021841247324
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.4677066110853762), 'iterations': np.float64(0.03221016284204033), 'mob_max': np.float64(0.4132596878542975), 'mob_min': np.float64(0.589931310810601), 'shift_amount': np.float64(0.4839453024540095)}
+Optimizer score: 0.6760075647787083 +/- 0.012963468927648922
+No baseline score to compare with.
+

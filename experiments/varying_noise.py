@@ -1,6 +1,5 @@
 import numpy as np
 from utils.rand_gen import create_random_opinion_distribution
-from models.deffuant import DeffuantModel
 from datasets.dataset import Dataset
 from utils.differences import calculate_mean_std, dataset_difference
 from utils.plotting import plot_2_datasets_snapshots, plot_2_snapshots
@@ -28,18 +27,18 @@ def varying_noise_experiment(
     # Create the array of explained variances and score differences
     explained_variances = []
     score_diffs = []
-    noises = [0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.15, 0.18, 0.25, 0.3]
+    noises = [0, 0.05, 0.1, 0.15, 0.25, 0.35, 0.45, 0.55]
     
     for noise in noises:
 
         # Iterate over the noise levels and create the true data with that noise value
-        true, basic_var, noisy_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
+        true, explained_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
 
         # Create zero data (just the last opinion to predict the next one)
         zero_data = copy.copy(true.get_data())
         zero_data.pop()
         zero_data.insert(0, zero_data[0])
-        zero = Dataset.create_from_data(zero_data)
+        zero = Dataset.create_from_data(zero_data, base_model)
 
         # Calculate the difference between the true and zero datasets
         zero_diff = dataset_difference(true, zero, method="wasserstein")
@@ -48,7 +47,8 @@ def varying_noise_experiment(
         start = time.time()
         comparison_model = model_class()
         optimizer = optimizers.get_optimizer()
-        best_params = optimizer(true, comparison_model, obj_f=optimizers.hyperopt_objective_from_true)
+        opt_params = {"from_true": True, "num_snapshots": 10}
+        best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
         print(f"Optimization took {time.time() - start} seconds")
 
         # Set the best parameters
@@ -63,8 +63,10 @@ def varying_noise_experiment(
 
         # Print and store the score difference between the zero and optimized datasets
         print(f"Score difference for noise {noise}: {zero_diff - opt_mean_diff}")
-        explained_variances.append(basic_var / noisy_var)
+        explained_variances.append(explained_var)
         score_diffs.append(zero_diff - opt_mean_diff)
+
+        # plot_2_datasets_snapshots(true, zero, difference="wasserstein", path=f"plots/{model_type}/noise/")
 
     if not os.path.exists(f"plots/{model_type}/noise"):
         os.makedirs(f"plots/{model_type}/noise")
