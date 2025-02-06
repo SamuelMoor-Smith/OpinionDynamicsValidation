@@ -1,5 +1,6 @@
 import numpy as np
 from utils.noise import add_noise
+import copy
 
 class Dataset:
 
@@ -7,12 +8,15 @@ class Dataset:
         """Initialize a dataset with data and an optional model."""
         self.data = data
         self.model = model
-
-    def create_from_data(data, model=None):
+    
+    def create_zero_data_from_true(true, model=None):
         """
-        Create a dataset from a list of data. No model required.
+        Create a dataset with the same data as true, but with the first opinion repeated and last opinion removed.
         """
-        return Dataset(data, model)
+        zero_data = copy.copy(true.get_data())
+        zero_data.pop()
+        zero_data.insert(0, zero_data[0])
+        return Dataset(zero_data, model)
 
     def create_with_model_from_initial(model, initial_opinions, num_steps):
         """

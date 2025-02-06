@@ -4,17 +4,17 @@ from datasets.dataset import Dataset
 from utils.differences import calculate_mean_std
 from utils.plotting import plot_2_datasets_snapshots
 from utils import optimizers
+from models.model import Model
 import time
 from utils.logging import write_results_to_file
 
 def no_noise_experiment(
-        model_class,
-        model_type,
+        model_class: Model,
+        model_name: str,
     ):
 
-    # Create a model with random parameters
-    base_model = model_class()
-    print(f"{model_class} model created with random parameters: ", base_model.params)
+    base_model = model_class.create() # Create model with random parameters
+    initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions
 
     # generate random initial opinions
     op_range = base_model.get_opinion_range()
@@ -30,7 +30,7 @@ def no_noise_experiment(
     base_mean_diff, base_std_diff = calculate_mean_std(true, datasets, "Baseline", method="wasserstein")
 
     # Plot the true dataset and the first of the rest
-    plot_2_datasets_snapshots(true, datasets[0], difference="wasserstein", path=f"plots/{model_type}/no_noise/same/")
+    plot_2_datasets_snapshots(true, datasets[0], difference="wasserstein", path=f"plots/{model_name}/no_noise/same/")
 
     # Optimization process and time it
     start = time.time()
@@ -54,14 +54,14 @@ def no_noise_experiment(
     opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
 
     # Plot the true dataset and the first of the optimized
-    plot_2_datasets_snapshots(true, opt_datasets[0], difference="wasserstein", path=f"plots/{model_type}/no_noise/diff/")
+    plot_2_datasets_snapshots(true, opt_datasets[0], difference="wasserstein", path=f"plots/{model_name}/no_noise/diff/")
 
     # Write the results to a file
     write_results_to_file(
         base_model.params, best_params, 
         base_mean_diff, base_std_diff, 
         opt_mean_diff, opt_std_diff, 
-        path=f"results/{model_type}/no_noise/"
+        path=f"results/{model_name}/no_noise/"
     )
 
 

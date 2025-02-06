@@ -95,3 +95,9 @@ class CarpentrasModel(Model):
             'mob_max': 0.15 * params['mob_max'] + 0.15,
             'iterations': int(5000 * params['iterations'])
         }
+
+    def create(params=None):
+        """Create the model and print that it was created with its random parameters."""
+        model = CarpentrasModel(params)
+        print(f"Carpentras model created with parameters {model.params}")
+        return model

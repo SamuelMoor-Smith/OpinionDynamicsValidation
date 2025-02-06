@@ -7,22 +7,18 @@ from utils import optimizers
 import time
 from utils.logging import write_results_to_file
 import copy
+from models.model import Model
 import matplotlib.pyplot as plt
 import os
 
 def varying_noise_experiment(
-        model_class,
-        model_type,
+        model_class: Model,
+        model_name: str,
         i=""
     ):
 
-    # Create a model with random parameters
-    base_model = model_class()
-    print(f"{model_class} model created with random parameters: ", base_model.params)
-
-    # generate random initial opinions
-    op_range = base_model.get_opinion_range()
-    initial_opinions = create_random_opinion_distribution(N=1000, min_val=op_range[0], max_val=op_range[1])
+    base_model = model_class.create() # Create model with random parameters
+    initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions
 
     # Create the array of explained variances and score differences
     explained_variances = []
@@ -35,10 +31,7 @@ def varying_noise_experiment(
         true, explained_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
 
         # Create zero data (just the last opinion to predict the next one)
-        zero_data = copy.copy(true.get_data())
-        zero_data.pop()
-        zero_data.insert(0, zero_data[0])
-        zero = Dataset.create_from_data(zero_data, base_model)
+        zero = Dataset.create_zero_data_from_true(true, base_model)
 
         # Calculate the difference between the true and zero datasets
         zero_diff = dataset_difference(true, zero, method="wasserstein")
@@ -66,15 +59,15 @@ def varying_noise_experiment(
         explained_variances.append(explained_var)
         score_diffs.append(zero_diff - opt_mean_diff)
 
-        # plot_2_datasets_snapshots(true, zero, difference="wasserstein", path=f"plots/{model_type}/noise/")
+        # plot_2_datasets_snapshots(true, zero, difference="wasserstein", path=f"plots/{model_name}/noise/")
 
-    if not os.path.exists(f"plots/{model_type}/noise"):
-        os.makedirs(f"plots/{model_type}/noise")
+    if not os.path.exists(f"plots/{model_name}/noise"):
+        os.makedirs(f"plots/{model_name}/noise")
 
     # Plot the explained variances
     plt.scatter(explained_variances, score_diffs)
     plt.xlabel("Explained Variance")
     plt.ylabel("Score difference")
     plt.title("Score difference for different explained variance levels")
-    plt.savefig(f"plots/{model_type}/noise/score_diff_explained_var_{i}.png")
+    plt.savefig(f"plots/{model_name}/noise/score_diff_explained_var_{i}.png")
     plt.close()

@@ -73,3 +73,9 @@ class DeffuantModel(Model):
             'interactions': int(400 * params['interactions'] + 300)
         }
 
+    def create(params=None):
+        """Create the model and print that it was created with its random parameters."""
+        model = DeffuantModel(params)
+        print(f"Deffuant model created with parameters {model.params}")
+        return model
+

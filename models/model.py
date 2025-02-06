@@ -1,7 +1,22 @@
+from utils.rand_gen import create_random_opinion_distribution
+
 class Model:
 
     def __init__(self, params=None):
         self.params = params if params is not None else self.get_random_params()
+
+    def create(params=None) -> 'Model':
+        """
+        Create a model with random parameters.
+        """
+        raise NotImplementedError
+    
+    def generate_initial_opinions(self):
+        """
+        Generate initial opinions for the model.
+        """
+        op_range = self.get_opinion_range()
+        return create_random_opinion_distribution(N=1000, min_val=op_range[0], max_val=op_range[1])
 
     def run(self, input):
         """

@@ -79,3 +79,9 @@ class HKAveragingModel(Model):
             'epsilon': 0.8 * params['epsilon'] + 0.1,
             'agents': params['agents']
         }
+
+    def create(params=None):
+        """Create the model and print that it was created with its random parameters."""
+        model = HKAveragingModel(params)
+        print(f"HKAveraging model created with parameters {model.params}")
+        return model
