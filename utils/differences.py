@@ -34,8 +34,8 @@ def dataset_difference(d1, d2, method='wasserstein'):
     """
     Compare two datasets using the given method.
     """
-    for s1, s2 in zip(d1.get_data(), d2.get_data()):
-        print(snapshot_difference(s1, s2, method))
+    # for s1, s2 in zip(d1.get_data(), d2.get_data()):
+    #     print(snapshot_difference(s1, s2, method))
     return sum(snapshot_difference(s1, s2, method) for s1, s2 in zip(d1.get_data(), d2.get_data()))
 
 def create_histograms(x, y, bins=100, range=(0, 1), add_epsilon=False, epsilon=1e-10):

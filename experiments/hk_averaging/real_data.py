@@ -5,5 +5,5 @@ from experiments.real_data import real_data_experiment
 real_data_experiment(
     model_class=HKAveragingModel,
     model_name="hk_averaging",
-    data_header="imwbcnt",
+    data_header="lrscale",
 )

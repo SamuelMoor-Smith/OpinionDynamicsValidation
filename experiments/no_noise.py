@@ -16,10 +16,6 @@ def no_noise_experiment(
     base_model = model_class.create() # Create model with random parameters
     initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions
 
-    # generate random initial opinions
-    op_range = base_model.get_opinion_range()
-    initial_opinions = create_random_opinion_distribution(N=1000, min_val=op_range[0], max_val=op_range[1])
-
     # Run this model for 10 steps and create dataset
     true = Dataset.create_with_model_from_initial(base_model, initial_opinions, num_steps=9)
 

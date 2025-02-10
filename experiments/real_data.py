@@ -66,7 +66,7 @@ def real_data_experiment(
     # Calculate mean and std of differences between the first dataset and the rest
     opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
 
-    opt_mean_diff2, opt_std_diff2 = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
+    opt_mean_diff2, opt_std_diff2 = calculate_mean_std(true, opt_datasets2, "Optimized", method="wasserstein")
 
     # Plot the true dataset and the first of the optimized
     plot_2_datasets_snapshots(true, opt_datasets[0], difference="wasserstein", path=f"plots/{model_name}/real_data/diff/", bins=11)

@@ -22,3 +22,15 @@ Best parameters: {'agents': np.float64(0.06255737256273339), 'epsilon': np.float
 Optimizer score: 0.7246984975223245 +/- 0.005999254798273453
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'agents': np.float64(0.02651818497706515), 'epsilon': np.float64(0.6774763761935032)}
+Optimizer score: 0.7391142928280764 +/- 0.008270300849624315
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'agents': np.float64(0.01996566280422311), 'epsilon': np.float64(0.5239445914248146)}
+Optimizer score: 0.2640427632795256 +/- 0.0061022891192709415
+No baseline score to compare with.
+
