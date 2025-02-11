@@ -6,6 +6,7 @@ class DeffuantModel(Model):
 
     def __init__(self, params=None):
         super().__init__(params)
+        print(f"Deffuant model created with parameters {self.params}")
 
     def run(self, input):
         """
@@ -73,7 +74,7 @@ class DeffuantModel(Model):
             'interactions': int(400 * params['interactions'] + 300)
         }
 
-    def create(params=None):
+    def create(params=None, agents=None):
         """Create the model and print that it was created with its random parameters."""
         model = DeffuantModel(params)
         print(f"Deffuant model created with parameters {model.params}")

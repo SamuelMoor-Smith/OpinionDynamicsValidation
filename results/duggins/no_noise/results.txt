@@ -58,3 +58,15 @@ Best parameters: {'popsize': 1000, 'gridsize': 1000, 'iters': 10, 'mean_intolera
 Optimizer score: 0.08054586967152258 +/- 0.020272355600946708
 No significant difference detected.
 
+Initial parameters: {'mean_intolerance': 1.0362500423813192, 'mean_susceptibility': 5.092370346147507, 'mean_conformity': 0.20532064303284786, 'std_intolerance': 0.2969611730475116, 'std_susceptibility': 0.7107581397031371, 'std_conformity': 0.37874143056549997}
+Baseline score: 0.060095964355983224 +/- 0.02047663268997095
+Best parameters: {'mean_intolerance': np.float64(1.0808724088584816), 'mean_susceptibility': np.float64(7.150099940978888), 'mean_conformity': np.float64(0.39042120320511153), 'std_intolerance': np.float64(0.288674849190355), 'std_susceptibility': np.float64(0.8356731158634567), 'std_conformity': np.float64(0.28385923883776915)}
+Optimizer score: 0.05282904594311276 +/- 0.006338379446572216
+Optimizer improved the score!
+
+Initial parameters: {'mean_intolerance': 0.6114235239208605, 'mean_susceptibility': 6.618203162822699, 'mean_conformity': 0.18931292799160615, 'std_intolerance': 0.17132355109681152, 'std_susceptibility': 0.942441495527818, 'std_conformity': 0.3742315269378666}
+Baseline score: 0.045533679907327464 +/- 0.014127693970159446
+Best parameters: {'mean_conformity': np.float64(0.09878989689074767), 'mean_intolerance': np.float64(0.1032532701720291), 'mean_susceptibility': np.float64(0.8014174948377382), 'std_conformity': np.float64(0.6095785197397794), 'std_intolerance': np.float64(0.5810074585459819), 'std_susceptibility': np.float64(0.7914077291546324)}
+Optimizer score: 0.0473414594072931 +/- 0.011381686177688062
+No significant difference detected.
+

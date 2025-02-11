@@ -16,6 +16,7 @@ class CarpentrasModel(Model):
 
     def __init__(self, params=None):
         super().__init__(params)
+        print(f"Carpentras model created with parameters {self.params}")
     
     def run(self, input):
         """
@@ -67,7 +68,7 @@ class CarpentrasModel(Model):
             # Keep opinion within range
             output[i] = keep_in_range(output[i])
 
-        return output
+        return np.array(output)
     
     def get_random_params(self):
         """Get random feasible parameters for the model."""
@@ -95,9 +96,3 @@ class CarpentrasModel(Model):
             'mob_max': 0.15 * params['mob_max'] + 0.15,
             'iterations': int(5000 * params['iterations'])
         }
-
-    def create(params=None):
-        """Create the model and print that it was created with its random parameters."""
-        model = CarpentrasModel(params)
-        print(f"Carpentras model created with parameters {model.params}")
-        return model

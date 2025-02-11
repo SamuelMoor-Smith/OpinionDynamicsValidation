@@ -5,9 +5,9 @@ class Model:
     def __init__(self, params=None):
         self.params = params if params is not None else self.get_random_params()
 
-    def create(params=None) -> 'Model':
+    def create(params=None, agents=None) -> 'Model':
         """
-        Create a model with random parameters.
+        Create a model with random parameters (and possibly duggins ßagents).
         """
         raise NotImplementedError
     

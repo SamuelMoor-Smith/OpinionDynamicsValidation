@@ -1,10 +1,9 @@
-import numpy as np
-from utils.rand_gen import create_random_opinion_distribution
 from datasets.dataset import Dataset
 from utils.differences import calculate_mean_std
 from utils.plotting import plot_2_datasets_snapshots
 from utils import optimizers
 from models.model import Model
+from models.duggins import DugginsModel
 import time
 from utils.logging import write_results_to_file
 
@@ -13,27 +12,37 @@ def no_noise_experiment(
         model_name: str,
     ):
 
-    base_model = model_class.create() # Create model with random parameters
+    base_model: Model = model_class() # Create model with random parameters
     initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions
 
-    # Run this model for 10 steps and create dataset
-    true = Dataset.create_with_model_from_initial(base_model, initial_opinions, num_steps=9)
+    if isinstance(base_model, DugginsModel):
+        base_model.sample_isc_for_agents(initial_opinions)
 
-    # Now create 10 more datasets with the same model and initial opinions
+    # Now create 10 datasets with the same model and initial opinions...
     datasets = [Dataset.create_with_model_from_initial(base_model, initial_opinions, num_steps=9) for _ in range(10)]
 
-    # Calculate mean and std of differences between the first dataset and the rest
-    base_mean_diff, base_std_diff = calculate_mean_std(true, datasets, "Baseline", method="wasserstein")
+    # Set the true dataset to be the first of the datasets
+    true = datasets[0]
 
-    # Plot the true dataset and the first of the rest
-    plot_2_datasets_snapshots(true, datasets[0], difference="wasserstein", path=f"plots/{model_name}/no_noise/same/")
+    # Calculate mean and std of differences between the first dataset and the rest
+    base_mean_diff, base_std_diff = calculate_mean_std(true, datasets[1:], "Baseline", method="wasserstein")
+
+    # Plot the first and second datasets
+    plot_2_datasets_snapshots(true, datasets[1], difference="wasserstein", path=f"plots/{model_name}/no_noise/same/")
 
     # Optimization process and time it
     start = time.time()
-    comparison_model = model_class()
+
+    if isinstance(base_model, DugginsModel):
+        comparison_model: Model = DugginsModel(agents=base_model.get_cleaned_agents())
+    else:
+        comparison_model: Model = model_class()
+
     optimizer = optimizers.get_optimizer()
+
     opt_params = {"from_true": False, "num_snapshots": 10}
     best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
+
     print(f"Optimization took {time.time() - start} seconds")
 
     # Set the best parameters

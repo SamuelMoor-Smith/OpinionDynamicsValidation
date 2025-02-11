@@ -16,3 +16,9 @@ Best parameters: {'agents': np.float64(0.10917387072689716), 'epsilon': np.float
 Optimizer score: 0.05722457155766023 +/- 0.013024291293476676
 Optimizer improved the score!
 
+Initial parameters: {'mu': 0.49760498297606337, 'epsilon': 0.47975882753948995, 'interactions': 457}
+Baseline score: 0.7445020496485002 +/- 0.19530353542406742
+Best parameters: {'epsilon': np.float64(0.640808590805416), 'interactions': np.float64(0.1284436025699361), 'mu': np.float64(0.7949944380070495)}
+Optimizer score: 0.567618804968798 +/- 0.23496735121937345
+Optimizer improved the score!
+

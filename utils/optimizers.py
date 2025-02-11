@@ -43,9 +43,9 @@ def hyperopt_objective(true: Dataset, model: Model, model_params, opt_params):
 
 def run_and_score_optimal(true, model, opt_params):
     """Run and score the model optimally."""
-    if type(model) == DugginsModel:
-        model.update_agents(None, true.get_data()[0])
     true_data = true.get_data()
+    if isinstance(model, DugginsModel):
+        model.sample_isc_for_agents(true_data[0])
     end_index = min(len(true_data) - 1, opt_params["num_snapshots"])
     ops = true_data[0]
     scores = [0]

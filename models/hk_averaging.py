@@ -21,6 +21,7 @@ class HKAveragingModel(Model):
     def __init__(self, params=None, method="arithmetic"):
         super().__init__(params)
         self.method = method
+        print(f"HKAveraging model created with parameters {self.params} and method {self.method}")
 
     def run(self, input):
         """
@@ -57,7 +58,7 @@ class HKAveragingModel(Model):
             if close_opinions.size > 0:
                 output[agent] = calculate_mean(close_opinions, method=self.method)
 
-        return output
+        return np.array(output)
     
     def get_random_params(self):
         """Get random feasible parameters for the model."""
@@ -79,9 +80,3 @@ class HKAveragingModel(Model):
             'epsilon': 0.8 * params['epsilon'] + 0.1,
             'agents': params['agents']
         }
-
-    def create(params=None):
-        """Create the model and print that it was created with its random parameters."""
-        model = HKAveragingModel(params)
-        print(f"HKAveraging model created with parameters {model.params}")
-        return model

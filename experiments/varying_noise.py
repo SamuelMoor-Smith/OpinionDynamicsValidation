@@ -1,15 +1,14 @@
-import numpy as np
-from utils.rand_gen import create_random_opinion_distribution
 from datasets.dataset import Dataset
-from utils.differences import calculate_mean_std, dataset_difference
-from utils.plotting import plot_2_datasets_snapshots, plot_2_snapshots
+from utils.differences import calculate_mean_std
+from utils.plotting import plot_2_datasets_snapshots
 from utils import optimizers
+from models.model import Model
+from models.duggins import DugginsModel
 import time
 from utils.logging import write_results_to_file
-import copy
-from models.model import Model
-import matplotlib.pyplot as plt
+from utils.differences import dataset_difference
 import os
+import matplotlib.pyplot as plt
 
 def varying_noise_experiment(
         model_class: Model,
@@ -17,8 +16,11 @@ def varying_noise_experiment(
         i=""
     ):
 
-    base_model = model_class.create() # Create model with random parameters
+    base_model: Model = model_class() # Create model with random parameters
     initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions
+
+    if isinstance(base_model, DugginsModel):
+        base_model.sample_isc_for_agents(initial_opinions)
 
     # Create the array of explained variances and score differences
     explained_variances = []
@@ -38,7 +40,7 @@ def varying_noise_experiment(
 
         # Optimization process and time it
         start = time.time()
-        comparison_model = model_class()
+        comparison_model: Model = model_class()
         optimizer = optimizers.get_optimizer()
         opt_params = {"from_true": True, "num_snapshots": 10}
         best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
