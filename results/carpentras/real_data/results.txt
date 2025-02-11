@@ -58,3 +58,9 @@ Best parameters: {'flip_prob': np.float64(0.4356225578298135), 'iterations': np.
 Optimizer score: 0.18189099028038258 +/- 0.0026500767369153715
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.49792127742554043), 'iterations': np.float64(0.001614532708741068), 'mob_max': np.float64(0.8523548136225775), 'mob_min': np.float64(0.554667896267283), 'shift_amount': np.float64(0.5489392310709207)}
+Optimizer score: 0.14881051185118574 +/- 0.001130775925061733
+No baseline score to compare with.
+

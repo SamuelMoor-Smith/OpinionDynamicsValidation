@@ -80,3 +80,9 @@ Best parameters: {'epsilon': np.float64(0.7561243592003051), 'interactions': np.
 Optimizer score: 0.19251097753991073 +/- 9.62559340460761e-05
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'epsilon': np.float64(0.21762008793659202), 'interactions': np.float64(0.191139728340433), 'mu': np.float64(0.0003115211720896978)}
+Optimizer score: 0.348416365302122 +/- 9.082728519765605e-07
+No baseline score to compare with.
+

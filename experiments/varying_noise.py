@@ -40,10 +40,17 @@ def varying_noise_experiment(
 
         # Optimization process and time it
         start = time.time()
-        comparison_model: Model = model_class()
+
+        if isinstance(base_model, DugginsModel):
+            comparison_model: Model = DugginsModel(agents=base_model.get_cleaned_agents())
+        else:
+            comparison_model: Model = model_class()
+
         optimizer = optimizers.get_optimizer()
+        
         opt_params = {"from_true": True, "num_snapshots": 10}
         best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
+
         print(f"Optimization took {time.time() - start} seconds")
 
         # Set the best parameters

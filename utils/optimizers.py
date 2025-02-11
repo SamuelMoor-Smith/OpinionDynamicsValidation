@@ -41,7 +41,7 @@ def hyperopt_objective(true: Dataset, model: Model, model_params, opt_params):
         'status': STATUS_OK,
     }
 
-def run_and_score_optimal(true, model, opt_params):
+def run_and_score_optimal(true: Dataset, model: Model, opt_params):
     """Run and score the model optimally."""
     true_data = true.get_data()
     if isinstance(model, DugginsModel):

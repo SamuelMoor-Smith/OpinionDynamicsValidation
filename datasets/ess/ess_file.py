@@ -73,7 +73,7 @@ class ESSFile:
             cur_data = self._grouped.get_group(rounds[i]).head(N)[self._key].values
 
             # adjust scale
-            cur_data = cur_data / scale - adjust
+            cur_data = cur_data * scale + adjust
             
             # # add noise to smooth out the data
             # NOISE_LEVEL = 0.05

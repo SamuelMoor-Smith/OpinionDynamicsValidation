@@ -8,33 +8,32 @@ import copy
 # August 11, 2016
 # ISC Model
 
-POP_SIZE = 1000
 GRID_SIZE = 1000
 ITERS = 10
 
-def create_agents():
+def create_agents(n):
     """Create agents with random positions and social reaches. These will stay constant with the model."""
 
-    agentdict = {}
-    x_positions = np.random.uniform(0, GRID_SIZE, POP_SIZE)
-    y_positions = np.random.uniform(0, GRID_SIZE, POP_SIZE)
-    social_reaches = np.maximum(np.random.normal(22.0, 4.0, POP_SIZE), 0)
+    agents = []
+    x_positions = np.random.uniform(0, GRID_SIZE, n)
+    y_positions = np.random.uniform(0, GRID_SIZE, n)
+    social_reaches = np.maximum(np.random.normal(22.0, 4.0, n), 0)
 
     # Create agents
-    for i in range(POP_SIZE):
-        agentdict[i] = agent(
+    for i in range(n):
+        agents.append(agent(
             iden=i,
             xpos=x_positions[i],
             ypos=y_positions[i],
             radius=social_reaches[i]
-        )
+        ))
     
-    return agentdict
+    return agents
 
-def network_agents(agentdict):
+def network_agents(agents):
 	#create social networks: if euclidian distance sqrt(dx^2+dy^2)<min(r_i,r_j), add to network
-	for i in agentdict.values(): # agentdict.itervalues():
-		for j in agentdict.values(): # agentdict.itervalues():
+	for i in agents: # agentdict.itervalues():
+		for j in agents: # agentdict.itervalues():
 			if i != j and ((j.x - i.x)**2 + (j.y - i.y)**2)**(0.5) < min(i.radius,j.radius):
 				i.addtonetwork(j)
 
@@ -114,16 +113,17 @@ class agent:
 				
 class DugginsModel(Model):
 
-    def __init__(self, params=None, agents=None):
+    def __init__(self, params=None, agents=None, n=1000):
         super().__init__(params)
-        self.agentdict = agents
-        print(f"Duggins model created with parameters {self.params}")
+        self.agents = agents
+        # print(f"Duggins model created with parameters {self.params}")
         if agents is not None:
-            print("Agents provided (with positions and reach networks).")
-        if agents is None:
-            print("No agents provided, creating new agents.")
-            self.agentdict = create_agents()
-            network_agents(self.agentdict)
+            # print("Agents provided (with positions and reach networks).")
+            pass
+        else:
+            # print("No agents provided, creating new agents.")
+            self.agents = create_agents(n)
+            network_agents(self.agents)
     
     def sample_isc_for_agents(self, initial_opinions):
 
@@ -140,10 +140,10 @@ class DugginsModel(Model):
 
         # Update agents
         for i in range(n):
-            self.agentdict[i].o = opinions[i]
-            self.agentdict[i].int = intolerances[i]
-            self.agentdict[i].sus = susceptibilities[i]
-            self.agentdict[i].con = conformities[i]
+            self.agents[i].o = opinions[i]
+            self.agents[i].int = intolerances[i]
+            self.agents[i].sus = susceptibilities[i]
+            self.agents[i].con = conformities[i]
     
     def run(self, input):
         
@@ -151,18 +151,18 @@ class DugginsModel(Model):
 		
         # Make sure agents have correct opinions
         for i, o in enumerate(input):
-            self.agentdict[i].O = o
+            self.agents[i].O = o
 		
         for i in range(ITERS):
 			
             # order = np.array(self.agentdict.keys())
-            order = np.array(list(self.agentdict.keys()))
+            order = np.arange(len(self.agents))
 			
             np.random.shuffle(order) #randomize order of dialogue initiation
             for i in order:
-                self.agentdict[i].hold_dialogue()
+                self.agents[i].hold_dialogue()
 		
-        return np.array([agent.O for agent in self.agentdict.values()])
+        return np.array([agent.O for agent in self.agents])
     
     def get_random_params(self):
         """Get random feasible parameters for the model."""
@@ -198,8 +198,8 @@ class DugginsModel(Model):
         }
 
     def get_cleaned_agents(self):
-        agents_copy = copy.deepcopy(self.agentdict)
-        for i in range(POP_SIZE):
+        agents_copy = copy.deepcopy(self.agents)
+        for i in range(len(agents_copy)):
             agents_copy[i].o = None
             agents_copy[i].int = None
             agents_copy[i].sus = None

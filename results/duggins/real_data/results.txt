@@ -1,0 +1,12 @@
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.7053353812028544), 'mean_intolerance': np.float64(0.9633442305241705), 'mean_susceptibility': np.float64(0.9996405600674758), 'std_conformity': np.float64(0.9012904894001177), 'std_intolerance': np.float64(0.3947060780446638), 'std_susceptibility': np.float64(0.28046794585123985)}
+Optimizer score: 0.23945498226242376 +/- 0.0018809650707948243
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.9128309833277273), 'mean_intolerance': np.float64(0.7489009785586381), 'mean_susceptibility': np.float64(0.9965266215057597), 'std_conformity': np.float64(0.6052932004407194), 'std_intolerance': np.float64(0.6345634895795608), 'std_susceptibility': np.float64(0.4742372705390206)}
+Optimizer score: 0.3894318627635013 +/- 0.004033226411863849
+No baseline score to compare with.
+

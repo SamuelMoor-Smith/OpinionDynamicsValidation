@@ -71,11 +71,12 @@ class Dataset:
     
     def get_opinion_range(self):
         """Get the opinion range of the model if the model exists."""
-        if self.model is None:
-            if np.array([value < 0 for value in self.data]).any():
-                return (-1,1)
-            else:
-                return (0,1)
-        
-        else:
+        if self.model is not None:
             return self.model.get_opinion_range()
+
+        if np.array([value < 0 for value in self.data]).any():
+            return (-1,1)
+        elif np.array([value > 1 for value in self.data]).any():
+            return (0,100)
+        else:
+            return (0,1)

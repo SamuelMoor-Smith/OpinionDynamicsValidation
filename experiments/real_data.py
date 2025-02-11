@@ -2,6 +2,7 @@ from datasets.ess.ess_file import ESSFile
 import numpy as np
 from utils.rand_gen import create_random_opinion_distribution
 from datasets.dataset import Dataset
+from models.duggins import DugginsModel
 from utils.differences import calculate_mean_std
 from utils.plotting import plot_2_datasets_snapshots
 from utils import optimizers
@@ -19,22 +20,19 @@ Basically on the first 5, use 1 to predict 2, and evaluate then use 2 to predict
 For the duggins, I basically have to show that using the same even with the same parameters, the outcomes are vastly different - it is a very uncertain model
 
 compare with zero model similar to in varying noise
-
 '''
 
 def real_data_experiment(
         model_class: Model,
         model_name: str,
         data_header,
-        scale=10,
+        scale=0.1,
         adjust=0
     ):
 
     essfile = ESSFile('datasets/ess/combined-sept26.csv', data_header, scale=scale, adjust=adjust)
 
     true = essfile.get_true()
-    initial_opinions = true.get_data()[0]
-    steps = len(true.get_data()) - 1 
 
     # Get zero data
     zero = Dataset.create_zero_data_from_true(true, None)
@@ -44,7 +42,10 @@ def real_data_experiment(
 
     # Optimization process and time it
     start = time.time()
-    comparison_model = model_class()
+    if isinstance(model_class, DugginsModel):
+        comparison_model: Model = DugginsModel(n=essfile.get_min_agents())
+    else: 
+        comparison_model: Model = model_class()
     optimizer = optimizers.get_optimizer()
     opt_params = {"from_true": True, "num_snapshots": 5}
     best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
@@ -59,23 +60,23 @@ def real_data_experiment(
 
     # Now create 10 more datasets with the optimized model and initial opinions
     
-    opt_datasets = [Dataset.create_with_model_from_initial(comparison_model, initial_opinions=initial_opinions, num_steps=steps) for _ in range(10)]
+    # opt_datasets = [Dataset.create_with_model_from_initial(comparison_model, initial_opinions=initial_opinions, num_steps=steps) for _ in range(10)]
 
     opt_datasets2 = [Dataset.create_with_model_from_true(comparison_model, true_data=true.get_data()) for _ in range(10)]
 
     # Calculate mean and std of differences between the first dataset and the rest
-    opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
+    # opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
 
     opt_mean_diff2, opt_std_diff2 = calculate_mean_std(true, opt_datasets2, "Optimized", method="wasserstein")
 
     # Plot the true dataset and the first of the optimized
-    plot_2_datasets_snapshots(true, opt_datasets[0], difference="wasserstein", path=f"plots/{model_name}/real_data/diff/", bins=11)
+    plot_2_datasets_snapshots(true, opt_datasets2[0], difference="wasserstein", path=f"plots/{model_name}/real_data/diff/", bins=11)
 
     # Write the results to a file
     write_results_to_file(
         None, best_params, 
         None, None, 
-        opt_mean_diff, opt_std_diff, 
+        opt_mean_diff2, opt_std_diff2, 
         path=f"results/{model_name}/real_data/"
     )
 

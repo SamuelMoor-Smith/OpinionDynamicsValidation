@@ -6,6 +6,6 @@ real_data_experiment(
     model_class=CarpentrasModel,
     model_name="carpentras",
     data_header="lrscale",
-    scale=5,
-    adjust=1
+    scale=0.2,
+    adjust=-1
 )
