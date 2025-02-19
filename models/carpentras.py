@@ -80,7 +80,13 @@ class CarpentrasModel(Model):
             'iterations': np.random.randint(1000, 5000)
         }
     
-    def get_opinion_range(self):
+    @staticmethod
+    def get_model_name():
+        """Return the name of the model."""
+        return "carpentras"
+    
+    @staticmethod
+    def get_opinion_range():
         """Get the opinion range of the model. ie. the range of possible opinion values."""
         return (-1, 1)
     

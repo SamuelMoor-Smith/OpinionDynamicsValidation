@@ -59,7 +59,13 @@ class DeffuantModel(Model):
             'interactions': np.random.randint(300, 700)
         }
     
-    def get_opinion_range(self):
+    @staticmethod
+    def get_model_name():
+        """Return the name of the model."""
+        return "deffuant"
+    
+    @staticmethod
+    def get_opinion_range():
         """Get the opinion range of the model. ie. the range of possible opinion values."""
         return (0, 1)
     

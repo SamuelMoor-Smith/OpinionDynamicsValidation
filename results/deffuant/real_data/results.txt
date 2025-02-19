@@ -86,3 +86,21 @@ Best parameters: {'epsilon': np.float64(0.21762008793659202), 'interactions': np
 Optimizer score: 0.348416365302122 +/- 9.082728519765605e-07
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'epsilon': np.float64(0.3080477387245204), 'interactions': np.float64(0.17144028612121626), 'mu': np.float64(0.00043207713926194876)}
+Optimizer score: 0.34846251604420864 +/- 1.5958614582433729e-06
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'epsilon': np.float64(0.05405820228054914), 'interactions': np.float64(0.8165373960212408), 'mu': np.float64(0.4769086561638114)}
+Optimizer score: 0.15675198587819944 +/- 2.7755575615628914e-17
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'epsilon': np.float64(0.09217497656975515), 'interactions': np.float64(0.01846083432677237), 'mu': np.float64(0.16979024667310572)}
+Optimizer score: 0.13145374449339203 +/- 0.0
+No baseline score to compare with.
+

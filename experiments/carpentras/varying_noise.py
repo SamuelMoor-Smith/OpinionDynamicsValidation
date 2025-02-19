@@ -7,6 +7,5 @@ for i in range(1, 11):
     # Run the experiment
     varying_noise_experiment(
         model_class=CarpentrasModel,
-        model_name="carpentras",
         i=i
     )

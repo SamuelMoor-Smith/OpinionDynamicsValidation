@@ -3,20 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datasets.dataset import Dataset
 
-# lrscale - Placement on left right scale
-# imwbcnt - Immigrants make country worse or better place to live
-# imbgeco - Immigration bad or good for country's economy
-# trstun  - Trust in the United Nations
-# trstplc - Trust in the police
-# pplfair - Most people try to take advantage of you, or try to be fair
-
 class ESSFile:
 
-    def __init__(self, filename, key, scale, adjust):
+    def __init__(self, filename, key, key_info, model_range):
         self._filename = filename
         self._key = key
+        self._key_info = key_info
         self.read_csv()
-        self.set_true(scale, adjust)
+        self.set_true(model_range)
 
     def read_csv(self):
         """
@@ -30,6 +24,10 @@ class ESSFile:
                 (df[self._key] != 77) & 
                 (df[self._key] != 88) & 
                 (df[self._key] != 99)]
+        
+        # remove all above num_choices
+        df = df[df[self._key] <= self._key_info["max"]]
+
         self._df = df
         self._grouped = df.groupby('essround')
 
@@ -52,7 +50,7 @@ class ESSFile:
     def get_true(self):
         return self.true
 
-    def set_true(self, scale=1, adjust=0):
+    def set_true(self, model_range=(0,1)):
         """
         Create dataset where each year's data (except the last year) 
         is the input X and the direct next year's data is the target Y.
@@ -73,7 +71,14 @@ class ESSFile:
             cur_data = self._grouped.get_group(rounds[i]).head(N)[self._key].values
 
             # adjust scale
-            cur_data = cur_data * scale + adjust
+            complete_range = self._key_info["max"] - self._key_info["min"]
+
+            # First get the data to be in the range [0, 1]
+            cur_data = cur_data - self._key_info["min"]
+            cur_data = cur_data / complete_range
+
+            # Then scale the data to the model's range
+            cur_data = cur_data * (model_range[1] - model_range[0]) + model_range[0]
             
             # # add noise to smooth out the data
             # NOISE_LEVEL = 0.05

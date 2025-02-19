@@ -67,7 +67,13 @@ class HKAveragingModel(Model):
             'agents': np.random.uniform(0, 1),
         }
     
-    def get_opinion_range(self):
+    @staticmethod
+    def get_model_name():
+        """Return the name of the model."""
+        return "hk_averaging"
+    
+    @staticmethod
+    def get_opinion_range():
         """Get the opinion range of the model. ie. the range of possible opinion values."""
         return (0, 1)
     

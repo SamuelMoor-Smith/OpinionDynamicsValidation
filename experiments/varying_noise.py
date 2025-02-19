@@ -12,9 +12,10 @@ import matplotlib.pyplot as plt
 
 def varying_noise_experiment(
         model_class: Model,
-        model_name: str,
         i=""
     ):
+
+    model_name = model_class.get_model_name()
 
     base_model: Model = model_class() # Create model with random parameters
     initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions

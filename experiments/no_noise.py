@@ -8,9 +8,10 @@ import time
 from utils.logging import write_results_to_file
 
 def no_noise_experiment(
-        model_class: Model,
-        model_name: str,
+        model_class: Model
     ):
+
+    model_name = model_class.get_model_name()
 
     base_model: Model = model_class() # Create model with random parameters
     initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions

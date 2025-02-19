@@ -17,7 +17,7 @@ def create_agents(n):
     agents = []
     x_positions = np.random.uniform(0, GRID_SIZE, n)
     y_positions = np.random.uniform(0, GRID_SIZE, n)
-    social_reaches = np.maximum(np.random.normal(22.0, 4.0, n), 0)
+    # social_reaches = np.maximum(np.random.normal(22.0, 4.0, n), 0)
 
     # Create agents
     for i in range(n):
@@ -25,17 +25,10 @@ def create_agents(n):
             iden=i,
             xpos=x_positions[i],
             ypos=y_positions[i],
-            radius=social_reaches[i]
+            # radius=social_reaches[i]
         ))
     
     return agents
-
-def network_agents(agents):
-	#create social networks: if euclidian distance sqrt(dx^2+dy^2)<min(r_i,r_j), add to network
-	for i in agents: # agentdict.itervalues():
-		for j in agents: # agentdict.itervalues():
-			if i != j and ((j.x - i.x)**2 + (j.y - i.y)**2)**(0.5) < min(i.radius,j.radius):
-				i.addtonetwork(j)
 
 def keep_in_range(value):
     """
@@ -50,18 +43,19 @@ def keep_in_range(value):
 import numpy as np
 class agent:
      
-    def __init__(self,iden,xpos,ypos,radius):
+    def __init__(self,iden,xpos,ypos):
         # Created upon initialization
         self.iden = iden
         self.x = xpos
         self.y = ypos
-        self.radius = radius 
+        # self.radius = radius 
 
         # Not created upon initialization
         self.O = None
         self.int = None
         self.sus = None
         self.con = None
+        self.radius = None
         self.commit = 1.0  
         self.network = []
         # self.E = o # Since it needs to be calculated
@@ -117,13 +111,9 @@ class DugginsModel(Model):
         super().__init__(params)
         self.agents = agents
         # print(f"Duggins model created with parameters {self.params}")
-        if agents is not None:
-            # print("Agents provided (with positions and reach networks).")
-            pass
-        else:
+        if agents is None:
             # print("No agents provided, creating new agents.")
             self.agents = create_agents(n)
-            network_agents(self.agents)
     
     def sample_isc_for_agents(self, initial_opinions):
 
@@ -137,6 +127,7 @@ class DugginsModel(Model):
         intolerances = np.maximum(np.random.normal(p['mean_intolerance'], p['std_intolerance'], n), 0)
         susceptibilities = np.maximum(np.random.normal(p['mean_susceptibility'], p['std_susceptibility'], n), 0)
         conformities = np.random.normal(p['mean_conformity'], p['std_conformity'], n)  # Conformity can be negative
+        social_reaches = np.maximum(np.random.normal(p['mean_social_reach'], p['std_social_reach'], n), 0)
 
         # Update agents
         for i in range(n):
@@ -144,10 +135,20 @@ class DugginsModel(Model):
             self.agents[i].int = intolerances[i]
             self.agents[i].sus = susceptibilities[i]
             self.agents[i].con = conformities[i]
+            self.agents[i].radius = social_reaches[i]
+            self.agents[i].commit = 1.0
+            self.agents[i].network = []
+        
+        self.network_agents()
+
+    def network_agents(self):
+        #create social networks: if euclidian distance sqrt(dx^2+dy^2)<min(r_i,r_j), add to network
+        for i in self.agents: # agentdict.itervalues():
+            for j in self.agents: # agentdict.itervalues():
+                if i != j and ((j.x - i.x)**2 + (j.y - i.y)**2)**(0.5) < min(i.radius,j.radius):
+                    i.addtonetwork(j)
     
     def run(self, input):
-        
-        p = self.params
 		
         # Make sure agents have correct opinions
         for i, o in enumerate(input):
@@ -173,11 +174,17 @@ class DugginsModel(Model):
             'std_intolerance': np.random.uniform(0.15, 0.45), # 0.3,
             'std_susceptibility': np.random.uniform(0.35, 1.05), # 0.7,
             'std_conformity': np.random.uniform(0.15, 0.45), # 0.3,
-            # 'mean_social_reach': np.random.uniform(10.0, 30.0), # 22.0,
-            # 'std_social_reach': np.random.uniform(2, 6), # 4
+            'mean_social_reach': np.random.uniform(0.0, 30.0), # 22.0,
+            'std_social_reach': np.random.uniform(2, 6), # 4
         }
     
-    def get_opinion_range(self):
+    @staticmethod
+    def get_model_name():
+        """Return the name of the model."""
+        return "duggins"
+    
+    @staticmethod
+    def get_opinion_range():
         """Get the opinion range of the model. ie. the range of possible opinion values."""
         return (0, 100)
     
@@ -193,8 +200,8 @@ class DugginsModel(Model):
             'std_intolerance': 0.15 + 0.3 * params['std_intolerance'],
             'std_susceptibility': 0.35 + 0.7 * params['std_susceptibility'],
             'std_conformity': 0.15 + 0.3 * params['std_conformity'],
-            # 'mean_social_reach': 15.0 + 20.0 * params['mean_social_reach'],
-            # 'std_social_reach': 2 + 4 * params['std_social_reach']
+            'mean_social_reach': 30.0 * params['mean_social_reach'],
+            'std_social_reach': 2 + 4 * params['std_social_reach']
         }
 
     def get_cleaned_agents(self):
@@ -204,6 +211,8 @@ class DugginsModel(Model):
             agents_copy[i].int = None
             agents_copy[i].sus = None
             agents_copy[i].con = None
+            agents_copy[i].radius = None
+            agents_copy[i].network = []
             agents_copy[i].commit = 1.0
 
         return agents_copy

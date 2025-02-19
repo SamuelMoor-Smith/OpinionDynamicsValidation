@@ -10,3 +10,27 @@ Best parameters: {'mean_conformity': np.float64(0.9128309833277273), 'mean_intol
 Optimizer score: 0.3894318627635013 +/- 0.004033226411863849
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.4662542783624191), 'mean_intolerance': np.float64(0.46607185160713194), 'mean_social_reach': np.float64(0.03225474231601962), 'mean_susceptibility': np.float64(0.16995799641902098), 'std_conformity': np.float64(0.07889646375774242), 'std_intolerance': np.float64(0.7403518098649915), 'std_social_reach': np.float64(0.787872850395756), 'std_susceptibility': np.float64(0.18237425937931356)}
+Optimizer score: 0.3563257504590332 +/- 0.003409592515132621
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.9642519204992887), 'mean_intolerance': np.float64(0.5191841960135196), 'mean_social_reach': np.float64(0.28510885118537865), 'mean_susceptibility': np.float64(0.48784796871372416), 'std_conformity': np.float64(0.8443289159398149), 'std_intolerance': np.float64(0.43263212879042484), 'std_social_reach': np.float64(0.3336272515527501), 'std_susceptibility': np.float64(0.2842777369872974)}
+Optimizer score: 0.35171067942006634 +/- 0.0018679993241318815
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.5617866578978576), 'mean_intolerance': np.float64(0.479751973045219), 'mean_social_reach': np.float64(0.11738757180777115), 'mean_susceptibility': np.float64(0.3874107522754656), 'std_conformity': np.float64(0.11043221873348102), 'std_intolerance': np.float64(0.8867762812668316), 'std_social_reach': np.float64(0.6150881007151084), 'std_susceptibility': np.float64(0.41762429312606764)}
+Optimizer score: 0.1499766423939864 +/- 0.001192418721237405
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.2238672034848423), 'mean_intolerance': np.float64(0.5723733022434885), 'mean_social_reach': np.float64(0.15711224804696117), 'mean_susceptibility': np.float64(0.1349652931665949), 'std_conformity': np.float64(0.1341881150727413), 'std_intolerance': np.float64(0.1708711966356991), 'std_social_reach': np.float64(0.5913908213905587), 'std_susceptibility': np.float64(0.5245078332057814)}
+Optimizer score: 0.13175873339494895 +/- 0.0009928294336977108
+No baseline score to compare with.
+

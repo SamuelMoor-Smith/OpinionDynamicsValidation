@@ -10,6 +10,7 @@ from models.model import Model
 import time
 from utils.logging import write_results_to_file
 from utils.differences import dataset_difference
+from datasets.ess.header_info import ess_header_info
 
 # _ESSFILE = ESSFile('datasets/ess/combined-sept26.csv', 'imbgeco')
 # _ESSFILE.plot_data()
@@ -24,13 +25,17 @@ compare with zero model similar to in varying noise
 
 def real_data_experiment(
         model_class: Model,
-        model_name: str,
-        data_header,
-        scale=0.1,
-        adjust=0
+        data_header: str,
     ):
 
-    essfile = ESSFile('datasets/ess/combined-sept26.csv', data_header, scale=scale, adjust=adjust)
+    model_name = model_class.get_model_name()
+
+    essfile = ESSFile(
+        'datasets/ess/combined-feb19.csv', 
+        key=data_header, 
+        key_info=ess_header_info[data_header],
+        model_range=model_class.get_opinion_range()
+    )
 
     true = essfile.get_true()
 
@@ -42,7 +47,7 @@ def real_data_experiment(
 
     # Optimization process and time it
     start = time.time()
-    if isinstance(model_class, DugginsModel):
+    if model_name == "duggins":
         comparison_model: Model = DugginsModel(n=essfile.get_min_agents())
     else: 
         comparison_model: Model = model_class()

@@ -30,7 +30,15 @@ class Model:
         """
         raise NotImplementedError
     
-    def get_opinion_range(self):
+    @staticmethod
+    def get_model_name():
+        """
+        Return the name of the model.
+        """
+        raise NotImplementedError
+    
+    @staticmethod
+    def get_opinion_range():
         """
         Return the range of opinions for the model.
         """
