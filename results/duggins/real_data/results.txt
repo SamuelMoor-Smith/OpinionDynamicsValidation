@@ -34,3 +34,111 @@ Best parameters: {'mean_conformity': np.float64(0.2238672034848423), 'mean_intol
 Optimizer score: 0.13175873339494895 +/- 0.0009928294336977108
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.4396577256743506), 'mean_intolerance': np.float64(0.9376613283016526), 'mean_social_reach': np.float64(0.10487295271688937), 'mean_susceptibility': np.float64(0.6380022571035037), 'std_conformity': np.float64(0.4399749392559832), 'std_intolerance': np.float64(0.6821664415580634), 'std_social_reach': np.float64(0.7758847545716879), 'std_susceptibility': np.float64(0.4175287511170058)}
+Optimizer score: 0.1489026342715163 +/- 0.00050531481991544
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.3431841521564013), 'mean_intolerance': np.float64(0.39261490348611994), 'mean_social_reach': np.float64(0.22506356307054853), 'mean_susceptibility': np.float64(0.24899048154684897), 'std_conformity': np.float64(0.835969791503422), 'std_intolerance': np.float64(0.2474840346559038), 'std_social_reach': np.float64(0.7769277382053341), 'std_susceptibility': np.float64(0.4551832350305395)}
+Optimizer score: 0.35038377187508785 +/- 0.0011216525490599974
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.19986579402263205), 'mean_intolerance': np.float64(0.16992849902593346), 'mean_social_reach': np.float64(0.04757682261478245), 'mean_susceptibility': np.float64(0.6951849891122657), 'std_conformity': np.float64(0.45713305231708606), 'std_intolerance': np.float64(0.8289753981341401), 'std_social_reach': np.float64(0.9980603918443164), 'std_susceptibility': np.float64(0.8856048275893098)}
+Optimizer score: 0.13355091051740425 +/- 0.0007612449315407263
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.6927511309228451), 'mean_intolerance': np.float64(0.3139591106729553), 'mean_social_reach': np.float64(0.18446765014501365), 'mean_susceptibility': np.float64(0.16198529132678793), 'std_conformity': np.float64(0.4918960076043545), 'std_intolerance': np.float64(0.23580654148085056), 'std_social_reach': np.float64(0.855212625141715), 'std_susceptibility': np.float64(0.0009005563937868888)}
+Optimizer score: 0.13181064572653503 +/- 0.0013260762322893746
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.4686775857115272), 'mean_intolerance': np.float64(0.6463222453172262), 'mean_social_reach': np.float64(0.34596895989861853), 'mean_susceptibility': np.float64(0.20551307705999244), 'std_conformity': np.float64(0.5541297967683095), 'std_intolerance': np.float64(0.8390240487140234), 'std_social_reach': np.float64(0.2833400963251971), 'std_susceptibility': np.float64(0.5788280255040449)}
+Optimizer score: 0.17413917372346108 +/- 0.003564762293486214
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.3146625035233072), 'mean_intolerance': np.float64(0.8460174573895871), 'mean_social_reach': np.float64(0.22423617566292417), 'mean_susceptibility': np.float64(0.28710299246234416), 'std_conformity': np.float64(0.9496161598199475), 'std_intolerance': np.float64(0.9362343732136893), 'std_social_reach': np.float64(0.7872127187982367), 'std_susceptibility': np.float64(0.7233734932810933)}
+Optimizer score: 0.187733496348784 +/- 0.007705323952934481
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.06311304908849648), 'mean_intolerance': np.float64(0.9310733352799064), 'mean_social_reach': np.float64(0.1768378090987313), 'mean_susceptibility': np.float64(0.949639931202972), 'std_conformity': np.float64(0.7237873528459009), 'std_intolerance': np.float64(0.11625941863334846), 'std_social_reach': np.float64(0.5424500210702959), 'std_susceptibility': np.float64(0.48277731390885426)}
+Optimizer score: 0.18778717698732975 +/- 0.0016208393090649644
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.23183620875449718), 'mean_intolerance': np.float64(0.9065917364374108), 'mean_social_reach': np.float64(0.16520814213443663), 'mean_susceptibility': np.float64(0.866110955252264), 'std_conformity': np.float64(0.8157280525898647), 'std_intolerance': np.float64(0.298681705978771), 'std_social_reach': np.float64(0.12033628980266103), 'std_susceptibility': np.float64(0.005100280480339739)}
+Optimizer score: 0.1596626985070012 +/- 0.0009417019763401804
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_conformity': np.float64(0.9447149647629054), 'mean_intolerance': np.float64(0.2194391592694187), 'mean_social_reach': np.float64(0.1680396754681238), 'mean_susceptibility': np.float64(0.09088431371816044), 'std_conformity': np.float64(0.7763756799095255), 'std_intolerance': np.float64(0.45874326092272616), 'std_social_reach': np.float64(0.050346771173994415), 'std_susceptibility': np.float64(0.3254867341683783)}
+Optimizer score: 0.12943506058107762 +/- 0.0010430746602269555
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.8630755618682315), 'mean_susceptibility': np.float64(4.657570175519664), 'mean_conformity': np.float64(0.2875030117450931), 'std_intolerance': np.float64(0.18521836014017923), 'std_susceptibility': np.float64(0.8730645761268562), 'std_conformity': np.float64(0.18962852990798418), 'mean_social_reach': np.float64(2.671750174204874), 'std_social_reach': np.float64(4.082324424640676)}
+Optimizer score: 0.14946048108049914 +/- 0.0005675599324094609
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.662654974836427), 'mean_susceptibility': np.float64(3.063526198482001), 'mean_conformity': np.float64(0.3317388561583687), 'std_intolerance': np.float64(0.3899549363232566), 'std_susceptibility': np.float64(0.9642112655509936), 'std_conformity': np.float64(0.2788467379564591), 'mean_social_reach': np.float64(7.021481817389548), 'std_social_reach': np.float64(3.6869617490484323)}
+Optimizer score: 0.35315277989065774 +/- 0.0017929139699889318
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.44687614840426004), 'mean_susceptibility': np.float64(6.699103572951466), 'mean_conformity': np.float64(0.4498625137887886), 'std_intolerance': np.float64(0.36410136535286053), 'std_susceptibility': np.float64(0.7658625588746659), 'std_conformity': np.float64(0.4386574863015519), 'mean_social_reach': np.float64(0.4210499403258754), 'std_social_reach': np.float64(2.304877873105612)}
+Optimizer score: 0.13354300458736304 +/- 0.0004480311585863874
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.6039589789067139), 'mean_susceptibility': np.float64(2.7978516314984354), 'mean_conformity': np.float64(0.22740308805953854), 'std_intolerance': np.float64(0.22040080045738228), 'std_susceptibility': np.float64(0.7751176916944724), 'std_conformity': np.float64(0.323927044338447), 'mean_social_reach': np.float64(6.064107216773696), 'std_social_reach': np.float64(4.2607554923973385)}
+Optimizer score: 0.13276448408458694 +/- 0.0013839219357664745
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.8815025140373014), 'mean_susceptibility': np.float64(6.2488096379588915), 'mean_conformity': np.float64(0.24824059755506817), 'std_intolerance': np.float64(0.276323837278327), 'std_susceptibility': np.float64(0.8023456346246896), 'std_conformity': np.float64(0.39081579513089537), 'mean_social_reach': np.float64(3.939875149015725), 'std_social_reach': np.float64(5.546331033212815)}
+Optimizer score: 0.16645113131360087 +/- 0.001522999577920214
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(1.1200531204432171), 'mean_susceptibility': np.float64(2.6049846179792895), 'mean_conformity': np.float64(0.20758236382323944), 'std_intolerance': np.float64(0.38883151527535365), 'std_susceptibility': np.float64(0.938030633602522), 'std_conformity': np.float64(0.2767879260255913), 'mean_social_reach': np.float64(7.781145461319342), 'std_social_reach': np.float64(5.989719281004741)}
+Optimizer score: 0.1818405876163453 +/- 0.0017516245140483605
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.7890560446635769), 'mean_susceptibility': np.float64(4.218423936156271), 'mean_conformity': np.float64(0.3799976261321752), 'std_intolerance': np.float64(0.41335792556681794), 'std_susceptibility': np.float64(0.7708552503478749), 'std_conformity': np.float64(0.20957306220754945), 'mean_social_reach': np.float64(5.374024397274998), 'std_social_reach': np.float64(4.304046632020048)}
+Optimizer score: 0.18972203974735968 +/- 0.0014942190907151543
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(1.190580403139038), 'mean_susceptibility': np.float64(6.626311042089634), 'mean_conformity': np.float64(0.24186647867680006), 'std_intolerance': np.float64(0.3484005590468682), 'std_susceptibility': np.float64(1.0024829955304062), 'std_conformity': np.float64(0.43829643315430744), 'mean_social_reach': np.float64(4.105206112869958), 'std_social_reach': np.float64(5.555141884794226)}
+Optimizer score: 0.1565703393294795 +/- 0.0013400019222676654
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': np.float64(0.5250126698102283), 'mean_susceptibility': np.float64(2.599842040974013), 'mean_conformity': np.float64(0.3717486980985152), 'std_intolerance': np.float64(0.24633395222519783), 'std_susceptibility': np.float64(0.9402647345307961), 'std_conformity': np.float64(0.30304936671505955), 'mean_social_reach': np.float64(6.908599374515881), 'std_social_reach': np.float64(4.257181071346693)}
+Optimizer score: 0.13152892236427374 +/- 0.0015142377083689207
+No baseline score to compare with.
+

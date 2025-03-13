@@ -5,10 +5,11 @@ from datasets.dataset import Dataset
 
 class ESSFile:
 
-    def __init__(self, filename, key, key_info, model_range):
+    def __init__(self, filename, key, key_info, model_range, country="GB"):
         self._filename = filename
         self._key = key
         self._key_info = key_info
+        self._country = country
         self.read_csv()
         self.set_true(model_range)
 
@@ -17,6 +18,9 @@ class ESSFile:
         Read the CSV file and remove rows where the KEY value is uninteresting.
         """
         df = pd.read_csv(self._filename)
+        # only keep data for the specified country
+        df = df[df['cntry'] == self._country]
+
         # remove rows where KEY value is uninteresting
         # 66 = Not Applicable, 77 = Refusal, 88 = Don't know, 99 = No answer
         df = df[(df[self._key].notnull()) & 

@@ -22,3 +22,33 @@ Best parameters: {'epsilon': np.float64(0.640808590805416), 'interactions': np.f
 Optimizer score: 0.567618804968798 +/- 0.23496735121937345
 Optimizer improved the score!
 
+Initial parameters: {'mu': 0.35866457186469214, 'epsilon': 0.7434074173266295, 'interactions': 343}
+Baseline score: 0.3196898745762864 +/- 0.11359746497925284
+Best parameters: {'epsilon': np.float64(0.7184115092885928), 'interactions': np.float64(0.0773736336638311), 'mu': np.float64(0.8726639403042717)}
+Optimizer score: 0.3758454793957572 +/- 0.11751217722358945
+No significant difference detected.
+
+Initial parameters: {'mu': 0.1146726819750038, 'epsilon': 0.3911537762499837, 'interactions': 675}
+Baseline score: 0.2813347320915112 +/- 0.12202562938500293
+Best parameters: {'epsilon': np.float64(0.4371025179742509), 'interactions': np.float64(0.38030128853765593), 'mu': np.float64(0.3183439173571205)}
+Optimizer score: 0.297134298953313 +/- 0.15233376746245494
+No significant difference detected.
+
+Initial parameters: {'mu': 0.39332513821255005, 'epsilon': 0.6829637573077422, 'interactions': 684}
+Baseline score: 0.8673847086403286 +/- 0.15962746980175052
+Best parameters: {'epsilon': np.float64(0.6872272078874815), 'interactions': np.float64(0.7705860060821982), 'mu': np.float64(0.6556863720520731)}
+Optimizer score: 1.101029874782118 +/- 0.24634370690453103
+Significant difference detected!
+
+Initial parameters: {'mu': 0.2442209071051431, 'epsilon': 0.18348397681523512, 'interactions': 568}
+Baseline score: 0.46534105685497035 +/- 0.13577278597679626
+Best parameters: {'epsilon': np.float64(0.11374753168729874), 'interactions': np.float64(0.7485888458262389), 'mu': np.float64(0.3981500836419873)}
+Optimizer score: 0.2758971134356731 +/- 0.08834010477926715
+Optimizer improved the score!
+
+Initial parameters: {'mu': 0.18566870185597723, 'epsilon': 0.797064827182517, 'interactions': 354}
+Baseline score: 0.2790725880496878 +/- 0.11743527726186652
+Best parameters: {'epsilon': np.float64(0.5891479745437094), 'interactions': np.float64(0.3279894378795525), 'mu': np.float64(0.2803070169756877)}
+Optimizer score: 0.3362010789995632 +/- 0.09616294832828248
+No significant difference detected.
+

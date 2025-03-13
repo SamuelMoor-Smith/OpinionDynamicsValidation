@@ -64,3 +64,219 @@ Best parameters: {'flip_prob': np.float64(0.49792127742554043), 'iterations': np
 Optimizer score: 0.14881051185118574 +/- 0.001130775925061733
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.650690428036599), 'iterations': np.float64(0.003624473011509699), 'mob_max': np.float64(0.49609470438000475), 'mob_min': np.float64(0.558861881893191), 'shift_amount': np.float64(0.2861550971523652)}
+Optimizer score: 0.14784488063548556 +/- 0.0014666039168751105
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.8629303924842161), 'iterations': np.float64(0.026511854100017433), 'mob_max': np.float64(0.5503502781919196), 'mob_min': np.float64(0.44727952878576427), 'shift_amount': np.float64(0.9980800611774732)}
+Optimizer score: 0.3477268668659753 +/- 0.003699241216947236
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.3650658842197613), 'iterations': np.float64(0.0009707211878520553), 'mob_max': np.float64(0.8006917250830043), 'mob_min': np.float64(0.4236721925544932), 'shift_amount': np.float64(0.30261169978095365)}
+Optimizer score: 0.1332632276211824 +/- 0.0004963403041605873
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.13231414120949797), 'iterations': np.float64(0.008168737174631794), 'mob_max': np.float64(0.9999706928611766), 'mob_min': np.float64(0.4684520362634417), 'shift_amount': np.float64(0.45098171397941533)}
+Optimizer score: 0.1328196615927316 +/- 0.0016678732049310136
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.013093456234029828), 'iterations': np.float64(0.00762419426697182), 'mob_max': np.float64(0.4851335615849993), 'mob_min': np.float64(0.44848456564789374), 'shift_amount': np.float64(0.7721286173001857)}
+Optimizer score: 0.1685790776353259 +/- 0.0008576234952917925
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.7866083289150343), 'iterations': np.float64(0.04301245526854365), 'mob_max': np.float64(0.5778496687968857), 'mob_min': np.float64(0.0007399098478173109), 'shift_amount': np.float64(0.060877972824007025)}
+Optimizer score: 0.18810973288625368 +/- 0.009213543499579903
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.7634377004208013), 'iterations': np.float64(0.021898489566770526), 'mob_max': np.float64(0.2574908364046734), 'mob_min': np.float64(0.3891675636924286), 'shift_amount': np.float64(0.2219434019693437)}
+Optimizer score: 0.1922724479922493 +/- 0.002434644689120893
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.7070735093042982), 'iterations': np.float64(0.020943140082127117), 'mob_max': np.float64(0.9969960261734874), 'mob_min': np.float64(0.5289441993460637), 'shift_amount': np.float64(0.3203165964576835)}
+Optimizer score: 0.15842370849878556 +/- 0.0037324540006534895
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.791908541904594), 'iterations': np.float64(0.0005123947572583454), 'mob_max': np.float64(0.5100477585774547), 'mob_min': np.float64(0.8265617743732309), 'shift_amount': np.float64(0.5407765662389915)}
+Optimizer score: 0.1313753224700705 +/- 0.0005279045632993568
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.3802604289192102), 'iterations': np.float64(0.002853887705047728), 'mob_max': np.float64(0.6706161740738302), 'mob_min': np.float64(0.40689655638152444), 'shift_amount': np.float64(0.9973672056254995)}
+Optimizer score: 0.14843819041765155 +/- 0.0006691600050463184
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.04690434033370053), 'iterations': np.float64(0.0680512488935785), 'mob_max': np.float64(0.14322726494360688), 'mob_min': np.float64(0.30636526398107977), 'shift_amount': np.float64(0.86410873793127)}
+Optimizer score: 0.3549127476612924 +/- 0.0031873562557930978
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.001614307561181444), 'iterations': np.float64(0.0004669250273044818), 'mob_max': np.float64(0.5479898979349116), 'mob_min': np.float64(0.8640325846190513), 'shift_amount': np.float64(0.3895308260637361)}
+Optimizer score: 0.13318104320636223 +/- 0.0002836945996879685
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.4641298016003952), 'iterations': np.float64(0.019007741988306404), 'mob_max': np.float64(0.42342514968830136), 'mob_min': np.float64(0.6004246759025704), 'shift_amount': np.float64(0.8727393313249687)}
+Optimizer score: 0.13382436449926413 +/- 0.0018361740368005822
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.1276554373792152), 'iterations': np.float64(0.01833416182853492), 'mob_max': np.float64(0.8645908024170994), 'mob_min': np.float64(0.5235248443969087), 'shift_amount': np.float64(0.4135326750006541)}
+Optimizer score: 0.16761349576270174 +/- 0.0022364289159340993
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.6206345762220704), 'iterations': np.float64(0.04836922613989031), 'mob_max': np.float64(0.32205492369922706), 'mob_min': np.float64(0.2766762626911706), 'shift_amount': np.float64(0.000667439426134453)}
+Optimizer score: 0.18469738799669694 +/- 0.005998242694805812
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.40723533799433037), 'iterations': np.float64(0.008282503901399701), 'mob_max': np.float64(0.29969027084942507), 'mob_min': np.float64(0.3552719129603715), 'shift_amount': np.float64(0.9010613340158955)}
+Optimizer score: 0.18906258136729265 +/- 0.0007947497389549716
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.6807977744433765), 'iterations': np.float64(0.023499044983050766), 'mob_max': np.float64(0.9338786099079552), 'mob_min': np.float64(0.6749310621112522), 'shift_amount': np.float64(0.29452684395079654)}
+Optimizer score: 0.1579673865556815 +/- 0.002692076871887634
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.8062300340314403), 'iterations': np.float64(0.00045527370642942566), 'mob_max': np.float64(0.471361413216024), 'mob_min': np.float64(0.34462651510845094), 'shift_amount': np.float64(0.4966620233041137)}
+Optimizer score: 0.1314776033699529 +/- 0.0006271460947025987
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.9083328009784623), 'iterations': np.float64(0.009792925698698773), 'mob_max': np.float64(0.6859956818275686), 'mob_min': np.float64(0.41212893772067694), 'shift_amount': np.float64(0.9385178985130516)}
+Optimizer score: 0.1483535457761403 +/- 0.0018767434943072617
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.6980363687119046), 'iterations': np.float64(0.04392040201899064), 'mob_max': np.float64(0.5855332001195873), 'mob_min': np.float64(0.516322189693083), 'shift_amount': np.float64(0.9993178452225426)}
+Optimizer score: 0.3498427735339176 +/- 0.004139703513323027
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.7470998936066184), 'iterations': np.float64(0.0007060299964345362), 'mob_max': np.float64(0.29164502581459467), 'mob_min': np.float64(0.5360585527063977), 'shift_amount': np.float64(0.8199628312867806)}
+Optimizer score: 0.13339893839501338 +/- 0.0006165319441100407
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.722278621020531), 'iterations': np.float64(0.018120973428753653), 'mob_max': np.float64(0.21380788488363917), 'mob_min': np.float64(0.055246356938934274), 'shift_amount': np.float64(0.9947749894131713)}
+Optimizer score: 0.13330131809748408 +/- 0.0013397383203836498
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.587564378360675), 'iterations': np.float64(0.014615694082269117), 'mob_max': np.float64(0.8362412941684534), 'mob_min': np.float64(0.9400720713448891), 'shift_amount': np.float64(0.6448393681635068)}
+Optimizer score: 0.17248738328246796 +/- 0.0020771169483555446
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.35743428193906646), 'iterations': np.float64(0.04835846740801987), 'mob_max': np.float64(0.31489270025821026), 'mob_min': np.float64(0.6373347027076669), 'shift_amount': np.float64(0.28301208275821105)}
+Optimizer score: 0.19837405206092296 +/- 0.010167960626691692
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.20076264154715184), 'iterations': np.float64(0.02051694629324294), 'mob_max': np.float64(0.545734100925097), 'mob_min': np.float64(0.2783958636585741), 'shift_amount': np.float64(0.3368824688502185)}
+Optimizer score: 0.189390247746592 +/- 0.0024045276724601224
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.709645353995902), 'iterations': np.float64(0.01789046903338036), 'mob_max': np.float64(0.3441212007553388), 'mob_min': np.float64(0.4186602853859438), 'shift_amount': np.float64(0.13013439795817833)}
+Optimizer score: 0.15539713714709816 +/- 0.0012600436596793894
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'flip_prob': np.float64(0.2928713770699235), 'iterations': np.float64(0.0031950548632467823), 'mob_max': np.float64(0.0020237727363501268), 'mob_min': np.float64(0.6819115843223522), 'shift_amount': np.float64(0.7719481782816485)}
+Optimizer score: 0.13218791050486747 +/- 0.0009657781985441133
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.006498525079471341), 'flip_prob': np.float64(0.0195504448826494), 'mob_min': np.float64(0.09585819227702609), 'mob_max': np.float64(0.21304132908661066), 'iterations': 8}
+Optimizer score: 0.14903804008071103 +/- 0.0005922419002668071
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.03732774715499831), 'flip_prob': np.float64(0.023734403443574432), 'mob_min': np.float64(0.09973782169928677), 'mob_max': np.float64(0.27545542902555253), 'iterations': 135}
+Optimizer score: 0.3484695636314169 +/- 0.0024416681827050314
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.05921158615138575), 'flip_prob': np.float64(0.05119957601180473), 'mob_min': np.float64(0.08179672230277606), 'mob_max': np.float64(0.2526195560884365), 'iterations': 22}
+Optimizer score: 0.13246185510383007 +/- 0.0010333875386571722
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.00045084739718946333), 'flip_prob': np.float64(0.0335479145544168), 'mob_min': np.float64(0.029937132209081608), 'mob_max': np.float64(0.1706075436345428), 'iterations': 69}
+Optimizer score: 0.13351388240259748 +/- 0.0014150025870768585
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.0017248039177136254), 'flip_prob': np.float64(0.076511665726383), 'mob_min': np.float64(0.047039103720403604), 'mob_max': np.float64(0.19720967268332115), 'iterations': 75}
+Optimizer score: 0.1710637787282005 +/- 0.002416351535460849
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.002910510808250606), 'flip_prob': np.float64(0.036693616263173266), 'mob_min': np.float64(0.09678543199066517), 'mob_max': np.float64(0.257169264846794), 'iterations': 242}
+Optimizer score: 0.19275052660599196 +/- 0.005835140474303967
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.058093952546897386), 'flip_prob': np.float64(0.026291864338184544), 'mob_min': np.float64(0.015177885037204415), 'mob_max': np.float64(0.2368960078118142), 'iterations': 20}
+Optimizer score: 0.18863670395270576 +/- 0.0010193133867827226
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.014594283550902643), 'flip_prob': np.float64(0.06954934279773614), 'mob_min': np.float64(0.053362567495241424), 'mob_max': np.float64(0.24234712780558829), 'iterations': 54}
+Optimizer score: 0.15601670856356534 +/- 0.0018509046583166935
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': np.float64(0.005607168828933889), 'flip_prob': np.float64(0.024946738720881826), 'mob_min': np.float64(0.08882632951431478), 'mob_max': np.float64(0.27228670371142105), 'iterations': 17}
+Optimizer score: 0.13162733421016842 +/- 0.001049933883826777
+No baseline score to compare with.
+

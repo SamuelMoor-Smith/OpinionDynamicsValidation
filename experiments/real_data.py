@@ -9,7 +9,7 @@ from utils import optimizers
 from models.model import Model
 import time
 from utils.logging import write_results_to_file
-from utils.differences import dataset_difference
+from utils.differences import dataset_difference, snapshot_difference
 from datasets.ess.header_info import ess_header_info
 
 # _ESSFILE = ESSFile('datasets/ess/combined-sept26.csv', 'imbgeco')
@@ -79,10 +79,12 @@ def real_data_experiment(
 
     # Write the results to a file
     write_results_to_file(
-        None, best_params, 
+        None, comparison_model.params, 
         None, None, 
         opt_mean_diff2, opt_std_diff2, 
         path=f"results/{model_name}/real_data/"
     )
+
+    return model_name, zero_diff, opt_mean_diff2, comparison_model.params
 
 

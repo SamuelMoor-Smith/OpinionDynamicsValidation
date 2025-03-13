@@ -34,3 +34,9 @@ Best parameters: {'flip_prob': np.float64(0.23977500109699748), 'iterations': np
 Optimizer score: 0.24258818296320478 +/- 0.030930559276265857
 Optimizer improved the score!
 
+Initial parameters: {'shift_amount': 0.0031997682057237006, 'flip_prob': 0.04794563476921743, 'mob_min': 0.06061041743816741, 'mob_max': 0.19567425514758024, 'iterations': 2901}
+Baseline score: 0.11485213047066736 +/- 0.013399695515052705
+Best parameters: {'flip_prob': np.float64(0.3816205756749599), 'iterations': np.float64(0.5408398492799915), 'mob_max': np.float64(0.6194364134798727), 'mob_min': np.float64(0.9380561687875137), 'shift_amount': np.float64(0.06924296618805978)}
+Optimizer score: 0.10627738212810836 +/- 0.008174251557156877
+Optimizer improved the score!
+
