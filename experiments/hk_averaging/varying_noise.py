@@ -1,9 +1,9 @@
 from models.hk_averaging import HKAveragingModel
 from experiments.varying_noise import varying_noise_experiment
 
-for i in range(1, 11):
+# for i in range(1, 11):
     # Run the experiment
-    varying_noise_experiment(
-        model_class=HKAveragingModel,
-        i=i
-    )
+varying_noise_experiment(
+    model_class=HKAveragingModel,
+    i=4
+)
