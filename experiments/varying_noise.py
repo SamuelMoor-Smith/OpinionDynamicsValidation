@@ -5,7 +5,7 @@ from utils import optimizers
 from models.model import Model
 from models.duggins import DugginsModel
 import time
-from utils.logging import write_results_to_file
+from OpinionDynamicsValidation.utils.my_logging import write_results_to_file
 from utils.differences import dataset_difference
 import os
 import matplotlib.pyplot as plt

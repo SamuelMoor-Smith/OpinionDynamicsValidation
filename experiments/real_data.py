@@ -8,7 +8,7 @@ from utils.plotting import plot_2_datasets_snapshots
 from utils import optimizers
 from models.model import Model
 import time
-from utils.logging import write_results_to_file
+from OpinionDynamicsValidation.utils.my_logging import write_results_to_file
 from utils.differences import dataset_difference, snapshot_difference
 from datasets.ess.header_info import ess_header_info
 

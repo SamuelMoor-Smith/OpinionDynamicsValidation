@@ -6,7 +6,7 @@ from utils.differences import calculate_mean_std, dataset_difference
 from utils.plotting import plot_2_datasets_snapshots, plot_2_snapshots
 from utils import optimizers
 import time
-from utils.logging import write_results_to_file
+from OpinionDynamicsValidation.utils.my_logging import write_results_to_file
 import copy
 import matplotlib.pyplot as plt
 

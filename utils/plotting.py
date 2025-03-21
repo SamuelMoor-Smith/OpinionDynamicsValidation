@@ -11,6 +11,7 @@ def plot_2_snapshots(
         difference="wasserstein",
         path=None,
         bins=100,
+        filename=None
 ):
     """plots 2 snapshots side by side"""
 
@@ -56,6 +57,7 @@ def plot_2_datasets_snapshots(
         difference="wasserstein",
         path=None,
         bins=100,
+        filename=None
 ):
     """plots the 2 datasets snapshots side by side"""
 
@@ -94,8 +96,8 @@ def plot_2_datasets_snapshots(
         ax.set_title(f'Round {i+1}', fontsize=8)
 
     # Shared X and Y labels
-    fig.supxlabel("Opinion Value", fontsize=9, labelpad=5)
-    fig.supylabel("Frequency", fontsize=9, labelpad=5)
+    fig.supxlabel("Opinion Value", fontsize=9)
+    fig.supylabel("Frequency", fontsize=9)
 
     plt.tight_layout()
 
@@ -103,7 +105,8 @@ def plot_2_datasets_snapshots(
         if not os.path.exists(path):
             os.makedirs(path)
         timestamp = time.strftime("%Y%m%d-%H%M%S")
-        filename = f"d1_vs_d2_snapshots_{timestamp}.png"
+        if not filename:
+            filename = f"d1_vs_d2_snapshots_{timestamp}.png"
         plt.savefig(os.path.join(path, filename), dpi=300, bbox_inches="tight")
         plt.close()  # Close the plot to free up memory
     else:
