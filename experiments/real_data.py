@@ -8,8 +8,8 @@ from utils.plotting import plot_2_datasets_snapshots
 from utils import optimizers
 from models.model import Model
 import time
-from OpinionDynamicsValidation.utils.my_logging import write_results_to_file
-from utils.differences import dataset_difference, snapshot_difference
+from utils.my_logging import write_results_to_file
+from utils.differences import dataset_difference
 from datasets.ess.header_info import ess_header_info
 
 # _ESSFILE = ESSFile('datasets/ess/combined-sept26.csv', 'imbgeco')
@@ -30,10 +30,19 @@ def real_data_experiment(
 
     model_name = model_class.get_model_name()
 
+    # essfile = ESSFile(
+    #     'datasets/ess/combined-feb19.csv', 
+    #     key=data_header, 
+    #     key_info=ess_header_info[data_header],
+    #     model_range=model_class.get_opinion_range()
+    # )
+
+    key_info = ess_header_info[data_header]
     essfile = ESSFile(
-        'datasets/ess/combined-feb19.csv', 
-        key=data_header, 
-        key_info=ess_header_info[data_header],
+        f'datasets/ess/full_groups/{key_info["folder"]}',
+        key=data_header,
+        key_info=key_info,
+        country=key_info["country"],
         model_range=model_class.get_opinion_range()
     )
 

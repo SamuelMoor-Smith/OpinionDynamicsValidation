@@ -52,3 +52,33 @@ Best parameters: {'epsilon': np.float64(0.5891479745437094), 'interactions': np.
 Optimizer score: 0.3362010789995632 +/- 0.09616294832828248
 No significant difference detected.
 
+Initial parameters: {'mu': 0.11187307497370091, 'epsilon': 0.48480811829625775, 'interactions': 504}
+Baseline score: 0.19371244308168029 +/- 0.06272080869794591
+Best parameters: {'epsilon': 0.6493568604180612, 'interactions': 0.2795394566696253, 'mu': 0.45647706723713194}
+Optimizer score: 0.11749992177657993 +/- 0.023298851702760724
+Optimizer improved the score!
+
+Initial parameters: {'mu': 0.2904837794079604, 'epsilon': 0.1715621478019481, 'interactions': 618}
+Baseline score: 0.6848037448220817 +/- 0.33260331604899196
+Best parameters: {'epsilon': 0.13551458572811065, 'interactions': 0.6280968886498015, 'mu': 0.7891411725940327}
+Optimizer score: 0.7033622935085647 +/- 0.2821501805370869
+No significant difference detected.
+
+Initial parameters: {'mu': 0.3371396525306806, 'epsilon': 0.28260011978824445, 'interactions': 669}
+Baseline score: 0.736579414565492 +/- 0.2337558654070327
+Best parameters: {'epsilon': 0.20947989173095335, 'interactions': 0.9560794384175361, 'mu': 0.426141911301428}
+Optimizer score: 0.4566301282076874 +/- 0.10676124667420672
+Optimizer improved the score!
+
+Initial parameters: {'mu': 0.46554344485438937, 'epsilon': 0.940003767323685, 'interactions': 442}
+Baseline score: 0.49147431084034565 +/- 0.16995541937505432
+Best parameters: {'epsilon': 0.999654431911785, 'interactions': 0.6310345326347179, 'mu': 0.947775097890408}
+Optimizer score: 0.5018233022091294 +/- 0.1399361887456432
+No significant difference detected.
+
+Initial parameters: {'mu': 0.31837384787815326, 'epsilon': 0.7135996127494655, 'interactions': 626}
+Baseline score: 0.6735739804084325 +/- 0.21004723969097674
+Best parameters: {'epsilon': 0.8685276941763417, 'interactions': 0.7626368427171109, 'mu': 0.8635080320749928}
+Optimizer score: 0.7530870051345616 +/- 0.1921752061941481
+No significant difference detected.
+

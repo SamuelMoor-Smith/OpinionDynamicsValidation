@@ -142,3 +142,39 @@ Best parameters: {'mean_intolerance': np.float64(0.5250126698102283), 'mean_susc
 Optimizer score: 0.13152892236427374 +/- 0.0015142377083689207
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': 0.8815886093759346, 'mean_susceptibility': 5.75464438638852, 'mean_conformity': 0.44980295573325224, 'std_intolerance': 0.4170980219347359, 'std_susceptibility': 0.5452741093038022, 'std_conformity': 0.3768552773391641, 'mean_social_reach': 6.229696118631783, 'std_social_reach': 4.065433619703453}
+Optimizer score: 0.3501342153603901 +/- 0.0024663889050801488
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': 1.1028483267866895, 'mean_susceptibility': 4.546292449329063, 'mean_conformity': 0.2944000493750835, 'std_intolerance': 0.25165890957612386, 'std_susceptibility': 0.9434379818083196, 'std_conformity': 0.34251314719194653, 'mean_social_reach': 5.5474567508731205, 'std_social_reach': 5.5489067228020925}
+Optimizer score: 0.4750169645099936 +/- 0.0009142149643700351
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': 0.4997206360659524, 'mean_susceptibility': 2.7426401714422517, 'mean_conformity': 0.1693340591859477, 'std_intolerance': 0.18151939217770602, 'std_susceptibility': 0.7105224306951843, 'std_conformity': 0.17822084497272653, 'mean_social_reach': 5.587573965290335, 'std_social_reach': 2.009258057295537}
+Optimizer score: 0.30731336088470523 +/- 0.0010219695939725462
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': 0.4692847427215242, 'mean_susceptibility': 2.8121201797800213, 'mean_conformity': 0.193061251101926, 'std_intolerance': 0.1592148307963788, 'std_susceptibility': 1.0200963882854905, 'std_conformity': 0.31307608447149354, 'mean_social_reach': 6.711533201952896, 'std_social_reach': 3.7395261968485753}
+Optimizer score: 0.3275180421285959 +/- 0.00208586376474877
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': 0.5720219204749764, 'mean_susceptibility': 2.5314061253573326, 'mean_conformity': 0.19651071760378697, 'std_intolerance': 0.19190876209174937, 'std_susceptibility': 1.0483146113768012, 'std_conformity': 0.39473615005066043, 'mean_social_reach': 4.1034910323299885, 'std_social_reach': 5.370238926248422}
+Optimizer score: 0.3007340417095611 +/- 0.0008161683631933961
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'mean_intolerance': 0.5663417881341077, 'mean_susceptibility': 3.322156273979437, 'mean_conformity': 0.40985437557260507, 'std_intolerance': 0.35412238546883745, 'std_susceptibility': 0.5492362290000865, 'std_conformity': 0.34169533658459195, 'mean_social_reach': 11.320870589831445, 'std_social_reach': 5.260226148317594}
+Optimizer score: 0.31197631467372017 +/- 0.0017078410373246348
+No baseline score to compare with.
+

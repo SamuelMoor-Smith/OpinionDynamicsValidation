@@ -5,5 +5,5 @@ from experiments.varying_noise import varying_noise_experiment
 # Run the experiment
 varying_noise_experiment(
     model_class=DeffuantModel,
-    i=4
+    i=11
 )

@@ -4,6 +4,7 @@ from datasets.dataset import Dataset
 from utils.differences import snapshot_difference
 import time
 import math
+import numpy as np
 
 def plot_2_snapshots(
         s1,
@@ -71,6 +72,14 @@ def plot_2_datasets_snapshots(
 
     scores = [snapshot_difference(data1[i], data2[i], method=difference) for i in range(N)]
 
+    # 📌 Step 1: Precompute y_max across all histograms
+    op_range = d1.get_opinion_range()
+    y_max = 0
+    for i in range(len(data1)):
+        h1, _ = np.histogram(data1[i], bins=bins, range=(op_range[0], op_range[1]))
+        h2, _ = np.histogram(data2[i], bins=bins, range=(op_range[0], op_range[1]))
+        y_max = max(y_max, h1.max(), h2.max())
+
     fig, axes = plt.subplots(rows, cols, figsize=(4.8, 4.8), constrained_layout=True)  # Set tight layout
 
     name = d1.model.__class__.__name__
@@ -84,8 +93,15 @@ def plot_2_datasets_snapshots(
     )
 
     for i, ax in enumerate(axes.flat):
-        ax.hist(data1[i], bins=bins, range=d1.get_opinion_range(), alpha=0.5, label='Data1')
-        ax.hist(data2[i], bins=bins, range=d2.get_opinion_range(), alpha=0.5, label='Data2')
+        ax.hist(data1[i], bins=bins, range=op_range, alpha=0.5, label='Data1')
+        ax.hist(data2[i], bins=bins, range=op_range, alpha=0.5, label='Data2')
+        if i > 0:
+            ax.hist(data1[i-1], bins=bins, range=d1.get_opinion_range(), alpha=0.2, label='Data1Z')
+
+        y_max = max(y_max, h1.max(), h2.max())
+
+        plt.xlim(op_range[0], op_range[1])
+        plt.ylim(0, y_max)  
 
         # Remove axis labels except for bottom row (X) and leftmost column (Y)
         if i // cols < rows - 1:  # Not in the last row
@@ -93,7 +109,14 @@ def plot_2_datasets_snapshots(
         if i % cols != 0:  # Not in the first column
             ax.set_yticklabels([])
 
-        ax.set_title(f'Round {i+1}', fontsize=8)
+        # ax.set_title(f'Round {i+1}', fontsize=8)
+        score_base = snapshot_difference(data1[i], data2[i], method=difference)
+        if i == 0:
+            ax.set_title(f'{score_base:.3f}', fontsize=8)
+        else:
+            score_zero = snapshot_difference(data1[i], data1[i-1], method=difference)
+            ax.set_title(f'{score_base:.3f}/{score_zero:.3f}', fontsize=8)
+        # ax.set_title(f'Score: ', fontsize=8)
 
     # Shared X and Y labels
     fig.supxlabel("Opinion Value", fontsize=9)

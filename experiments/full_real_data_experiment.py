@@ -8,11 +8,11 @@ from models.carpentras import CarpentrasModel
 from models.transform_deffuant import TransformDeffuantModel
 
 # Define output CSV file
-OUTPUT_CSV = "results/master_results_one_alpha.csv"
+OUTPUT_CSV = "results/master_results_mar24-duggins.csv"
 
 # List of models to run
-# models = [DugginsModel]
-models = [TransformDeffuantModel]
+models = [DugginsModel]
+# models = [DeffuantModel, HKAveragingModel, CarpentrasModel]
 
 # Initialize an empty list to store results
 results_list = []

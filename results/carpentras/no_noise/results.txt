@@ -40,3 +40,27 @@ Best parameters: {'flip_prob': np.float64(0.3816205756749599), 'iterations': np.
 Optimizer score: 0.10627738212810836 +/- 0.008174251557156877
 Optimizer improved the score!
 
+Initial parameters: {'shift_amount': 0.053205940875331516, 'flip_prob': 0.06994743365519275, 'mob_min': 0.003777016146856516, 'mob_max': 0.203351331536279, 'iterations': 2174}
+Baseline score: 0.17752360493571398 +/- 0.037937028220140244
+Best parameters: {'flip_prob': 0.03401383573980844, 'iterations': 0.5859877748055196, 'mob_max': 0.5257242697270392, 'mob_min': 0.13729149980906163, 'shift_amount': 0.8227466762079375}
+Optimizer score: 0.1687534012733818 +/- 0.025990513711087456
+Optimizer improved the score!
+
+Initial parameters: {'shift_amount': 0.020315560374726607, 'flip_prob': 0.07259385614289954, 'mob_min': 0.05177699143122375, 'mob_max': 0.23292536236949665, 'iterations': 4581}
+Baseline score: 0.14286396376472527 +/- 0.01944507355024645
+Best parameters: {'flip_prob': 0.7984745731313647, 'iterations': 0.7022456725879144, 'mob_max': 0.1963859682984755, 'mob_min': 0.293122650267332, 'shift_amount': 0.14527642656048617}
+Optimizer score: 0.13731914518469304 +/- 0.02568170453997665
+Optimizer improved the score!
+
+Initial parameters: {'shift_amount': 0.017359041949975267, 'flip_prob': 0.06944247912958346, 'mob_min': 0.021162616799139323, 'mob_max': 0.26839346885554377, 'iterations': 2229}
+Baseline score: 0.12416639568341704 +/- 0.020815380592719368
+Best parameters: {'flip_prob': 0.46414265915404596, 'iterations': 0.7867922149016424, 'mob_max': 0.6390755155121215, 'mob_min': 0.3985875520700631, 'shift_amount': 0.32139296982929055}
+Optimizer score: 0.15802581919115416 +/- 0.030532066570013998
+Significant difference detected!
+
+Initial parameters: {'shift_amount': 0.05592119575316149, 'flip_prob': 0.01833476866275464, 'mob_min': 0.04197261867013448, 'mob_max': 0.2684642050409414, 'iterations': 2736}
+Baseline score: 0.18086723806832483 +/- 0.031029604164657103
+Best parameters: {'flip_prob': 0.6896967782047, 'iterations': 0.223142218015262, 'mob_max': 0.1760843104440311, 'mob_min': 0.4024736068959113, 'shift_amount': 0.7151787762769974}
+Optimizer score: 0.18450387349422406 +/- 0.04103110817067301
+No significant difference detected.
+

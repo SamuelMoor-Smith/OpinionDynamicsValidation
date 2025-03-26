@@ -7,5 +7,5 @@ from experiments.varying_noise import varying_noise_experiment
 # Run the experiment
 varying_noise_experiment(
     model_class=CarpentrasModel,
-    i=1
+    i=6
 )

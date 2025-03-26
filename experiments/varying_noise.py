@@ -6,7 +6,7 @@ from models.model import Model
 from models.duggins import DugginsModel
 import time
 from utils.my_logging import write_results_to_file
-from utils.differences import dataset_difference
+from utils.differences import dataset_difference, dataset_difference_early
 import os
 import matplotlib.pyplot as plt
 
@@ -52,13 +52,16 @@ def varying_noise_experiment(
     # Create the array of explained variances and score differences
     explained_variances = []    
     score_diffs = []
+    base_score_diffs = []
     opt_mean_diffs = []
     opt_std_diffs = []
     zero_diffs = []
+    base_mean_diffs = []
+    base_std_diffs = []
 
     # Create non-uniformly sampled noise levels
-    uniform_samples = np.linspace(0, 1, 100)  # Uniformly spaced values between 0 and 1
-    noises = 0.5 * uniform_samples**2  # Square root transformation to bias towards smaller values
+    noises = np.linspace(0, 0.5, 100)  # Uniformly spaced values between 0 and 1
+    # noises = 0.5 * uniform_samples**2  # Square root transformation to bias towards smaller values
     
     print(f"Noises: {noises}")
 
@@ -73,8 +76,16 @@ def varying_noise_experiment(
         # Iterate over the noise levels and create the true data with that noise value
         true, explained_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
 
-        if explained_var < 0.05:
-            continue
+        # # Now create 10 more datasets with the base model and initial opinions
+        # base_datasets = [Dataset.create_with_model_from_true(base_model, true.get_data()) for _ in range(10)]
+
+        # # Calculate mean and std of differences between the first dataset and the rest
+        # base_mean_diff, base_std_diff = calculate_mean_std(true, base_datasets, "Baseline", method="wasserstein")
+        # base_mean_diffs.append(base_mean_diff)
+        # base_std_diffs.append(base_std_diff)
+
+        # if explained_var < 0.05:
+        #     continue
 
         # Create zero data (just the last opinion to predict the next one)
         zero = Dataset.create_zero_data_from_true(true, base_model)
@@ -92,8 +103,10 @@ def varying_noise_experiment(
             comparison_model: Model = model_class()
 
         optimizer = optimizers.get_optimizer()
+
+        zero_diff1to6 = dataset_difference_early(true, zero)
         
-        opt_params = {"from_true": True, "num_snapshots": 10}
+        opt_params = {"from_true": True, "num_snapshots": 10, "zero_diff1to6": zero_diff1to6}
         best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
 
         print(f"Optimization took {time.time() - start} seconds")
@@ -113,7 +126,8 @@ def varying_noise_experiment(
         # Print and store the score difference between the zero and optimized datasets
         print(f"Score difference for noise {noise}: {zero_diff - opt_mean_diff}")
         explained_variances.append(explained_var)
-        score_diffs.append(zero_diff - opt_mean_diff)
+        score_diffs.append((zero_diff - opt_mean_diff)/zero_diff)
+        # base_score_diffs.append((zero_diff - base_mean_diff)/zero_diff)
 
         # plot_2_datasets_snapshots(true, zero, difference="wasserstein", path=f"plots/{model_name}/noise/")
 
@@ -122,7 +136,7 @@ def varying_noise_experiment(
 
     filename = f"results/{model_name}/noise/varying_noise_data_{i}.csv"
     data = {
-        # "noise": noises,
+        "noise": noises,
         "zero_diff": zero_diffs,
         "explained_variance": explained_variances,
         "opt_mean_diff": opt_mean_diffs,
@@ -131,8 +145,9 @@ def varying_noise_experiment(
 
     save_experiment_results(filename, data)
     # Plot the explained variances
-    plt.scatter(explained_variances, score_diffs)
-    plt.xlabel("Explained Variance")
+    plt.scatter(noises, score_diffs)
+    # plt.scatter(noises, base_score_diffs)
+    plt.xlabel("Noise Level")
     plt.ylabel("Score difference")
     plt.title("Score difference for different explained variance levels")
     plt.savefig(f"plots/{model_name}/noise/score_diff_explained_var_{i}.png")

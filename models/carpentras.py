@@ -73,11 +73,11 @@ class CarpentrasModel(Model):
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-            'shift_amount': np.random.uniform(0, 0.06),
-            'flip_prob': np.random.uniform(0, 0.08),
+            'shift_amount': np.random.uniform(0.01, 0.06),
+            'flip_prob': np.random.uniform(0.01, 0.08),
             'mob_min': np.random.uniform(0, 0.10),
             'mob_max': np.random.uniform(0.15, 0.30),
-            'iterations': np.random.randint(1000, 5000)
+            'iterations': np.random.randint(5000, 10000)
         }
     
     @staticmethod

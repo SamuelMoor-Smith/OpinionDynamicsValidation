@@ -55,8 +55,8 @@ class DeffuantModel(Model):
         """Get random feasible parameters for the model."""
         return {
             'mu': np.random.uniform(0, 0.5),
-            'epsilon': np.random.uniform(0.1, 0.9),
-            'interactions': np.random.randint(300, 700)
+            'epsilon': np.random.uniform(0.1, 1),
+            'interactions': np.random.randint(0, 700)
         }
     
     @staticmethod
@@ -76,8 +76,8 @@ class DeffuantModel(Model):
         """
         self.params = {
             'mu': 0.5 * params['mu'],
-            'epsilon': 0.8 * params['epsilon'] + 0.1,
-            'interactions': int(400 * params['interactions'] + 300)
+            'epsilon': 0.9 * params['epsilon'] + 0.1,
+            'interactions': int(1000 * params['interactions'])
         }
 
     def create(params=None, agents=None):

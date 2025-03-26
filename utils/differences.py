@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import wasserstein_distance, ks_2samp
 from scipy.spatial.distance import jensenshannon
+from datasets.dataset import Dataset
 
 def calculate_mean_std(true, datasets, type, method="wasserstein"):
     """
@@ -11,14 +12,14 @@ def calculate_mean_std(true, datasets, type, method="wasserstein"):
     print(f"{type} score: {mean_diff} +/- {std_diff}")
     return mean_diff, std_diff
 
-def snapshot_difference(s1, s2, method='wasserstein'):
+def snapshot_difference(s1, s2, method='wasserstein', range=(0,1)):
     """
     Compare two snapshots using the given method.
     """
     if method == 'sorted':
         return difference_sorted(s1, s2)
     elif method == 'wasserstein':
-        return difference_wasserstein(s1, s2)
+        return difference_wasserstein(s1, s2, range=range)
     elif method == 'js':
         return difference_js(s1, s2)
     elif method == 'ks':
@@ -30,13 +31,21 @@ def snapshot_difference(s1, s2, method='wasserstein'):
     else:
         raise ValueError(f"Method {method} not recognized.")
 
-def dataset_difference(d1, d2, method='wasserstein'):
+def dataset_difference(d1: Dataset, d2: Dataset, method='wasserstein'):
     """
     Compare two datasets using the given method.
     """
     # for s1, s2 in zip(d1.get_data(), d2.get_data()):
     #     print(snapshot_difference(s1, s2, method))
-    return sum(snapshot_difference(s1, s2, method) for s1, s2 in zip(d1.get_data(), d2.get_data()))
+    return sum(snapshot_difference(s1, s2, method, range=d2.get_opinion_range()) for s1, s2 in zip(d1.get_data(), d2.get_data()))
+
+def dataset_difference_early(d1, d2, method='wasserstein'):
+    """
+    Compare two datasets using the given method.
+    """
+    # for s1, s2 in zip(d1.get_data(), d2.get_data()):
+    #     print(snapshot_difference(s1, s2, method))
+    return sum(snapshot_difference(s1, s2, method) for s1, s2 in zip(d1.get_data()[:6], d2.get_data()[:6]))
 
 def create_histograms(x, y, bins=100, range=(0, 1), add_epsilon=False, epsilon=1e-10):
     """
@@ -68,13 +77,13 @@ def difference_sorted(x, y):
     # Calculate absolute differences between the sorted values
     return np.sum(np.abs(x_sorted - y_sorted))
 
-def difference_wasserstein(x, y):
+def difference_wasserstein(x, y, range):
     """
     Compare distributions using Wasserstein distance (Earth Mover's Distance).
     Normalize distributions to [0, 1] before comparison.
     """
-    x = (x - np.min(x)) / (np.max(x) - np.min(x))
-    y = (y - np.min(y)) / (np.max(y) - np.min(y))
+    x = (x - range[0]) / (range[1] - range[0])
+    y = (y - range[0]) / (range[1] - range[0])
     return wasserstein_distance(x, y)
 
 def difference_js(x, y, bins=100, range=(0, 1)):

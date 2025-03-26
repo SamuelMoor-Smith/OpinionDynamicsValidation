@@ -280,3 +280,39 @@ Best parameters: {'shift_amount': np.float64(0.005607168828933889), 'flip_prob':
 Optimizer score: 0.13162733421016842 +/- 0.001049933883826777
 No baseline score to compare with.
 
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': 0.05772510273598021, 'flip_prob': 0.027629824203044603, 'mob_min': 0.07321889458974223, 'mob_max': 0.168133855960833, 'iterations': 163}
+Optimizer score: 0.35163773647877994 +/- 0.003433662629319045
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': 0.0536077475044376, 'flip_prob': 0.028080005154167736, 'mob_min': 0.0503980082815364, 'mob_max': 0.1594533459521193, 'iterations': 237}
+Optimizer score: 0.47714786581307844 +/- 0.003042560805130835
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': 0.018133929847663845, 'flip_prob': 0.03628563054962431, 'mob_min': 0.05560988600223086, 'mob_max': 0.1739184730652557, 'iterations': 286}
+Optimizer score: 0.30454341780850436 +/- 0.004866150961362915
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': 0.03088923521189968, 'flip_prob': 0.07742176835936837, 'mob_min': 0.06405959929640358, 'mob_max': 0.1788318375373845, 'iterations': 575}
+Optimizer score: 0.31979077856641597 +/- 0.0041949989591599695
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': 0.037614955061753046, 'flip_prob': 0.04277280369614321, 'mob_min': 0.0064113123573381475, 'mob_max': 0.16644904492997858, 'iterations': 206}
+Optimizer score: 0.30471255424529825 +/- 0.0031355084076216326
+No baseline score to compare with.
+
+Initial parameters: None
+Baseline score: None +/- None
+Best parameters: {'shift_amount': 0.03728438529508164, 'flip_prob': 0.052942594376329616, 'mob_min': 0.09237419028993459, 'mob_max': 0.29098620201986164, 'iterations': 298}
+Optimizer score: 0.29516095124178243 +/- 0.0060743357553306315
+No baseline score to compare with.
+
