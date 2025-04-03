@@ -23,7 +23,7 @@ def hyperopt():
         fn=lambda params: obj_f(true, model, params, opt_params),
         space={param: hp.uniform(param, 0, 1) for param in model.params.keys()},
         algo=rand.suggest,
-        max_evals=500,
+        max_evals=100,
         trials=Trials(),
         show_progressbar=True
     )
@@ -33,7 +33,7 @@ def hyperopt_objective(true: Dataset, model: Model, model_params, opt_params):
     """Objective function for Hyperopt to minimize"""
     model.set_normalized_params(model_params)
     diffs = []
-    for _ in range(5):
+    for _ in range(3):
         scores = run_and_score_optimal(true, model, opt_params)
         # normalizer = opt_params["zero_diff1to6"] if "zero_diff1to6" in opt_params else 1
         normalizer = 1
