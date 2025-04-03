@@ -48,6 +48,7 @@ def real_data_experiment(
     print(f"Zero difference: {zero_diff}")
 
     all_diffs = []
+    params = []
 
     for i in range(10):
 
@@ -70,7 +71,8 @@ def real_data_experiment(
 
         # Calculate the differences and add them to samples
         all_diffs.extend([dataset_difference(true, d) for d in opt_datasets])
+        params.extend([comparison_model.params for _ in range(10)])
 
-    return model_name, zero_diff, all_diffs, comparison_model.params
+    return model_name, zero_diff, all_diffs, params
 
 

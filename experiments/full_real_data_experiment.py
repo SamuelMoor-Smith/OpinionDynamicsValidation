@@ -25,7 +25,7 @@ for model_class in models:
             data_header=key
         )
 
-        for i, diff in enumerate(optimized_diffs):
+        for i, (diff, params) in enumerate(zip(optimized_diffs, optimized_params)):
             violin_data.append({
                 "Model": model_name,
                 "Key": key,
@@ -34,7 +34,7 @@ for model_class in models:
                 "Raw Optimized Difference": diff,
                 "Scaled Optimized Difference": (zero_diff - diff) / zero_diff,
                 "Optimized Better": diff < zero_diff,
-                "Optimized Params": str(optimized_params)  # store as string to avoid issues
+                "Optimized Params": str(params)  # store each run's specific params
             })
 
 # Convert to DataFrame
