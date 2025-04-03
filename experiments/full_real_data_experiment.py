@@ -1,50 +1,45 @@
 import pandas as pd
 from experiments.real_data import real_data_experiment
 from datasets.ess.header_info import ess_header_info
-from models.duggins import DugginsModel
-from models.hk_averaging import HKAveragingModel
 from models.deffuant import DeffuantModel
+from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
-from models.transform_deffuant import TransformDeffuantModel
+from models.duggins import DugginsModel
 
-# Define output CSV file
-OUTPUT_CSV = "results/master_results_mar24-duggins.csv"
+# Output path
+OUTPUT_CSV = "results/violin_data_apr3-hk_averaging.csv"
 
-# List of models to run
-models = [DugginsModel]
-# models = [DeffuantModel, HKAveragingModel, CarpentrasModel]
+# Models to run
+models = [HKAveragingModel]
 
-# Initialize an empty list to store results
-results_list = []
+# List to collect all run-level diffs for violin plot
+violin_data = []
 
-# Loop over each model and dataset key
+# Loop through each model and ESS key
 for model_class in models:
     for key in ess_header_info.keys():
         print(f"Running experiment for {model_class.__name__} on {key}...")
 
-        # Call real_data_experiment (assuming it returns necessary values)
-        model_name, zero_diff, optimized_diff, optimized_params = real_data_experiment(
+        model_name, zero_diff, optimized_diffs, optimized_params = real_data_experiment(
             model_class=model_class,
             data_header=key
         )
 
-        # Compute additional metrics
-        is_optimized_better = optimized_diff < zero_diff
+        for i, diff in enumerate(optimized_diffs):
+            violin_data.append({
+                "Model": model_name,
+                "Key": key,
+                "Run": i,
+                "Zero Difference": zero_diff,
+                "Raw Optimized Difference": diff,
+                "Scaled Optimized Difference": (zero_diff - diff) / zero_diff,
+                "Optimized Better": diff < zero_diff,
+                "Optimized Params": str(optimized_params)  # store as string to avoid issues
+            })
 
-        # Store results in a dictionary
-        results_list.append({
-            "Model": model_name,
-            "Key": key,
-            "Zero Difference": zero_diff,
-            "Scaled Optimized Difference": (optimized_diff - zero_diff)/zero_diff,
-            "Raw Optimized Difference": optimized_diff,
-            "Optimized Better": is_optimized_better,
-            # "Difference": difference,
-            "Optimized Params": optimized_params
-        })
+# Convert to DataFrame
+df_violin = pd.DataFrame(violin_data)
 
-# Convert list to DataFrame
-df_results = pd.DataFrame(results_list)
+# Save
+df_violin.to_csv(OUTPUT_CSV, index=False)
 
-# Save to CSV
-df_results.to_csv(OUTPUT_CSV, index=False)

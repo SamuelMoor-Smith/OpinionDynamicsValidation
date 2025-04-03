@@ -83,6 +83,6 @@ class HKAveragingModel(Model):
         This function will convert them to the actual parameter values.
         """
         self.params = {
-            'epsilon': 0.95 * params['epsilon'] + 0.05,
-            'agents': 0.95 * params['agents'] + 0.05
+            'epsilon': params['epsilon'],
+            'agents': params['agents']
         }
