@@ -1,9 +1,10 @@
 from models.deffuant import DeffuantModel
-from experiments.varying_noise import varying_noise_experiment
+from experiments.experiment import run_experiment
 
 # for i in range(1, 11):
 # Run the experiment
-varying_noise_experiment(
+run_experiment(
     model_class=DeffuantModel,
-    i=1
+    i=1,
+    max_noise=0.5
 )

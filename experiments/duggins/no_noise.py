@@ -1,7 +1,7 @@
 from models.duggins import DugginsModel
-from experiments.no_noise import no_noise_experiment
+from experiments.experiment import run_experiment
 
 # Run the experiment
-no_noise_experiment(
+run_experiment(
     model_class=DugginsModel
 )

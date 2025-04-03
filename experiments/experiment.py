@@ -15,15 +15,16 @@ import numpy as np
 import os
 import json
 
-def no_noise_experiment(
+def run_experiment(
         model_class: Model,
-        i=""
+        i="",
+        max_noise=0
     ):
 
     model_name = model_class.get_model_name()
 
     # Create non-uniformly sampled noise levels
-    noises = np.linspace(0, 0, 100)  # Uniformly spaced values between 0 and 1
+    noises = np.linspace(0, max_noise, 100)  # Uniformly spaced values between 0 and 1
     # noises = 0.5 * uniform_samples**2  # Square root transformation to bias towards smaller values
     
     print(f"Noises: {noises}")
@@ -85,7 +86,7 @@ def no_noise_experiment(
         if not os.path.exists(f"results/{model_name}/noise"):
             os.makedirs(f"results/{model_name}/noise")
 
-        results_path = f"results/{model_name}/noise/no_noise_results_{i}.jsonl"  # JSON Lines format
+        results_path = f"results/{model_name}/noise/max_noise_{max_noise}_results_{i}.jsonl"  # JSON Lines format
 
         with open(results_path, "a") as f:
             f.write(json.dumps(new_point) + "\n")
