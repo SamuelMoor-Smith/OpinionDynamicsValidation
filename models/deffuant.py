@@ -55,7 +55,7 @@ class DeffuantModel(Model):
         """Get random feasible parameters for the model."""
         return {
             'mu': np.random.uniform(0, 0.5),
-            'epsilon': np.random.uniform(0.1, 1),
+            'epsilon': np.random.uniform(0.05, 1),
             'interactions': np.random.randint(0, 700)
         }
     
@@ -76,7 +76,7 @@ class DeffuantModel(Model):
         """
         self.params = {
             'mu': 0.5 * params['mu'],
-            'epsilon': 0.9 * params['epsilon'] + 0.1,
+            'epsilon': 0.95 * params['epsilon'] + 0.05,
             'interactions': int(1000 * params['interactions'])
         }
 

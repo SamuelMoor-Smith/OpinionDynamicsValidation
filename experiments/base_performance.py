@@ -57,7 +57,7 @@ def base_varying_noise_experiment(
     base_std_diffs = []
 
     # Create non-uniformly sampled noise levels
-    noises = np.linspace(0, 0, 20)  # Uniformly spaced values between 0 and 1
+    noises = np.linspace(0, 0, 100)  # Uniformly spaced values between 0 and 1
     # noises = 0.5 * uniform_samples**2  # Square root transformation to bias towards smaller values
     
     print(f"Noises: {noises}")
@@ -100,6 +100,7 @@ def base_varying_noise_experiment(
             print(f"Zero diff: {zero_diff}")
             print(f"{base_model.params}")
 
+        print(f"Zero diff is {zero_diff}")
         # # Plot the first and second datasets
         plot_2_datasets_snapshots(true, base_datasets[0], difference="wasserstein", path=f"plots/{model_name}/no_noise/same/dump/")
 
@@ -114,7 +115,7 @@ def base_varying_noise_experiment(
         # "iterations": iterations,
         "zero_diff": zero_diffs,
         "explained_variance": explained_variances,
-        "opt_mean_diff": base_mean_diff,
+        "opt_mean_diff": base_mean_diffs,
         "opt_std_diff": base_std_diffs
     }
 

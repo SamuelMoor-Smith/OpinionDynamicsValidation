@@ -63,8 +63,8 @@ class HKAveragingModel(Model):
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-            'epsilon': np.random.uniform(0.1, 0.9),
-            'agents': np.random.uniform(0, 1),
+            'epsilon': np.random.uniform(0.05, 1),
+            'agents': np.random.uniform(0.05, 1),
         }
     
     @staticmethod
@@ -83,6 +83,6 @@ class HKAveragingModel(Model):
         This function will convert them to the actual parameter values.
         """
         self.params = {
-            'epsilon': 0.8 * params['epsilon'] + 0.1,
-            'agents': params['agents']
+            'epsilon': 0.95 * params['epsilon'] + 0.05,
+            'agents': 0.95 * params['agents'] + 0.05
         }

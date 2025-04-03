@@ -1,4 +1,4 @@
-from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
+from hyperopt import fmin, tpe, hp, STATUS_OK, Trials, rand
 import logging
 from datasets.dataset import Dataset
 import numpy as np
@@ -22,7 +22,7 @@ def hyperopt():
     best = lambda true, model, opt_params, obj_f=hyperopt_objective: fmin(
         fn=lambda params: obj_f(true, model, params, opt_params),
         space={param: hp.uniform(param, 0, 1) for param in model.params.keys()},
-        algo=tpe.suggest,
+        algo=rand.suggest,
         max_evals=500,
         trials=Trials(),
         show_progressbar=True

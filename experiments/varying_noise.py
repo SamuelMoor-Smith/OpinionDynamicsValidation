@@ -94,21 +94,16 @@ def varying_noise_experiment(
         zero_diff = dataset_difference(true, zero, method="wasserstein")
         zero_diffs.append(zero_diff)
 
-        # Optimization process and time it
-        start = time.time()
-
         if isinstance(base_model, DugginsModel):
             comparison_model: Model = DugginsModel(agents=base_model.get_cleaned_agents())
         else:
             comparison_model: Model = model_class()
 
+        # Optimization process and time it
+        start = time.time()
         optimizer = optimizers.get_optimizer()
-
-        zero_diff1to6 = dataset_difference_early(true, zero)
-        
-        opt_params = {"from_true": True, "num_snapshots": 10, "zero_diff1to6": zero_diff1to6}
+        opt_params = {"from_true": True, "num_snapshots": 10}
         best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
-
         print(f"Optimization took {time.time() - start} seconds")
 
         # Set the best parameters
@@ -134,7 +129,7 @@ def varying_noise_experiment(
     if not os.path.exists(f"results/{model_name}/noise"):
         os.makedirs(f"results/{model_name}/noise")
 
-    filename = f"results/{model_name}/noise/varying_noise_data_{i}.csv"
+    filename = f"results/{model_name}/noise/rand-varying_noise_data_{i}.csv"
     data = {
         "noise": noises,
         "zero_diff": zero_diffs,
@@ -150,5 +145,5 @@ def varying_noise_experiment(
     plt.xlabel("Noise Level")
     plt.ylabel("Score difference")
     plt.title("Score difference for different explained variance levels")
-    plt.savefig(f"plots/{model_name}/noise/score_diff_explained_var_{i}.png")
+    plt.savefig(f"plots/{model_name}/noise/rand-score_diff_explained_var_{i}.png")
     plt.close()

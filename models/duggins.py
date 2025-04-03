@@ -3,6 +3,7 @@ from models.model import Model
 from utils import rand_gen
 from scipy.spatial import cKDTree
 import copy
+from hyperopt import hp
 
 # Peter Duggins
 # August 11, 2016
@@ -123,6 +124,13 @@ class DugginsModel(Model):
         p = self.params
         n = len(initial_opinions)
 
+        p['std_conformity'] = 0.3
+        p['std_intolerance'] = 0.3
+        p['std_susceptibility'] = 0.7
+        p['std_social_reach'] = 4.0
+
+        # print(p)
+
         # Sample other parameters in bulk
         intolerances = np.maximum(np.random.normal(p['mean_intolerance'], p['std_intolerance'], n), 0)
         susceptibilities = np.maximum(np.random.normal(p['mean_susceptibility'], p['std_susceptibility'], n), 0)
@@ -168,14 +176,14 @@ class DugginsModel(Model):
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-            'mean_intolerance': np.random.uniform(0.4, 1.2), # 0.8,
-            'mean_susceptibility': np.random.uniform(2.5, 7.5), # 5.0,
-            'mean_conformity': np.random.uniform(0.15, 0.45), # 0.3,
-            'std_intolerance': np.random.uniform(0.15, 0.45), # 0.3,
-            'std_susceptibility': np.random.uniform(0.35, 1.05), # 0.7,
-            'std_conformity': np.random.uniform(0.15, 0.45), # 0.3,
-            'mean_social_reach': np.random.uniform(0.0, 30.0), # 22.0,
-            'std_social_reach': np.random.uniform(2, 6), # 4
+            'mean_intolerance': np.random.uniform(0.7, 1.01),
+            'mean_susceptibility':np.random.uniform(1, 5),
+            'mean_conformity': np.random.uniform(0.1, 0.5),
+            # 'std_intolerance': np.random.uniform(0.15, 0.45), # 0.3,
+            # 'std_susceptibility': np.random.uniform(0.35, 1.05), # 0.7,
+            # 'std_conformity': np.random.uniform(0.15, 0.45), # 0.3,
+            'mean_social_reach': np.random.uniform(15.0, 30.0), # 22.0,
+            # 'std_social_reach': np.random.uniform(2, 6), # 4
         }
     
     @staticmethod
@@ -194,14 +202,14 @@ class DugginsModel(Model):
         This function will convert them to the actual parameter values.
         """
         self.params = {
-            'mean_intolerance': 0.4 + 0.8 * params['mean_intolerance'],
-            'mean_susceptibility': 2.5 + 5.0 * params['mean_susceptibility'],
-            'mean_conformity': 0.15 + 0.3 * params['mean_conformity'],
-            'std_intolerance': 0.15 + 0.3 * params['std_intolerance'],
-            'std_susceptibility': 0.35 + 0.7 * params['std_susceptibility'],
-            'std_conformity': 0.15 + 0.3 * params['std_conformity'],
+            'mean_intolerance': 0.3 * params['mean_intolerance'] + 0.7,
+            'mean_susceptibility': 4 * params['mean_susceptibility'] + 1,
+            'mean_conformity': 0.4 * params['mean_conformity'] + 0.1,
+            # 'std_intolerance': 0.15 + 0.3 * params['std_intolerance'],
+            # 'std_susceptibility': 0.35 + 0.7 * params['std_susceptibility'],
+            # 'std_conformity': 0.15 + 0.3 * params['std_conformity'],
             'mean_social_reach': 30.0 * params['mean_social_reach'],
-            'std_social_reach': 2 + 4 * params['std_social_reach']
+            # 'std_social_reach': 2 + 4 * params['std_social_reach']
         }
 
     def get_cleaned_agents(self):
