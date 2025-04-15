@@ -12,4 +12,4 @@ cd /cluster/home/smoorsmith/OpinionDynamicsValidation/
 export PYTHONPATH=$(pwd)
 
 pip3 install numpy
-python3 /cluster/home/smoorsmith/OpinionDynamicsValidation/experiments/duggins/varying_noise.py
+python3 /cluster/home/smoorsmith/OpinionDynamicsValidation/experiments/duggins/no_noise.py
