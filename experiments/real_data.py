@@ -50,7 +50,7 @@ def real_data_experiment(
     all_diffs = []
     params = []
 
-    for i in range(10):
+    for i in range(4):
 
         # Optimization process and time it
         start = time.time()

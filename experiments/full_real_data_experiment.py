@@ -7,10 +7,10 @@ from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
 
 # Output path
-OUTPUT_CSV = "results/violin_data_apr3-hk_averaging.csv"
+OUTPUT_CSV = "results/violin_data_apr3-duggins.csv"
 
 # Models to run
-models = [HKAveragingModel]
+models = [DugginsModel]
 
 # List to collect all run-level diffs for violin plot
 violin_data = []

@@ -4,6 +4,7 @@ import numpy as np
 import os
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
+import json
 
 # Define the exponential function: y = a * exp(-b * x) + c
 def exp_func(x, a, b, c):
@@ -20,7 +21,7 @@ def get_yx_fit_y_lower_upper(df, x_param):
     poly_fit = np.poly1d(coeffs)
 
     # Generate fitted values
-    x_fit = np.linspace(df[x_param].min(), df[x_param].max(), 100)
+    x_fit = np.linspace(df[x_param].min(), df[x_param].max(), len(df))
     y_fit = poly_fit(x_fit)
      
     # # Initial parameter guess (a, b, c)
@@ -72,7 +73,7 @@ model_name = "duggins"
 base1 = "base_"
 base2 = ""
 # base2 = "no_noise-"
-x_param = "zero_diff"
+x_param = "noise"
 i1 = 2
 # i2 = 1
 
@@ -80,10 +81,16 @@ cap_model_name = model_name.capitalize()
 if cap_model_name == "Hk_averaging":
     cap_model_name = "HK Averaging"
 
-file_path1 = f"results/{model_name}/noise/{base1}varying_noise_data_{i1}.csv"  # Change this to the path of your CSV file
-df1 = pd.read_csv(file_path1)
+file_path1 = f"results/{model_name}/noise/max_noise_0.5_results_1.jsonl"  # Change this to the path of your CSV file
+# df1 = pd.read_csv(file_path1)
+# Load JSON lines data into a list of dicts
+with open(file_path1, "r") as f:
+    json_data = [json.loads(line) for line in f if line.strip()]
 
-# file_path2 = f"results/{model_name}/noise/{base2}varying_noise_data_{i2}.csv"  # Change this to the path of your CSV file
+# Convert to DataFrame
+df1 = pd.DataFrame(json_data)
+
+# file_path2 = f"results/{model_name}/noise/no_noise_results_.csv"  # Change this to the path of your CSV file
 # df2 = pd.read_csv(file_path2)
 
 # Compute zero_diff - opt_mean_diff
@@ -119,11 +126,11 @@ plt.fill_between(xfit1, ylower1, yupper1, alpha=0.2, color="C0")
 # # Plot shaded confidence band (1 std deviation)
 
 # 7. Labels and legend
-# plt.xlabel("Noise Level", fontsize=14, fontweight="bold")
-plt.xlabel("Zero Difference", fontsize=14)
-# plt.xlabel("Optimizer Performance", fontsize=14, fontweight="bold")
-plt.ylabel("Baseline Performance", fontsize=14)
-plt.title(f"{cap_model_name}: Performance vs Zero Difference", fontsize=16)
+plt.xlabel("Noise Level", fontsize=14, fontweight="bold")
+# plt.xlabel("Zero Difference", fontsize=14)
+plt.ylabel("Optimizer Performance", fontsize=14, fontweight="bold")
+# plt.ylabel("Baseline Performance", fontsize=14)
+plt.title(f"{cap_model_name}: Performance vs Noise", fontsize=16)
 plt.legend()
 plt.grid(True)
 plt.tight_layout()

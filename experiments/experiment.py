@@ -24,7 +24,7 @@ def run_experiment(
     model_name = model_class.get_model_name()
 
     # Create non-uniformly sampled noise levels
-    noises = np.linspace(0, max_noise, 100)  # Uniformly spaced values between 0 and 1
+    noises = np.linspace(0.3, max_noise, 10)  # Uniformly spaced values between 0 and 1
     # noises = 0.5 * uniform_samples**2  # Square root transformation to bias towards smaller values
     
     print(f"Noises: {noises}")
