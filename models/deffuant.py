@@ -54,9 +54,9 @@ class DeffuantModel(Model):
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-            'mu': np.random.uniform(0, 0.5),
-            'epsilon': np.random.uniform(0.05, 1),
-            'interactions': np.random.randint(0, 700)
+            'mu': np.random.uniform(0.2, 0.4),
+            'epsilon': np.random.uniform(0.5, 0.5),
+            'interactions': np.random.randint(300, 700)
         }
     
     @staticmethod

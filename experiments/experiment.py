@@ -24,7 +24,7 @@ def run_experiment(
     model_name = model_class.get_model_name()
 
     # Create non-uniformly sampled noise levels
-    noises = np.linspace(0.3, max_noise, 10)  # Uniformly spaced values between 0 and 1
+    noises = np.linspace(0, max_noise, 10)  # Uniformly spaced values between 0 and 1
     # noises = 0.5 * uniform_samples**2  # Square root transformation to bias towards smaller values
     
     print(f"Noises: {noises}")
@@ -81,7 +81,7 @@ def run_experiment(
         new_point["explained_var"] = explained_var
         new_point["score_diff"] = (zero_diff - opt_mean_diff)/zero_diff
 
-        # plot_2_datasets_snapshots(true, zero, difference="wasserstein", path=f"plots/{model_name}/noise/")
+        plot_2_datasets_snapshots(true, opt_datasets[0], difference="wasserstein", path=f"paper/figures/frequency/")
 
         if not os.path.exists(f"results/{model_name}/noise"):
             os.makedirs(f"results/{model_name}/noise")

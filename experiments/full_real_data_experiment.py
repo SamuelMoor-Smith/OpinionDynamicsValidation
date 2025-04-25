@@ -7,10 +7,10 @@ from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
 
 # Output path
-OUTPUT_CSV = "results/violin_data_apr3-duggins.csv"
+OUTPUT_CSV = "paper/real/deffuant.csv"
 
 # Models to run
-models = [DugginsModel]
+models = [DeffuantModel]
 
 # List to collect all run-level diffs for violin plot
 violin_data = []

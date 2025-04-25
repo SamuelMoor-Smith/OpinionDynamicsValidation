@@ -22,7 +22,7 @@ def hyperopt():
     best = lambda true, model, opt_params, obj_f=hyperopt_objective: fmin(
         fn=lambda params: obj_f(true, model, params, opt_params),
         space={param: hp.uniform(param, 0, 1) for param in model.params.keys()},
-        algo=rand.suggest,
+        algo=tpe.suggest,
         max_evals=100,
         trials=Trials(),
         show_progressbar=True
@@ -33,7 +33,7 @@ def hyperopt_objective(true: Dataset, model: Model, model_params, opt_params):
     """Objective function for Hyperopt to minimize"""
     model.set_normalized_params(model_params)
     diffs = []
-    for _ in range(3):
+    for _ in range(5):
         scores = run_and_score_optimal(true, model, opt_params)
         # normalizer = opt_params["zero_diff1to6"] if "zero_diff1to6" in opt_params else 1
         normalizer = 1
@@ -51,7 +51,7 @@ def run_and_score_optimal(true: Dataset, model: Model, opt_params):
     end_index = min(len(true_data) - 1, opt_params["num_snapshots"])
     ops = true_data[0]
     scores = [0]
-    for i in range(1,6):
+    for i in range(1,5):
         if opt_params["from_true"]: ops = model.run(true_data[i-1])
         else: ops = model.run(ops)
         scores.append(snapshot_difference(ops, true_data[i], method="wasserstein", range=model.get_opinion_range()))

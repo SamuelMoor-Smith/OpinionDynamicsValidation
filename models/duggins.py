@@ -176,7 +176,7 @@ class DugginsModel(Model):
     def get_random_params(self):
         """Get random feasible parameters for the model."""
         return {
-            'mean_intolerance': np.random.uniform(0.7, 1.01),
+            'mean_intolerance': np.random.uniform(0.7, 1.00),
             'mean_susceptibility':np.random.uniform(1, 5),
             'mean_conformity': np.random.uniform(0.1, 0.5),
             # 'std_intolerance': np.random.uniform(0.15, 0.45), # 0.3,
