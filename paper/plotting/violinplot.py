@@ -10,6 +10,7 @@ model_info = {
     "hk_averaging": ("HK Averaging Model", "C1"),
     "carpentras": ("ED Model", "C4"),
     "duggins": ("Duggins Model", "C2"),
+    "transform_deffuant": ("Transformed Deffuant Model", "C3"),
 }
 
 # Create palette based on model_info

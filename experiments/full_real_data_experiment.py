@@ -5,12 +5,12 @@ from models.deffuant import DeffuantModel
 from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
-
+from models.deffuant_transform import TransformDeffuantModel
 # Output path
-OUTPUT_CSV = "paper/real/deffuant.csv"
+OUTPUT_CSV = "paper/real/transform_deffuant.csv"
 
 # Models to run
-models = [DeffuantModel]
+models = [TransformDeffuantModel]
 
 # List to collect all run-level diffs for violin plot
 violin_data = []

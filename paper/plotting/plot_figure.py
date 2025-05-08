@@ -83,18 +83,22 @@ model_info = {
     "deffuant": ("Deffuant Model", "C0"),
     "hk_averaging": ("HK Averaging Model", "C1"),
     "carpentras": ("ED Model", "C4"),
-    "duggins": ("Duggins Model", "C2"),
+    # "duggins": ("Duggins Model", "C2"),
+    "transform_deffuant": ("Transformed Deffuant Model", "C3"),
 }
 
 # NEW ADDITION
 fig, axs = plt.subplots(2, 2, figsize=(12, 10))
 axs = axs.flatten()
 
-for i, model in enumerate(["deffuant", "hk_averaging", "carpentras", "duggins"]):
+# enumerate(["transform_deffuant"]): #
+for i, model in enumerate(["transform_deffuant", "deffuant", "hk_averaging", "carpentras"]): #enumerate(["deffuant", "hk_averaging", "carpentras", "duggins"]):
 
     filetype = "csv"
     if model == "duggins" and args.experiment != "reproducibility":
         filetype = "jsonl"    
+    elif model == "transform_deffuant" and args.experiment != "reproducibility":
+        filetype = "jsonl"
 
     # Read in file
     # filepath = f"./{args.experiment}/{args.model}.{args.filetype}"
@@ -195,7 +199,7 @@ if args.experiment == "optimized":
     fig.tight_layout(rect=[0, 0.1, 1, 1])
 else:
     fig.tight_layout(rect=[0, 0.05, 1, 1])  # Leave space for the legend at bottom
-plt.savefig(f"./paper/figures/combined_{args.experiment}.png", dpi=300, bbox_inches='tight')
+plt.savefig(f"./paper/figures/test_{args.experiment}.png", dpi=300, bbox_inches='tight')
 
 # plot_file_path = f"./figures/{args.experiment}_{args.model}.png"
 # plt.savefig(plot_file_path, dpi=300, bbox_inches='tight')
