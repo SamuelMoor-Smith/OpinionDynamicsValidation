@@ -166,7 +166,6 @@ cython_debug/
 
 old/
 results/
-paper/
 
 datasets/ess/ess_plots/
 datasets/ess/ess_datasets/
