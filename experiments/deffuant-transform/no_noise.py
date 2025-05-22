@@ -5,5 +5,5 @@ from experiments.experiment import run_experiment
 # Run the experiment
 run_experiment(
     model_class=TransformDeffuantModel,
-    i=2
+    i=5
 )

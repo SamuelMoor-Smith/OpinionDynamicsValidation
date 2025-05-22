@@ -97,7 +97,7 @@ for i, model in enumerate(["transform_deffuant", "deffuant", "hk_averaging", "ca
     filetype = "csv"
     if model == "duggins" and args.experiment != "reproducibility":
         filetype = "jsonl"    
-    elif model == "transform_deffuant" and args.experiment != "reproducibility":
+    elif model == "transform_deffuant":
         filetype = "jsonl"
 
     # Read in file
@@ -111,8 +111,15 @@ for i, model in enumerate(["transform_deffuant", "deffuant", "hk_averaging", "ca
         df = pd.DataFrame(json_data)
 
     if args.experiment == "optimized":
-        filepath_base = f"./paper/reproducibility/{model}.csv"
-        df_base = pd.read_csv(filepath_base)
+        filepath_base = f"./paper/reproducibility/{model}"
+        if model == "transform_deffuant":
+            filetype_base = "jsonl"
+            with open(f"{filepath_base}.{filetype_base}", "r") as f:
+                json_data = [json.loads(line) for line in f if line.strip()]
+            df_base = pd.DataFrame(json_data)
+        else:
+            filetype_base = "csv"
+            df_base = pd.read_csv(f"{filepath_base}.{filetype_base}")
         df_base["explained_variance"] = 1 - df_base["opt_mean_diff"]/df_base["zero_diff"]
         df_base["explained_variance"] = df_base["explained_variance"].replace([np.inf, -np.inf], np.nan).fillna(df_base["explained_variance"].min())
 

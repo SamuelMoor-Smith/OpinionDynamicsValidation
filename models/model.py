@@ -2,7 +2,8 @@ from utils.rand_gen import create_random_opinion_distribution
 
 class Model:
 
-    def __init__(self, params=None):
+    def __init__(self, params=None, seed=None):
+        self.seed = seed
         self.params = params if params is not None else self.get_random_params()
 
     def create(params=None, agents=None) -> 'Model':

@@ -33,4 +33,4 @@ def keep_in_range(values, model):
         (min_val - values[values < min_val]) + min_val
     values[values > max_val] = \
         max_val - (values[values > max_val] - max_val)
-    return values
+    return values.clip(min_val, max_val)

@@ -5,6 +5,6 @@ from experiments.experiment import run_experiment
 # Run the experiment
 run_experiment(
     model_class=TransformDeffuantModel,
-    i=1,
+    i=2,
     max_noise=0.5
 )

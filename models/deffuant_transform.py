@@ -1,55 +1,13 @@
 import numpy as np
 from models.model import Model
 from utils import rand_gen
-
-def transform_sigmoid_forward(input, alpha, beta):
-    """
-    Forward transformation function for the sigmoid.
-    """
-    return 1 / (1 + np.exp(-alpha * (input - beta)))
-
-def transform_sigmoid_backward(output, alpha, beta):
-    """
-    Backward transformation function for the sigmoid.
-    """
-    return 1/alpha * np.log(output / (1 - output)) + beta
-
-def transform_1_alpha_forward(input, alpha, beta):
-    """
-    Forward transformation function for the 1-alpha.
-    Safely raise input to the power of alpha.
-    """
-    input = np.clip(input, 1e-8, 1.0)  # avoid zero/negative inputs
-    return input ** alpha
-
-def transform_1_alpha_backward(output, alpha, beta):
-    """
-    Backward transformation function for the 1-alpha.
-    """
-    output = np.clip(output, 1e-8, 1.0)  # avoid zero before taking 1/alpha power
-    return output ** (1 / alpha)
-
-def transform_logit_forward(input, alpha, beta):
-    """
-    Forward transformation function for the logistic growth-like transformation.
-    """
-    return input**alpha / (input**alpha + (1 - input)**alpha)
-
-def transform_logit_backward(output, alpha, beta):
-    """
-    Backward transformation function for the logistic growth-like transformation.
-    """
-    a = (output / (1 - output)) ** (1/alpha)
-    return a / (1 + a)
+from models.transforms import SigmoidTransformation
 
 class TransformDeffuantModel(Model):
 
-    def __init__(self, params=None):
-        self.transform = {
-            "forward": transform_1_alpha_forward,
-            "backward": transform_1_alpha_backward
-        }
-        super().__init__(params)
+    def __init__(self, params=None, seed=None):
+        self.transform = SigmoidTransformation()
+        super().__init__(params, seed)
         print(f"Transform Deffuant model created with parameters {self.params}")
 
     def run(self, input):
@@ -68,7 +26,7 @@ class TransformDeffuantModel(Model):
         p = self.params
         n = len(input)
 
-        input = self.transform["forward"](input, p['alpha'], p['beta'])
+        input = self.transform.forward(input, p['a'], p['b'], p['c'])
 
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
@@ -97,18 +55,21 @@ class TransformDeffuantModel(Model):
                 output[j] += update_to_j
 
         # Convert back to original space
-        output = self.transform["backward"](output, p['alpha'], p['beta'])
+        output = self.transform.backward(output, p['a'], p['b'], p['c'])
 
         return np.array(output)
 
     def get_random_params(self):
         """Get random feasible parameters for the model."""
+        # set seed
+        np.random.seed(self.seed)
         return {
             'mu': np.random.uniform(0, 0.5),
             'epsilon': np.random.uniform(0.1, 0.9),
             'interactions': np.random.randint(300, 700),
-            'alpha': np.random.uniform(0.01, 4.01),
-            'beta': np.random.uniform(0, 1)
+            'a': np.random.uniform(0.01, 40.01),
+            'b': np.random.uniform(0, 1),
+            'c': np.random.uniform(0.01, 20.01)
         }
     
     @staticmethod
@@ -130,8 +91,9 @@ class TransformDeffuantModel(Model):
             'mu': 0.5 * params['mu'],
             'epsilon': 0.8 * params['epsilon'] + 0.1,
             'interactions': int(400 * params['interactions'] + 300),
-            'alpha': 4 * params['alpha'] + 0.01,
-            'beta': params['beta']
+            'a': 40 * params['a'] + 0.01,
+            'b': params['b'],
+            'c': 20 * params['c'] + 0.01
         }
 
     def create(params=None, agents=None):

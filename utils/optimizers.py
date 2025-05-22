@@ -23,7 +23,7 @@ def hyperopt():
         fn=lambda params: obj_f(true, model, params, opt_params),
         space={param: hp.uniform(param, 0, 1) for param in model.params.keys()},
         algo=tpe.suggest,
-        max_evals=100,
+        max_evals=250,
         trials=Trials(),
         show_progressbar=True
     )

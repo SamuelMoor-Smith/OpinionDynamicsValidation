@@ -18,7 +18,8 @@ import json
 def run_experiment(
         model_class: Model,
         i="",
-        max_noise=0
+        max_noise=0,
+        base=False
     ):
 
     model_name = model_class.get_model_name()
@@ -29,6 +30,7 @@ def run_experiment(
     
     print(f"Noises: {noises}")
 
+    count = 0
     for noise in noises:
 
         new_point = {}
@@ -36,7 +38,8 @@ def run_experiment(
         new_point["model"] = model_name
         new_point["i"] = i
 
-        base_model: Model = model_class() # Create model with random parameters
+        base_model: Model = model_class(seed=count) # Create model with random parameters
+        count += 1
         initial_opinions = base_model.generate_initial_opinions() # generate random initial opinions
 
         if isinstance(base_model, DugginsModel):
@@ -45,6 +48,13 @@ def run_experiment(
         # Iterate over the noise levels and create the true data with that noise value
         true, explained_var = Dataset.create_with_model_from_initial_with_noise(base_model, initial_opinions, num_steps=9, noise=noise)
 
+        if base:
+            # Now create 10 more datasets with the base model and initial opinions
+            base_datasets = [Dataset.create_with_model_from_true(base_model, true.get_data()) for _ in range(10)]
+
+            # Calculate mean and std of differences between the first dataset and the rest
+            base_mean_diff, base_std_diff = calculate_mean_std(true, base_datasets, "Baseline", method="wasserstein")
+
         # Create zero data (just the last opinion to predict the next one)
         zero = Dataset.create_zero_data_from_true(true, base_model)
 
@@ -52,27 +62,33 @@ def run_experiment(
         zero_diff = dataset_difference(true, zero, method="wasserstein")
         new_point["zero_diff"] = zero_diff
 
-        if isinstance(base_model, DugginsModel):
-            comparison_model: Model = DugginsModel(agents=base_model.get_cleaned_agents())
+        if not base:
+            if isinstance(base_model, DugginsModel):
+                comparison_model: Model = DugginsModel(agents=base_model.get_cleaned_agents())
+            else:
+                comparison_model: Model = model_class()
+
+            # Optimization process and time it
+            start = time.time()
+            optimizer = optimizers.get_optimizer()
+            opt_params = {"from_true": True, "num_snapshots": 10}
+            best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
+            print(f"Optimization took {time.time() - start} seconds")
+
+            # Set the best parameters
+            comparison_model.set_normalized_params(best_params)
+            print("Best parameters: ", comparison_model.params)
+
+            # Now create 10 more datasets with the optimized model and initial opinions
+            opt_datasets = [Dataset.create_with_model_from_true(comparison_model, true.get_data()) for _ in range(10)]
+
+            # Calculate mean and std of differences between the first dataset and the rest
+            opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
         else:
-            comparison_model: Model = model_class()
+            opt_datasets = base_datasets
+            opt_mean_diff = base_mean_diff
+            opt_std_diff = base_std_diff
 
-        # Optimization process and time it
-        start = time.time()
-        optimizer = optimizers.get_optimizer()
-        opt_params = {"from_true": True, "num_snapshots": 10}
-        best_params = optimizer(true, comparison_model, opt_params, obj_f=optimizers.hyperopt_objective)
-        print(f"Optimization took {time.time() - start} seconds")
-
-        # Set the best parameters
-        comparison_model.set_normalized_params(best_params)
-        print("Best parameters: ", comparison_model.params)
-
-        # Now create 10 more datasets with the optimized model and initial opinions
-        opt_datasets = [Dataset.create_with_model_from_true(comparison_model, true.get_data()) for _ in range(10)]
-
-        # Calculate mean and std of differences between the first dataset and the rest
-        opt_mean_diff, opt_std_diff = calculate_mean_std(true, opt_datasets, "Optimized", method="wasserstein")
         new_point["opt_mean_diff"] = opt_mean_diff
         new_point["opt_std_diff"] = opt_std_diff
 
