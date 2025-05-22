@@ -108,8 +108,8 @@ class agent:
 				
 class DugginsModel(Model):
 
-    def __init__(self, params=None, agents=None, n=1000):
-        super().__init__(params)
+    def __init__(self, params=None, seed=None, agents=None, n=1000):
+        super().__init__(params, seed)
         self.agents = agents
         # print(f"Duggins model created with parameters {self.params}")
         if agents is None:

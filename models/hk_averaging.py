@@ -18,8 +18,8 @@ def calculate_mean(x, method="arithmetic"):
     
 class HKAveragingModel(Model):
 
-    def __init__(self, params=None, method="arithmetic"):
-        super().__init__(params)
+    def __init__(self, params=None, seed=None, method="arithmetic"):
+        super().__init__(params, seed)
         self.method = method
         print(f"HKAveraging model created with parameters {self.params} and method {self.method}")
 

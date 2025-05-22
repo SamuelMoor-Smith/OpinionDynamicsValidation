@@ -14,8 +14,8 @@ def keep_in_range(value):
 
 class CarpentrasModel(Model):
 
-    def __init__(self, params=None):
-        super().__init__(params)
+    def __init__(self, params=None, seed=None):
+        super().__init__(params, seed)
         print(f"Carpentras model created with parameters {self.params}")
     
     def run(self, input):

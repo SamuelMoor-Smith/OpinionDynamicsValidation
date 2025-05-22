@@ -4,8 +4,8 @@ from utils import rand_gen
 
 class DeffuantModel(Model):
 
-    def __init__(self, params=None):
-        super().__init__(params)
+    def __init__(self, params=None, seed=None):
+        super().__init__(params, seed)
         print(f"Deffuant model created with parameters {self.params}")
 
     def run(self, input):
