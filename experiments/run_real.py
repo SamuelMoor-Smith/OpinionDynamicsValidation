@@ -1,9 +1,6 @@
 from datasets.ess.ess_file import ESSFile
 from datasets.dataset import Dataset
-from models.deffuant import DeffuantModel
-from models.deffuant_transform import TransformDeffuantModel
-from models.hk_averaging import HKAveragingModel
-from models.carpentras import CarpentrasModel
+from models.distortion import DistortionAdaptor
 from models.duggins import DugginsModel
 from utils import optimizers
 from models.model import Model
@@ -26,7 +23,7 @@ def predict_ess_key_data(key: str):
         key=key,
         key_info=key_info,
         country=key_info["country"],
-        model_range=prediction_model_class.get_opinion_range()
+        model_range=PredictionModelClass.get_opinion_range()
     )
     true_data = essfile.get_true()
 
@@ -48,7 +45,7 @@ def predict_ess_key_data(key: str):
         if prediction_model_name == "duggins":
             prediction_model: Model = DugginsModel(n=essfile.get_min_agents())
         else:
-            prediction_model: Model = prediction_model_class()
+            prediction_model: Model = PredictionModelClass()
 
         # Optimization process and time it
         start = time.time()
@@ -81,21 +78,17 @@ def predict_ess_key_data(key: str):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--prediction_model", type=str, required=True)
+
+    parser.add_argument("--prediction_model", type=str, default=None)
+    parser.add_argument("--distort_prediction", action="store_true")
+
     args = parser.parse_args()
 
     # Extract the arguments
     prediction_model_name = args.prediction_model
-
-    # Get the actual model classes (going to put in Model class)
-    models_to_Models = {
-        "deffuant": DeffuantModel,
-        "hk_averaging": HKAveragingModel,
-        "ed": CarpentrasModel,
-        "duggins": DugginsModel,
-        "transform_deffuant": TransformDeffuantModel
-    }
-    prediction_model_class = models_to_Models[prediction_model_name]
+    PredictionModelClass = Model.get_registry()[prediction_model_name]
+    if args.distort_prediction:
+        prediction_model_name = f"distorted_{prediction_model_name}"
 
     KEY_SC = 10
     TRIAL_SC = 10

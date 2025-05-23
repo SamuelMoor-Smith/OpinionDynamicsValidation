@@ -1,47 +1,65 @@
 from utils.rand_gen import create_random_opinion_distribution
+import numpy as np
 
 class Model:
 
+    # Class variables
+    MODEL_NAME = None
+    OPINION_RANGE = None
+    PARAM_RANGES = None
+
+    # Will be set in __init__
+    params = None
+
     def __init__(self, params=None, seed=None):
         self.seed = seed
-        self.params = params if params is not None else self.get_random_params()
-    
-    def generate_initial_opinions(self):
-        """
-        Generate initial opinions for the model.
-        """
-        op_range = self.get_opinion_range()
-        return create_random_opinion_distribution(N=1000, min_val=op_range[0], max_val=op_range[1])
+        self.params = self._complete_params(params)
+        print(f"{self.MODEL_NAME} model created with parameters {self.params}")
 
-    def run(self, input):
+    def run(self, input, p=None):
         """
-        Run the model with input.
-        """
-        raise NotImplementedError
-    
-    def get_random_params(self):
-        """
-        Get some random feasible parameters for the model.
+        Run the model with input and parameters p.
         """
         raise NotImplementedError
     
-    @staticmethod
-    def get_model_name():
-        """
-        Return the name of the model.
-        """
-        raise NotImplementedError
+    def _complete_params(self, partial_params):
+        """Fill in missing parameters with random values."""
+        if self.PARAM_RANGES is None:
+            raise NotImplementedError("PARAM_RANGES must be defined in subclass.")
+
+        np.random.seed(self.seed)
+        complete = {}
+
+        for name, (low, high) in self.PARAM_RANGES.items():
+            if partial_params and name in partial_params:
+                complete[name] = partial_params[name]
+            else:
+                complete[name] = np.random.uniform(low, high)
+
+        return complete
+
+    def set_normalized_params(self, norm_params):
+        """Convert [0, 1] normalized params to real values using PARAM_RANGES."""
+        if self.PARAM_RANGES is None:
+            raise NotImplementedError("PARAM_RANGES must be defined in subclass.")
+        self.params = {
+            name: low + (norm_params[name] * (high - low))
+            for name, (low, high) in self.PARAM_RANGES.items()
+        }
     
-    @staticmethod
-    def get_opinion_range():
-        """
-        Return the range of opinions for the model.
-        """
-        raise NotImplementedError
+    @classmethod
+    def get_registry(cls):
+        return {subcls.MODEL_NAME: subcls for subcls in cls.__subclasses__()}
     
-    def set_normalized_params(self, params):
-        """
-        The optimizer will return values between 0 and 1.
-        This function will convert them to the actual parameter values.
-        """
-        raise NotImplementedError
+    @classmethod
+    def get_model_name(cls):
+        return cls.MODEL_NAME
+    
+    @classmethod
+    def get_opinion_range(cls):
+        return cls.OPINION_RANGE
+    
+    @classmethod
+    def generate_initial_opinions(cls):
+        op_range = cls.get_opinion_range()
+        return create_random_opinion_distribution(N=1000, min_val=op_range[0], max_val=op_range[1])

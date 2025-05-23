@@ -8,15 +8,11 @@ class DeffuantModel(Model):
     OPINION_RANGE = (0, 1)
     PARAM_RANGES = {
         'mu': (0, 0.5),
-        'epsilon': (0.1, 0.9),
+        'epsilon': (0.05, 1),
         'interactions': (300, 700)
     }
 
-    def __init__(self, params=None, seed=None):
-        super().__init__(params, seed)
-        print(f"Deffuant model created with parameters {self.params}")
-
-    def run(self, input):
+    def run(self, input, p=None):
         """
         Args:
             input: Array of initial opinion values.
@@ -28,8 +24,8 @@ class DeffuantModel(Model):
             Updated opinion distribution from running x on the deffuant model.
         """  
 
-        p = self.params
         n = len(input)
+        p = self.params if p is None else p
 
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
@@ -38,7 +34,7 @@ class DeffuantModel(Model):
         # E[interactions] = steps * epsilon
         steps = int(p['interactions']/p['epsilon'])
 
-        # Genrate random pairs of interactors beforehand to save time
+        # Generate random pairs of interactors beforehand to save time
         random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
 
         for idx in range(steps):
@@ -58,24 +54,4 @@ class DeffuantModel(Model):
                 output[j] += update_to_j
 
         return np.array(output)
-
-    def get_random_params(self):
-        """Get random feasible parameters for the model."""
-        return {
-            'mu': np.random.uniform(0.2, 0.4),
-            'epsilon': np.random.uniform(0.5, 0.5),
-            'interactions': np.random.randint(300, 700)
-        }
-    
-    
-    def set_normalized_params(self, params):
-        """
-        The optimizer will return values between 0 and 1.
-        This function will convert them to the actual parameter values.
-        """
-        self.params = {
-            'mu': 0.5 * params['mu'],
-            'epsilon': 0.95 * params['epsilon'] + 0.05,
-            'interactions': int(1000 * params['interactions'])
-        }
 

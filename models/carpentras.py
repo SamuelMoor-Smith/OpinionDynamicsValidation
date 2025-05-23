@@ -5,11 +5,17 @@ from utils.noise import keep_value_in_range
 
 class CarpentrasModel(Model):
 
-    def __init__(self, params=None, seed=None):
-        super().__init__(params, seed)
-        print(f"Carpentras model created with parameters {self.params}")
+    MODEL_NAME = "ed"
+    OPINION_RANGE = (-1, 1)
+    PARAM_RANGES = {
+        'shift_amount': (0.01, 0.06),
+        'flip_prob': (0.01, 0.08),
+        'mob_min': (0.00, 0.10),
+        'mob_max': (0.15, 0.30),
+        'iterations': (5000, 10000)
+    }
     
-    def run(self, input):
+    def run(self, input, p=None):
         """
         Args:
             x: Array of initial opinion values.
@@ -22,9 +28,9 @@ class CarpentrasModel(Model):
         Returns:
             Updated opinion distribution after iterations.
         """
-        
-        p = self.params
+
         n = len(input)
+        p = self.params if p is None else p
 
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
@@ -60,36 +66,3 @@ class CarpentrasModel(Model):
             output[i] = keep_value_in_range(output[i])
 
         return np.array(output)
-    
-    def get_random_params(self):
-        """Get random feasible parameters for the model."""
-        return {
-            'shift_amount': np.random.uniform(0.01, 0.06),
-            'flip_prob': np.random.uniform(0.01, 0.08),
-            'mob_min': np.random.uniform(0, 0.10),
-            'mob_max': np.random.uniform(0.15, 0.30),
-            'iterations': np.random.randint(5000, 10000)
-        }
-    
-    @staticmethod
-    def get_model_name():
-        """Return the name of the model."""
-        return "carpentras"
-    
-    @staticmethod
-    def get_opinion_range():
-        """Get the opinion range of the model. ie. the range of possible opinion values."""
-        return (-1, 1)
-    
-    def set_normalized_params(self, params):
-        """
-        The optimizer will return values between 0 and 1.
-        This function will convert them to the actual parameter values.
-        """
-        self.params = {
-            'shift_amount': 0.06 * params['shift_amount'],
-            'flip_prob': 0.08 * params['flip_prob'],
-            'mob_min': 0.10 * params['mob_min'],
-            'mob_max': 0.15 * params['mob_max'] + 0.15,
-            'iterations': int(5000 * params['iterations'])
-        }

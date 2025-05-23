@@ -1,7 +1,6 @@
 import numpy as np
 from models.model import Model
 from utils import rand_gen
-from scipy.spatial import KDTree
 
 def calculate_mean(x, method="arithmetic"):
     """
@@ -18,12 +17,18 @@ def calculate_mean(x, method="arithmetic"):
     
 class HKAveragingModel(Model):
 
+    MODEL_NAME = "hk_averaging"
+    OPINION_RANGE = (0, 1)
+    PARAM_RANGES = {
+        'epsilon': (0.05, 1),
+        'agents': (0.05, 1)
+    }
+
     def __init__(self, params=None, seed=None, method="arithmetic"):
         super().__init__(params, seed)
         self.method = method
-        print(f"HKAveraging model created with parameters {self.params} and method {self.method}")
 
-    def run(self, input):
+    def run(self, input, p=None):
         """
         Args:
             x: Array of initial opinion values.
@@ -34,8 +39,8 @@ class HKAveragingModel(Model):
             Updated opinion distribution from running x on the HK averaging model.
         """
         
-        p = self.params
         n = len(input)
+        p = self.params if p is None else p
 
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
@@ -59,30 +64,3 @@ class HKAveragingModel(Model):
                 output[agent] = calculate_mean(close_opinions, method=self.method)
 
         return np.array(output)
-    
-    def get_random_params(self):
-        """Get random feasible parameters for the model."""
-        return {
-            'epsilon': np.random.uniform(0.05, 1),
-            'agents': np.random.uniform(0.05, 1),
-        }
-    
-    @staticmethod
-    def get_model_name():
-        """Return the name of the model."""
-        return "hk_averaging"
-    
-    @staticmethod
-    def get_opinion_range():
-        """Get the opinion range of the model. ie. the range of possible opinion values."""
-        return (0, 1)
-    
-    def set_normalized_params(self, params):
-        """
-        The optimizer will return values between 0 and 1.
-        This function will convert them to the actual parameter values.
-        """
-        self.params = {
-            'epsilon': params['epsilon'],
-            'agents': params['agents']
-        }

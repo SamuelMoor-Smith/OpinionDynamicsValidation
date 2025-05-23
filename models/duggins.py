@@ -108,6 +108,19 @@ class agent:
 				
 class DugginsModel(Model):
 
+    MODEL_NAME = "duggins"
+    OPINION_RANGE = (0, 100)
+    PARAM_RANGES = {
+        'mean_intolerance': (0.7, 1.0),
+        'mean_susceptibility': (1, 5),
+        'mean_conformity': (0.1, 0.5),
+        # 'std_intolerance': (0.15, 0.45), # 0.3,
+        # 'std_susceptibility': (0.35, 1.05), # 0.7,
+        # 'std_conformity': (0.15, 0.45), # 0.3,
+        'mean_social_reach': (15.0, 30.0), # 22.0,
+        # 'std_social_reach': (2, 6), # 4
+    }
+
     def __init__(self, params=None, seed=None, agents=None, n=1000):
         super().__init__(params, seed)
         self.agents = agents
@@ -156,7 +169,7 @@ class DugginsModel(Model):
                 if i != j and ((j.x - i.x)**2 + (j.y - i.y)**2)**(0.5) < min(i.radius,j.radius):
                     i.addtonetwork(j)
     
-    def run(self, input):
+    def run(self, input, p=None):
 		
         # Make sure agents have correct opinions
         for i, o in enumerate(input):
@@ -172,45 +185,6 @@ class DugginsModel(Model):
                 self.agents[i].hold_dialogue()
 		
         return np.array([agent.O for agent in self.agents])
-    
-    def get_random_params(self):
-        """Get random feasible parameters for the model."""
-        return {
-            'mean_intolerance': np.random.uniform(0.7, 1.00),
-            'mean_susceptibility':np.random.uniform(1, 5),
-            'mean_conformity': np.random.uniform(0.1, 0.5),
-            # 'std_intolerance': np.random.uniform(0.15, 0.45), # 0.3,
-            # 'std_susceptibility': np.random.uniform(0.35, 1.05), # 0.7,
-            # 'std_conformity': np.random.uniform(0.15, 0.45), # 0.3,
-            'mean_social_reach': np.random.uniform(15.0, 30.0), # 22.0,
-            # 'std_social_reach': np.random.uniform(2, 6), # 4
-        }
-    
-    @staticmethod
-    def get_model_name():
-        """Return the name of the model."""
-        return "duggins"
-    
-    @staticmethod
-    def get_opinion_range():
-        """Get the opinion range of the model. ie. the range of possible opinion values."""
-        return (0, 100)
-    
-    def set_normalized_params(self, params):
-        """
-        The optimizer will return values between 0 and 1.
-        This function will convert them to the actual parameter values.
-        """
-        self.params = {
-            'mean_intolerance': 0.3 * params['mean_intolerance'] + 0.7,
-            'mean_susceptibility': 4 * params['mean_susceptibility'] + 1,
-            'mean_conformity': 0.4 * params['mean_conformity'] + 0.1,
-            # 'std_intolerance': 0.15 + 0.3 * params['std_intolerance'],
-            # 'std_susceptibility': 0.35 + 0.7 * params['std_susceptibility'],
-            # 'std_conformity': 0.15 + 0.3 * params['std_conformity'],
-            'mean_social_reach': 30.0 * params['mean_social_reach'],
-            # 'std_social_reach': 2 + 4 * params['std_social_reach']
-        }
 
     def get_cleaned_agents(self):
         agents_copy = copy.deepcopy(self.agents)

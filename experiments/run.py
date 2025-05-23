@@ -6,21 +6,29 @@ import argparse
 from datasets.dataset import Dataset
 from utils.differences import calculate_mean_std
 from utils import optimizers
+
 from models.model import Model
+from models.distortion import DistortionAdaptor
 from models.deffuant import DeffuantModel
-from models.deffuant_transform import TransformDeffuantModel
 from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
+
 from utils.differences import dataset_difference
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
+
     parser.add_argument("--true_model", type=str, required=True)
+    parser.add_argument("--distort_true", action="store_true")
+
     parser.add_argument("--prediction_model", type=str, default=None)
-    parser.add_argument("--experiment", type=str, choices=["reproducibility", "noise", "optimized"], required=True)
+    parser.add_argument("--distort_prediction", action="store_true")
+
+    parser.add_argument("--experiment", type=str, default="reproducibility", choices=["reproducibility", "noise", "optimized"])
     parser.add_argument("--seed", type=int, default=0)
+
     args = parser.parse_args()
 
     # Extract the arguments
@@ -29,16 +37,20 @@ if __name__ == "__main__":
     starting_seed = args.seed
     experiment = args.experiment
 
-    # Get the actual model classes (going to put in Model class)
-    models_to_Models = {
-        "deffuant": DeffuantModel,
-        "hk_averaging": HKAveragingModel,
-        "ed": CarpentrasModel,
-        "duggins": DugginsModel,
-        "transform_deffuant": TransformDeffuantModel
-    }
-    true_model_class = models_to_Models[true_model_name]
-    prediction_model_class = models_to_Models[prediction_model_name]
+    # Get the actual model classes
+    TrueModelClass = Model.get_registry()[true_model_name]
+    PredictionModelClass = Model.get_registry()[prediction_model_name]
+
+    # Add distortion to the names if needed
+    if args.distort_true:
+        true_model_name = f"distorted_{true_model_name}"
+        if args.prediction_model == None:
+            # If the prediction model is not specified, we will use the true model
+            # Which means we need to distort it
+            args.distort_prediction = True
+
+    if args.distort_prediction:
+        prediction_model_name = f"distorted_{prediction_model_name}"
 
     TOTAL_TRIALS = 100
     TRIAL_SC = 10
@@ -61,6 +73,8 @@ if __name__ == "__main__":
     seed = starting_seed
     for trial in range(TOTAL_TRIALS):
 
+        print(f"Running trial {trial + 1}/{TOTAL_TRIALS} with seed {seed}")
+
         trial_info = {
             "trial": trial,
             "true_model": true_model_name,
@@ -70,7 +84,9 @@ if __name__ == "__main__":
         }
 
         # Create true model with random parameters
-        true_model: Model = true_model_class(seed=seed)
+        true_model: Model = TrueModelClass(seed=seed)
+        if args.distort_true:
+            true_model = DistortionAdaptor(true_model, seed=seed)
         seed += 1
 
         # generate random initial opinions
@@ -98,7 +114,11 @@ if __name__ == "__main__":
             if isinstance(true_model, DugginsModel):
                 prediction_model: Model = DugginsModel(agents=true_model.get_cleaned_agents())
             else:
-                prediction_model: Model = prediction_model_class()
+                prediction_model: Model = PredictionModelClass()
+                if args.distort_prediction:
+                    prediction_model = DistortionAdaptor(prediction_model, seed=seed)
+                    print(f"Distorted prediction model: {prediction_model.get_model_name()}")
+                    print(f"Old params have been reset. New params: {prediction_model.params}")
 
             # Optimization process and time it
             start = time.time()
@@ -124,3 +144,5 @@ if __name__ == "__main__":
 
         with open(results_file, "a") as f:
             f.write(json.dumps(trial_info) + "\n")
+        
+        print(f"Trial {trial + 1}/{TOTAL_TRIALS} completed.\n\n\n")
