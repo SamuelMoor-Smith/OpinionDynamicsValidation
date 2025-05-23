@@ -4,6 +4,14 @@ from utils import rand_gen
 
 class DeffuantModel(Model):
 
+    MODEL_NAME = "deffuant"
+    OPINION_RANGE = (0, 1)
+    PARAM_RANGES = {
+        'mu': (0, 0.5),
+        'epsilon': (0.1, 0.9),
+        'interactions': (300, 700)
+    }
+
     def __init__(self, params=None, seed=None):
         super().__init__(params, seed)
         print(f"Deffuant model created with parameters {self.params}")
@@ -59,15 +67,6 @@ class DeffuantModel(Model):
             'interactions': np.random.randint(300, 700)
         }
     
-    @staticmethod
-    def get_model_name():
-        """Return the name of the model."""
-        return "deffuant"
-    
-    @staticmethod
-    def get_opinion_range():
-        """Get the opinion range of the model. ie. the range of possible opinion values."""
-        return (0, 1)
     
     def set_normalized_params(self, params):
         """
@@ -79,10 +78,4 @@ class DeffuantModel(Model):
             'epsilon': 0.95 * params['epsilon'] + 0.05,
             'interactions': int(1000 * params['interactions'])
         }
-
-    def create(params=None, agents=None):
-        """Create the model and print that it was created with its random parameters."""
-        model = DeffuantModel(params)
-        print(f"Deffuant model created with parameters {model.params}")
-        return model
 

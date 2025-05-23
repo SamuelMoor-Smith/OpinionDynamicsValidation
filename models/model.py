@@ -5,12 +5,6 @@ class Model:
     def __init__(self, params=None, seed=None):
         self.seed = seed
         self.params = params if params is not None else self.get_random_params()
-
-    def create(params=None, agents=None) -> 'Model':
-        """
-        Create a model with random parameters (and possibly duggins ßagents).
-        """
-        raise NotImplementedError
     
     def generate_initial_opinions(self):
         """

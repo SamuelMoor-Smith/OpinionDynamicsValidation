@@ -96,9 +96,3 @@ class TransformDeffuantModel(Model):
             'c': 20 * params['c'] + 0.01
         }
 
-    def create(params=None, agents=None):
-        """Create the model and print that it was created with its random parameters."""
-        model = TransformDeffuantModel(params)
-        print(f"Transform Deffuant model created with parameters {model.params}")
-        return model
-
