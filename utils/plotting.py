@@ -1,146 +1,115 @@
 import matplotlib.pyplot as plt
 import os
 from datasets.dataset import Dataset
-from utils.differences import snapshot_difference
 import time
-import math
 import numpy as np
+import seaborn as sns
+import pandas as pd
+from datasets.ess.header_info import ess_header_info
 
-def plot_2_snapshots(
-        s1,
-        s2,
-        difference="wasserstein",
-        path=None,
-        bins=100,
-        filename=None
-):
-    """plots 2 snapshots side by side"""
+def produce_stripplot():
 
-    scores = snapshot_difference(s1, s2, method=difference)
+    # Model name mapping
+    model_info = {
+        "deffuant": ("Deffuant Model", "C0"),
+        "hk_averaging": ("HK Averaging Model", "C1"),
+        "carpentras": ("ED Model", "C4"),
+        "duggins": ("Duggins Model", "C2"),
+        "transform_deffuant": ("Transformed Deffuant Model", "C3"),
+    }
 
-    plt.figure(figsize=(15, 5))
-    plt.suptitle(f"Snapshot 1 and Snapshot 2\n{difference} Score: {scores:.3f}")
+    # Create palette based on model_info
+    palette = {info[0]: info[1] for info in model_info.values()}
 
-    # Plot data 1
-    plt.subplot(1, 2, 1)
-    plt.hist(s1, bins=bins, edgecolor='black', alpha=0.7)
-    plt.title('Snapshot 1')
-    plt.xlabel('Opinion Value')
-    plt.ylabel('Frequency')
-    plt.xticks(fontsize=7)
-    plt.yticks(fontsize=7)
+    dfs = []
+    for model in model_info.keys():
+        df = pd.read_csv(f"paper/real/{model}.csv")
+        df["Model Title"] = model_info[model][0]
+        dfs.append(df)
 
-    # Plot data 2
-    plt.subplot(1, 2, 2)
-    plt.hist(s2, bins=bins, edgecolor='black', alpha=0.7)
-    plt.title('Snapshot 2')
-    plt.xlabel('Opinion Value')
-    plt.ylabel('Frequency')
-    plt.xticks(fontsize=7)
-    plt.yticks(fontsize=7)
+    # Combine all DataFrames
+    df_combined = pd.concat(dfs, ignore_index=True)
+    df_combined["Dataset"] = df_combined["Key"].map(lambda k: f"{k}-{ess_header_info[k]['country'][:2].upper()}")
 
-    plt.tight_layout(pad=1.5)  # Adjusted padding for better fit
+    # Plot
 
-    if path is not None:
-        if not os.path.exists(path):
-            os.makedirs(path)
-        timestamp = time.strftime("%Y%m%d-%H%M%S")
-        filename = f"s1_vs_s2_{timestamp}.png"
-        plt.savefig(os.path.join(path, filename))
-        # print(f"Plot saved at {os.path.join(save_path, filename)}")
-        plt.close()  # Close the plot to free up memory
-    else:
-        plt.show()
+    TITLE = f"Model Performance on ESS Data"
+    Y_LABEL = "Explained Variance"
+    X_LABEL = "ESS Dataset"
 
-def plot_2_datasets_snapshots(
-        d1: Dataset,
-        d2: Dataset,
-        difference="wasserstein",
-        path=None,
-        bins=100,
-        filename=None
-):
-    """plots the 2 datasets snapshots side by side"""
+    plt.figure(figsize=(12, 6))
+    sns.stripplot(data=df_combined, x="Dataset", y="Scaled Optimized Difference", hue="Model Title", dodge="quartile", alpha=0.5, palette=palette, size=5)
 
+    plt.axhline(y=0, color='black', linewidth=2)
+
+    plt.title(TITLE, fontsize=20)
+
+    plt.ylabel(Y_LABEL, fontsize=18)
+    plt.xlabel(X_LABEL, fontsize=18)
+    plt.xticks(rotation=45, fontsize=16)
+    plt.yticks(fontsize=16)
+
+    plt.tight_layout()
+    plt.savefig("paper/figures/real/stripplot.png", dpi=300, bbox_inches="tight")
+    plt.show()
+
+
+def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
+    """
+    Plots snapshots of two datasets side by side with histograms per time step.
+    
+    Parameters:
+        d1, d2: Dataset objects with get_data(), get_opinion_range(), get_params()
+        path: optional directory to save the figure
+        bins: number of bins for histogram
+        filename: optional filename for saved image
+        difference: metric name for computing snapshot differences (e.g. 'wasserstein')
+    """
     data1 = d1.get_data()
     data2 = d2.get_data()
-
-    print("Parameters: ", d2.get_params())
-
-    N = len(data1)
-
-    cols = 3
-    rows = 3
-
-    scores = [snapshot_difference(data1[i], data2[i], method=difference) for i in range(N)]
-
-    # 📌 Step 1: Precompute y_max across all histograms
     op_range = d1.get_opinion_range()
-    fig, axes = plt.subplots(rows, cols, figsize=(10, 10))  # Set tight layout
+    n_snapshots = len(data1)
 
-    # name = d1.model.__class__.__name__
-    # Set a shared title
+    rows, cols = 3, 3
+
+    fig, axes = plt.subplots(rows, cols, figsize=(12, 10))
+    name = d2.model.get_model_name().capitalize()
     fig.suptitle(
-        # f"Model 1: {d1.model.__class__.__name__} (Params: {d1.get_params()})\n"
-        # f"Model 2: {d2.model.__class__.__name__} (Params: {d2.get_params()})\n"
-        # f"Total Score Sum: {sum(scores):.3f}",
-        # f"{name[0].upper() + name[1:]}",
-        "Deffuant Model: Optimized vs. Ground-Truth Over Time",
+        f"{name} Model: Optimized vs. Ground-Truth Over Time",
         fontsize=24
     )
 
+    # Compute max y-value per row for consistent scaling
     row_y_max = [0 for _ in range(rows)]
-    for i, ax in enumerate(axes.flat):
-        h1, _, _ = ax.hist(data1[i], bins=bins, range=op_range, alpha=0.5, label='Data1')
-        h2, _, _ = ax.hist(data2[i], bins=bins, range=op_range, alpha=0.5, label='Data2')
-        # if i > 0:
-        #     ax.hist(data1[i-1], bins=bins, range=d1.get_opinion_range(), alpha=0.2, label='Data1Z')
-
-        # y_max = max(y_max, h1.max(), h2.max())
+    for i in range(n_snapshots):
         row = i // cols
+        h1, _, _ = np.histogram(data1[i], bins=bins, range=op_range)
+        h2, _, _ = np.histogram(data2[i], bins=bins, range=op_range)
         row_y_max[row] = max(row_y_max[row], h1.max(), h2.max())
 
-        # if i % cols == cols -1: # Last column
-        #     # iterate through the row
-        #     for ax2 in axes.flat[i-cols+1:i+1]: 
-        #         ax2.set_ylim(bottom=0, top=y_max)
+    for i, ax in enumerate(axes.flat[:n_snapshots]):
+        ax.hist(data1[i], bins=bins, range=op_range, alpha=0.5, label='Data1')
+        ax.hist(data2[i], bins=bins, range=op_range, alpha=0.5, label='Data2')
 
-        # Remove axis labels except for bottom row (X) and leftmost column (Y)
-        if i // cols < rows - 1:  # Not in the last row
+        ax.set_title(f'Round {i+1}', fontsize=16)
+        ax.set_xlim(*op_range)
+        ax.set_ylim(0, row_y_max[i // cols])
+        ax.tick_params(axis='both', labelsize=12)
+
+        # Hide redundant ticks
+        if i // cols < rows - 1:
             ax.set_xticklabels([])
-        if i % cols != 0:  # Not in the first column
+        if i % cols != 0:
             ax.set_yticklabels([])
-         # ax.set_title(f'Score: ', fontsize=8)
-        ax.tick_params(axis='both', labelsize=16)
 
-        # # ax.set_title(f'Round {i+1}', fontsize=8)
-        # score_base = snapshot_difference(data1[i], data2[i], method=difference)
-        # if i == 0:
-        #     ax.set_title(f'{score_base:.3f}', fontsize=8)
-        # else:
-        #     score_zero = snapshot_difference(data1[i], data1[i-1], method=difference)
-        ax.set_title(f'Round {i+1}', fontsize=20)
-        ax.set_xlim(left=op_range[0], right=op_range[1])
+    # Global axis labels
+    fig.supxlabel("Opinion Value", fontsize=18)
+    fig.supylabel("Frequency", fontsize=18)
 
-    for i, ax in enumerate(axes.flat):
-        # Set y-limits for each row
-        ax.set_ylim(bottom=0, top=row_y_max[i // cols])
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for title
 
-    # Shared X and Y labels
-    fig.supxlabel("Opinion Value", fontsize=22)
-    fig.supylabel("Frequency", fontsize=22)
-
-    plt.tight_layout()
-    # plt.xlim(op_range[0], op_range[1])
-    # plt.ylim(0, y_max)  
-
-    if path is not None:
-        if not os.path.exists(path):
-            os.makedirs(path)
-        timestamp = time.strftime("%Y%m%d-%H%M%S")
-        if not filename:
-            filename = f"d1_vs_d2_snapshots_{timestamp}.png"
-        plt.savefig(os.path.join(path, filename), dpi=300, bbox_inches="tight")
-        plt.close()  # Close the plot to free up memory
-    else:
-        plt.show()
+    os.makedirs(path, exist_ok=True)
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    filename = f"d1_vs_d2_snapshots_{timestamp}.png"
+    plt.savefig(os.path.join(path, filename), dpi=300, bbox_inches="tight")
+    plt.close()

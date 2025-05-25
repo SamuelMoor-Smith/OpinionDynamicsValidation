@@ -3,7 +3,6 @@ import numpy as np
 import sys
 import os
 import matplotlib.pyplot as plt
-from utils.plotting import plot_2_datasets_snapshots
 
 from datasets.dataset import Dataset
 from datasets.ess.ess_file import ESSFile

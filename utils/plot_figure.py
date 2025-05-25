@@ -67,9 +67,7 @@ def get_yx_fit_y_lower_upper(df, x_param):
     return x_fit, y_fit, y_lower, y_upper
 
 parser = argparse.ArgumentParser()
-# parser.add_argument("--model", type=str, default="deffuant")
 parser.add_argument("--experiment", type=str, default="reproducibility")
-# parser.add_argument("--filetype", type=str, default="csv")
 args = parser.parse_args()
 
 # Get x parameter
@@ -80,22 +78,25 @@ else:
 
 # Model name mapping
 model_info = {
-    # "deffuant": ("Deffuant Model", "C0"),
-    # "hk_averaging": ("HK Averaging Model", "C1"),
-    # "carpentras": ("ED Model", "C4"),
-    # "duggins": ("Duggins Model", "C2"),
-    "transform_deffuant": ("Transformed Deffuant Model", "C0"),
+    "deffuant": ("Deffuant Model", "C0"),
+    "hk_averaging": ("HK Averaging Model", "C1"),
+    "carpentras": ("ED Model", "C4"),
+    "duggins": ("Duggins Model", "C2"),
+    "transform_deffuant": ("Transformed Deffuant Model", "C3"),
 }
 
 # NEW ADDITION
 fig, axs = plt.subplots(2, 2, figsize=(12, 10))
 axs = axs.flatten()
 
-for i, model in enumerate(["deffuant", "hk_averaging", "carpentras", "duggins"]):
+# enumerate(["transform_deffuant"]): #
+for i, model in enumerate(["transform_deffuant", "deffuant", "hk_averaging", "carpentras"]): #enumerate(["deffuant", "hk_averaging", "carpentras", "duggins"]):
 
     filetype = "csv"
     if model == "duggins" and args.experiment != "reproducibility":
         filetype = "jsonl"    
+    elif model == "transform_deffuant":
+        filetype = "jsonl"
 
     # Read in file
     # filepath = f"./{args.experiment}/{args.model}.{args.filetype}"
@@ -108,8 +109,15 @@ for i, model in enumerate(["deffuant", "hk_averaging", "carpentras", "duggins"])
         df = pd.DataFrame(json_data)
 
     if args.experiment == "optimized":
-        filepath_base = f"./paper/reproducibility/{model}.csv"
-        df_base = pd.read_csv(filepath_base)
+        filepath_base = f"./paper/reproducibility/{model}"
+        if model == "transform_deffuant":
+            filetype_base = "jsonl"
+            with open(f"{filepath_base}.{filetype_base}", "r") as f:
+                json_data = [json.loads(line) for line in f if line.strip()]
+            df_base = pd.DataFrame(json_data)
+        else:
+            filetype_base = "csv"
+            df_base = pd.read_csv(f"{filepath_base}.{filetype_base}")
         df_base["explained_variance"] = 1 - df_base["opt_mean_diff"]/df_base["zero_diff"]
         df_base["explained_variance"] = df_base["explained_variance"].replace([np.inf, -np.inf], np.nan).fillna(df_base["explained_variance"].min())
 
@@ -196,7 +204,7 @@ if args.experiment == "optimized":
     fig.tight_layout(rect=[0, 0.1, 1, 1])
 else:
     fig.tight_layout(rect=[0, 0.05, 1, 1])  # Leave space for the legend at bottom
-plt.savefig(f"./paper/figures/combined_{args.experiment}.png", dpi=300, bbox_inches='tight')
+plt.savefig(f"./paper/figures/test_{args.experiment}.png", dpi=300, bbox_inches='tight')
 
 # plot_file_path = f"./figures/{args.experiment}_{args.model}.png"
 # plt.savefig(plot_file_path, dpi=300, bbox_inches='tight')
