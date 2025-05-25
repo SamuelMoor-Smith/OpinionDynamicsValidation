@@ -5,7 +5,7 @@ from models.duggins import DugginsModel
 from utils import optimizers
 from models.model import Model
 import time
-from utils.differences import dataset_difference, calculate_mean_std
+from utils.differences import dataset_difference
 from datasets.ess.header_info import ess_header_info
 import argparse
 import copy

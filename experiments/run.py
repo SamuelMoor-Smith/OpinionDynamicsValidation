@@ -106,7 +106,7 @@ if __name__ == "__main__":
         # Create zero data (just the last opinion to predict the next one) and
         # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
         null_model_data = Dataset.create_null_model_dataset(true_data, true_model)
-        opinion_drift = dataset_difference(true_data, null_model_data, method="wasserstein")
+        opinion_drift = dataset_difference(true_data, null_model_data)
         trial_info["opinion_drift"] = opinion_drift
 
         if experiment != "reproducibility": # We will use the optimizer
@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
         # For self-consistency, create TRIAL_SC datasets with the `prediction_model` and the `true_data` as the input
         predictions = [Dataset.create_with_model_from_true(prediction_model, true_data.get_data()) for _ in range(TRIAL_SC)]
-        mean_loss, std_loss = calculate_mean_std(true_data, predictions, "Baseline", method="wasserstein")
+        mean_loss, std_loss = calculate_mean_std(true_data, predictions)
 
         trial_info["mean_loss"] = mean_loss
         trial_info["std_loss"] = std_loss

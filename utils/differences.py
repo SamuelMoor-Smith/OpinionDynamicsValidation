@@ -22,8 +22,9 @@ def snapshot_difference(s1, s2, range):
     s2 = (s2 - range[0]) / (range[1] - range[0])
     return wasserstein_distance(s1, s2)
 
-def dataset_difference(d1: Dataset, d2: Dataset, method='wasserstein'):
+def dataset_difference(d1: Dataset, d2: Dataset):
     """
     Compare two datasets using the given method.
     """
-    return sum(snapshot_difference(s1, s2, method, range=d2.get_opinion_range()) for s1, s2 in zip(d1.get_data(), d2.get_data()))
+    print(d2.get_opinion_range())
+    return sum(snapshot_difference(s1, s2, range=d2.get_opinion_range()) for s1, s2 in zip(d1.get_data(), d2.get_data()))
