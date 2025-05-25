@@ -83,13 +83,13 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
     row_y_max = [0 for _ in range(rows)]
     for i in range(n_snapshots):
         row = i // cols
-        h1, _, _ = np.histogram(data1[i], bins=bins, range=op_range)
-        h2, _, _ = np.histogram(data2[i], bins=bins, range=op_range)
+        h1, _, _ = np.histogram(data1[i], bins=100, range=op_range)
+        h2, _, _ = np.histogram(data2[i], bins=100, range=op_range)
         row_y_max[row] = max(row_y_max[row], h1.max(), h2.max())
 
     for i, ax in enumerate(axes.flat[:n_snapshots]):
-        ax.hist(data1[i], bins=bins, range=op_range, alpha=0.5, label='Data1')
-        ax.hist(data2[i], bins=bins, range=op_range, alpha=0.5, label='Data2')
+        ax.hist(data1[i], bins=100, range=op_range, alpha=0.5, label='Data1')
+        ax.hist(data2[i], bins=100, range=op_range, alpha=0.5, label='Data2')
 
         ax.set_title(f'Round {i+1}', fontsize=16)
         ax.set_xlim(*op_range)
