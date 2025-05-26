@@ -8,7 +8,7 @@ from utils.differences import calculate_mean_std
 from utils import optimizers
 
 from models.model import Model
-from models.distortion import DistortionAdaptor
+from models.distortion import DistortionAdaptor, plot_distortion, BetaCDFTransformation
 from models.deffuant import DeffuantModel
 from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
@@ -87,6 +87,7 @@ if __name__ == "__main__":
         true_model: Model = TrueModelClass(seed=seed)
         if args.distort_true:
             true_model = DistortionAdaptor(true_model, seed=seed)
+            # plot_distortion(BetaCDFTransformation(), a=true_model.params["a"], b=true_model.params["b"], title="Beta CDF Distortion", show_inverse=True)
         seed += 1
 
         # generate random initial opinions
@@ -117,8 +118,6 @@ if __name__ == "__main__":
                 prediction_model: Model = PredictionModelClass()
                 if args.distort_prediction:
                     prediction_model = DistortionAdaptor(prediction_model, seed=seed)
-                    print(f"Distorted prediction model: {prediction_model.get_model_name()}")
-                    print(f"Old params have been reset. New params: {prediction_model.params}")
 
             # Optimization process and time it
             start = time.time()

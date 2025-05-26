@@ -26,5 +26,4 @@ def dataset_difference(d1: Dataset, d2: Dataset):
     """
     Compare two datasets using the given method.
     """
-    print(d2.get_opinion_range())
     return sum(snapshot_difference(s1, s2, range=d2.get_opinion_range()) for s1, s2 in zip(d1.get_data(), d2.get_data()))

@@ -51,5 +51,5 @@ def run_and_score_optimal(true: Dataset, model: Model):
     scores = [0]
     for i in range(1,T_OPT):
         ops = model.run(true_data[i-1])
-        scores.append(snapshot_difference(ops, true_data[i], method="wasserstein", range=model.get_opinion_range()))
+        scores.append(snapshot_difference(ops, true_data[i], range=model.get_opinion_range()))
     return scores

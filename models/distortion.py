@@ -1,6 +1,31 @@
 import numpy as np
 from models.model import Model
 from scipy.stats import beta
+import matplotlib.pyplot as plt
+
+def plot_distortion(transformation, a, b, title="Distortion", show_inverse=False):
+    x = np.linspace(0, 1, 500)
+    y = transformation.forward(x, a, b)
+
+    plt.figure(figsize=(6, 4))
+    plt.plot(x, x, '--', label='Identity (no distortion)', color='gray')
+    plt.plot(x, y, label=f'Forward (a={a}, b={b})', color='blue')
+
+    if show_inverse:
+        try:
+            inv_x = np.linspace(0, 1, 500)
+            inv_y = transformation.backward(inv_x, a, b)
+            plt.plot(inv_x, inv_y, label='Inverse (Backward)', color='green')
+        except Exception as e:
+            print("Could not plot inverse:", e)
+
+    plt.xlabel("Input")
+    plt.ylabel("Transformed Output")
+    plt.title(title)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
     
 class DistortionAdaptor(Model):
 
@@ -28,6 +53,7 @@ class DistortionAdaptor(Model):
         # Extract transform params
         a, b = p['a'], p['b']
         transformed_input = self.transform.forward(input, a, b)
+        Transformation.assert_valid(transformed_input)
 
         # Extract base model params
         model_params = {k: v for k, v in p.items() if k not in {'a', 'b'}}
@@ -38,7 +64,8 @@ class DistortionAdaptor(Model):
     
 class Transformation:
 
-    def assert_valid(self, x, **kwargs):
+    @staticmethod
+    def assert_valid(x, **kwargs):
         """
         Assert that the input is valid.
         """
