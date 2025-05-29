@@ -35,14 +35,16 @@ class CarpentrasModel(Model):
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
 
+        iterations = int(p['iterations'])
+
         # Generate all random numbers beforehand to save time
-        random_pairs = rand_gen.generate_multiple_random_pairs(n, p['iterations'])
-        standard_noises = np.random.normal(0, 1, p['iterations'])
-        flip_draws = np.random.rand(p['iterations'])
+        random_pairs = rand_gen.generate_multiple_random_pairs(n, iterations)
+        standard_noises = np.random.normal(0, 1, iterations)
+        flip_draws = np.random.rand(iterations)
 
         mobility_range = p['mob_max'] - p['mob_min']
 
-        for idx in range(p['iterations']):
+        for idx in range(iterations):
             # Select a random pair of agents
             i, j = random_pairs[idx]
             while j == i:
@@ -53,7 +55,7 @@ class CarpentrasModel(Model):
             output[i] += standard_noises[idx] * noise_sd
             
             # Keep opinion within range
-            output[i] = keep_value_in_range(output[i])
+            output[i] = keep_value_in_range(output[i], self)
 
             # 2. Agent i flips their opinion with a 4% chance (unless the sign already changed? does this matter?)
             if flip_draws[idx] < p['flip_prob']:
@@ -63,6 +65,6 @@ class CarpentrasModel(Model):
             output[i] += p['shift_amount'] * np.sign(output[j] - output[i])
 
             # Keep opinion within range
-            output[i] = keep_value_in_range(output[i])
+            output[i] = keep_value_in_range(output[i], self)
 
         return np.array(output)

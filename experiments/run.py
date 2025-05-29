@@ -13,6 +13,7 @@ from models.deffuant import DeffuantModel
 from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
+from utils.plotting.plotting import produce_figure
 
 from utils.differences import dataset_difference
 
@@ -23,7 +24,7 @@ if __name__ == "__main__":
     parser.add_argument("--true_model", type=str, required=True)
     parser.add_argument("--distort_true", action="store_true")
 
-    parser.add_argument("--prediction_model", type=str, default=None)
+    parser.add_argument("--prediction_model", type=str, default="same_as_true")
     parser.add_argument("--distort_prediction", action="store_true")
 
     parser.add_argument("--experiment", type=str, default="reproducibility", choices=["reproducibility", "noise", "optimized"])
@@ -33,7 +34,7 @@ if __name__ == "__main__":
 
     # Extract the arguments
     true_model_name = args.true_model
-    prediction_model_name = args.prediction_model if args.prediction_model else true_model_name
+    prediction_model_name = true_model_name if args.prediction_model == "same_as_true" else args.prediction_model
     starting_seed = args.seed
     experiment = args.experiment
 
@@ -44,9 +45,8 @@ if __name__ == "__main__":
     # Add distortion to the names if needed
     if args.distort_true:
         true_model_name = f"distorted_{true_model_name}"
-        if args.prediction_model == None:
-            # If the prediction model is not specified, we will use the true model
-            # Which means we need to distort it
+        if args.prediction_model == "same_as_true":
+            # Which means we need to distort it as well
             args.distort_prediction = True
 
     if args.distort_prediction:
@@ -107,10 +107,14 @@ if __name__ == "__main__":
         # Create zero data (just the last opinion to predict the next one) and
         # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
         null_model_data = Dataset.create_null_model_dataset(true_data, true_model)
-        opinion_drift = dataset_difference(true_data, null_model_data)
-        trial_info["opinion_drift"] = opinion_drift
+        trial_info["opinion_drift"] = dataset_difference(true_data, null_model_data)
 
-        if experiment != "reproducibility": # We will use the optimizer
+        # No matter what we will use test the true model as the prediction model for our baseline data (reproducibility experiment)
+        # For self-consistency, create TRIAL_SC datasets with the `true_model` and the `true_data` as the input
+        baseline_predictions = [Dataset.create_with_model_from_true(true_model, true_data.get_data()) for _ in range(TRIAL_SC)]
+        trial_info["mean_loss_baseline"], trial_info["std_loss_baseline"] = calculate_mean_std(true_data, baseline_predictions)
+
+        if experiment != "reproducibility": # We will use the optimizer for all other experiments
 
             if isinstance(true_model, DugginsModel):
                 prediction_model: Model = DugginsModel(agents=true_model.get_cleaned_agents())
@@ -129,19 +133,19 @@ if __name__ == "__main__":
             prediction_model.set_normalized_params(best_params)
             print("Best parameters: ", prediction_model.params)
 
-        else:
-
-            prediction_model = true_model
-            print("Using the true model as the prediction model for reproducibility experiment")
-
-        # For self-consistency, create TRIAL_SC datasets with the `prediction_model` and the `true_data` as the input
-        predictions = [Dataset.create_with_model_from_true(prediction_model, true_data.get_data()) for _ in range(TRIAL_SC)]
-        mean_loss, std_loss = calculate_mean_std(true_data, predictions)
-
-        trial_info["mean_loss"] = mean_loss
-        trial_info["std_loss"] = std_loss
+            # For self-consistency, create TRIAL_SC datasets with the `prediction_model` and the `true_data` as the input
+            optimizer_predictions = [Dataset.create_with_model_from_true(prediction_model, true_data.get_data()) for _ in range(TRIAL_SC)]
+            trial_info["mean_loss_optimizer"], trial_info["std_loss_optimizer"] = calculate_mean_std(true_data, optimizer_predictions)
 
         with open(results_file, "a") as f:
             f.write(json.dumps(trial_info) + "\n")
         
         print(f"Trial {trial + 1}/{TOTAL_TRIALS} completed.\n\n\n")
+
+    # Plot the results
+    produce_figure(
+        model=prediction_model_name,
+        filepath=results_file,
+        experiment=experiment
+    )
+

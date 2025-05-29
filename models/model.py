@@ -52,6 +52,16 @@ class Model:
         return {subcls.MODEL_NAME: subcls for subcls in cls.__subclasses__()}
     
     @classmethod
+    def get_model_plotting_info(cls):
+        return {
+            "deffuant": ("Deffuant Model", "C0"),
+            "hk_averaging": ("HK Averaging Model", "C1"),
+            "ed": ("ED Model", "C4"),
+            "duggins": ("Duggins Model", "C2"),
+            "distorted_deffuant": ("Distorted Deffuant Model", "C3"),
+        }
+    
+    @classmethod
     def get_model_name(cls):
         return cls.MODEL_NAME
     

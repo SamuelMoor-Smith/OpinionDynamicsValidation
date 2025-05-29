@@ -6,17 +6,79 @@ import numpy as np
 import seaborn as sns
 import pandas as pd
 from datasets.ess.header_info import ess_header_info
+from models.model import Model
+from utils.plotting.plotting_utils import get_yx_fit_y_lower_upper, calculate_explained_variance
+import json
+
+def produce_figure(model, filepath, experiment):
+
+    # Get x parameter
+    x_param = "noise" if experiment == "noise" else "opinion_drift"
+    method = "baseline" if experiment == "reproducibility" else "optimizer"
+    y_param = f"explained_variance_{method}"
+
+    with open(filepath, "r") as f:
+        json_data = [json.loads(line) for line in f if line.strip()]
+    df = pd.DataFrame(json_data)
+
+    # Compute explained variance for optimizer
+    df = calculate_explained_variance(df, method=method)
+
+    # Get the fit
+    xfit, yfit, ylower, yupper = get_yx_fit_y_lower_upper(df, experiment, x_param, y_param)
+
+    fig, ax = plt.subplots(figsize=(12, 10))
+
+    model_plotting_info = Model.get_model_plotting_info()[model]
+
+    COLOR = model_plotting_info[1]
+    DATA_TYPE = "Reproduced" if experiment == "reproducibility" else "Optimized"
+    FIT_LABEL = f"{DATA_TYPE} Exponential Fit" if experiment == "noise" else f"{DATA_TYPE} Logarithmic Fit"
+    RAW_LABEL = f"{DATA_TYPE} Raw Data"
+
+    ax.scatter(df[x_param], df[y_param], alpha=0.2, label=RAW_LABEL, color=COLOR)
+    ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR)
+    ax.fill_between(xfit, ylower, yupper, alpha=0.2, color=COLOR)
+
+    if experiment == "optimized":
+
+        # Compute explained variance for baseline
+        df = calculate_explained_variance(df, method="baseline")
+        xfit_base, yfit_base, ylower_base, yupper_base = get_yx_fit_y_lower_upper(df, experiment, x_param, "explained_variance_baseline")
+
+        ax.scatter(df[x_param], df["explained_variance_baseline"], alpha=0.2, label="Reproduced Raw Data", color="#808080")
+        ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080")
+        ax.fill_between(xfit_base, ylower_base, yupper_base, alpha=0.2, color="#808080")
+
+    # Labels and legend
+    TITLE = f"{model_plotting_info[0]} {experiment.capitalize()}"
+    if experiment == "noise":
+        TITLE = f"{model_plotting_info[0]} with Noise"
+    Y_LABEL = "Explained Variance"
+    X_LABEL = "Noise" if experiment == "noise" else "Opinion Drift"
+
+    ax.set_title(TITLE, fontsize=24)
+    plt.xlabel(X_LABEL, fontsize=22)
+    plt.ylabel(Y_LABEL, fontsize=22)
+    ax.tick_params(axis='both', labelsize=16)
+    ax.axhline(y=0, color='black', linewidth=2)
+    ax.grid(True)
+
+    # Cap y-axis at 1
+    # X_RANGE = (0, 0.5) if experiment == "noise" else (0, 0.2)
+    Y_RANGE = (-0.5, 1) if experiment == "noise" else (-1, 1)
+    # ax.set_xlim(left=X_RANGE[0], right=X_RANGE[1])
+    ax.set_ylim(bottom=Y_RANGE[0], top=Y_RANGE[1])
+
+    plt.legend(loc="lower right", fontsize=14)
+    plt.tight_layout()
+    image_filepath = filepath.replace(".jsonl", ".png")
+    plt.savefig(image_filepath, dpi=300, bbox_inches='tight')
+
 
 def produce_stripplot():
 
-    # Model name mapping
-    model_info = {
-        "deffuant": ("Deffuant Model", "C0"),
-        "hk_averaging": ("HK Averaging Model", "C1"),
-        "carpentras": ("ED Model", "C4"),
-        "duggins": ("Duggins Model", "C2"),
-        "transform_deffuant": ("Transformed Deffuant Model", "C3"),
-    }
+    model_info = Model.get_model_plotting_info()
 
     # Create palette based on model_info
     palette = {info[0]: info[1] for info in model_info.values()}
