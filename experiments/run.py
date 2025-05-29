@@ -58,7 +58,7 @@ if __name__ == "__main__":
     MAX_NOISE = 0.5
 
     # Create the results directory if it doesn't exist
-    results_path = f"results/{experiment}"
+    results_path = f"results/{experiment}/{true_model_name}"
     if not os.path.exists(results_path):
         os.makedirs(results_path)
 
