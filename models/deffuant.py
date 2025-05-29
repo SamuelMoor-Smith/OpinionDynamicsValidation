@@ -13,16 +13,6 @@ class DeffuantModel(Model):
     }
 
     def run(self, input, p=None):
-        """
-        Args:
-            input: Array of initial opinion values.
-            mu: Convergence parameter (how much interactors converge together).
-            epsilon: Confidence threshold (how close must interactors be to converge).
-            interactions: How many expected successful interactions. 
-
-        Returns:
-            Updated opinion distribution from running x on the deffuant model.
-        """  
 
         n = len(input)
         p = self.params if p is None else p

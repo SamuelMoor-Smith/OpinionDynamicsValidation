@@ -47,9 +47,9 @@ def run_and_score_optimal(true: Dataset, model: Model):
     true_data = true.get_data()
     if isinstance(model, DugginsModel):
         model.sample_isc_for_agents(true_data[0])
-    ops = true_data[0]
+    opinions = true_data[0]
     scores = [0]
     for i in range(1,T_OPT):
-        ops = model.run(true_data[i-1])
-        scores.append(snapshot_difference(ops, true_data[i], range=model.get_opinion_range()))
+        opinions = model.run(true_data[i-1])
+        scores.append(snapshot_difference(opinions, true_data[i], range=model.get_opinion_range()))
     return scores

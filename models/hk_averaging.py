@@ -29,15 +29,6 @@ class HKAveragingModel(Model):
         self.method = method
 
     def run(self, input, p=None):
-        """
-        Args:
-            x: Array of initial opinion values.
-            epsilon: Confidence threshold (how close must interactors be to converge).
-            agents: Fraction of agents to update at each iteration.
-
-        Returns:
-            Updated opinion distribution from running x on the HK averaging model.
-        """
         
         n = len(input)
         p = self.params if p is None else p

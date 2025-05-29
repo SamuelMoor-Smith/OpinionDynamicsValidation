@@ -16,18 +16,6 @@ class CarpentrasModel(Model):
     }
     
     def run(self, input, p=None):
-        """
-        Args:
-            x: Array of initial opinion values.
-            mob_max: Maximum mobility value.
-            mob_min: Minimum mobility value.
-            flip_prob: Probability of flipping an opinion.
-            shift_amount: Amount to shift opinion towards another agent.
-            iterations: Number of iterations to run the model for.
-            
-        Returns:
-            Updated opinion distribution after iterations.
-        """
 
         n = len(input)
         p = self.params if p is None else p

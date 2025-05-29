@@ -13,7 +13,7 @@ conda activate opinion_models_clean
 MODEL=$1
 EXPERIMENT=$2
 
-JOB_NAME="basic_${MODEL}_${EXPERIMENT}"
+JOB_NAME="basic_${MODEL}_${EXPERIMENT}_${SLURM_JOB_ID}"
 LOG_DIR="logs"
 mkdir -p $LOG_DIR
 
@@ -25,7 +25,7 @@ if [[ -z "$JOB_NAME" || -z "$LOG_DIR" ]]; then
   exit 1
 fi
 
-CMD="python experiments/run.py --true_model $MODEL --experiment $EXPERIMENT"
+CMD="python experiments/run.py --true_model $MODEL --distort_true --experiment $EXPERIMENT"
 
 echo "Running command: $CMD" >> "${LOG_DIR}/${JOB_NAME}.out"
 eval $CMD >> "${LOG_DIR}/${JOB_NAME}.out" 2>> "${LOG_DIR}/${JOB_NAME}.err"
