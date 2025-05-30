@@ -28,7 +28,7 @@ class Dataset:
         data = [initial_opinions]
         for _ in range(num_steps):
             run_output = model.run(data[-1])
-            if noise is not None:
+            if noise is not None and noise != 0:
                 run_output, _, _ = add_noise(data[-1], run_output, noise, model)
             data.append(run_output)
         return Dataset(data, model)

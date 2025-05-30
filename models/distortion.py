@@ -2,6 +2,8 @@ import numpy as np
 from models.model import Model
 from scipy.stats import beta
 import matplotlib.pyplot as plt
+import random
+import os
 
 def plot_distortion(transformation, a, b, title="Distortion", show_inverse=False):
     x = np.linspace(0, 1, 500)
@@ -25,7 +27,21 @@ def plot_distortion(transformation, a, b, title="Distortion", show_inverse=False
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    # plt.show()
+
+    # Create output directory if it doesn't exist
+    save_dir = "results/distortions"
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Construct filename
+    filename = f"distortion_a{a:.2f}_b{b:.2f}.png"
+    filepath = os.path.join(save_dir, filename)
+
+    # Save plot to file
+    plt.savefig(filepath)
+    plt.close()  # Close the figure to avoid memory issues in loops
+
+    print(f"Saved: {filepath}")
     
 class DistortionAdaptor(Model):
 
@@ -46,6 +62,8 @@ class DistortionAdaptor(Model):
 
         super().__init__(params=params, seed=seed)
 
+        plot_distortion(self.transform, a=self.params["a"], b=self.params["b"], title="Beta CDF Distortion", show_inverse=True)
+
     def run(self, input, p=None):
 
         p = self.params if p is None else p
@@ -61,6 +79,27 @@ class DistortionAdaptor(Model):
         output = self.base_model.run(transformed_input, model_params)
         
         return self.transform.backward(output, a, b)
+
+    def _complete_params(self, partial_params):
+        """Fill in missing parameters with random values."""
+        if self.PARAM_RANGES is None:
+            raise NotImplementedError("PARAM_RANGES must be defined in subclass.")
+
+        np.random.seed(self.seed)
+        complete = {}
+
+        for name, (low, high) in self.PARAM_RANGES.items():
+            if partial_params and name in partial_params:
+                complete[name] = partial_params[name]
+            elif name == 'a' or name == 'b':
+                rand1 = np.random.uniform(low, 1)
+                rand2 = np.random.uniform(1, high)
+
+                complete[name] = rand1 if random.random() < 0.5 else rand2
+            else:
+                complete[name] = np.random.uniform(low, high)
+
+        return complete
     
 class Transformation:
 

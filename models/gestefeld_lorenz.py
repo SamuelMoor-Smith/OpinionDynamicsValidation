@@ -1,5 +1,6 @@
 import numpy as np
 from models.model import Model
+import time
 
 class GestefeldLorenz(Model):
 
@@ -25,7 +26,7 @@ class GestefeldLorenz(Model):
             loc=0,  # mean opinion
             scale=1,  # standard deviation
             size=1000  # number of agents
-        ).clip(*cls.OPINION_RANGE).astype(int)
+        ).clip(*cls.OPINION_RANGE)
 
     def run(self, input, p=None):
 
@@ -35,33 +36,43 @@ class GestefeldLorenz(Model):
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
 
-        for t in range(p['timesteps']):
-            for _ in range(n):  # each agent updates once per timestep
-                i = np.random.randint(0, n)
+        start_time = time.time()
 
-                if np.random.rand() < p['theta']:
-                    # Idiosyncratic reversion to initial opinion
-                    input[i] = output[i]
-                    continue
+        # Create idiosyncrasy draws
+        iterations = int(p['timesteps'])
+        idiosyncrasy_prob_draws = np.random.rand(iterations, n)
+        idiosyncrasy_value_draws = np.random.normal(
+            loc=p['mean_idiosyncrasy'],
+            scale=p['std_idiosyncrasy'],
+            size=(iterations, n)
+        )
 
-                # Select random sender j ≠ i
-                j = np.random.randint(0, n)
-                while j == i:
-                    j = np.random.randint(0, n)
+        # Create agent order updates
+        recipient_matrix = np.array([np.random.permutation(n) for _ in range(iterations)])
+        sender_matrix = np.random.randint(0, n - 1, size=(iterations, n))
 
-                ai = output[i]
-                aj = output[j]
-                discrepancy = abs(aj - ai)
+        for t in range(iterations):
+            
+            current_opinions = output.copy()
+            i_vec = recipient_matrix[t]
+            j_vec = sender_matrix[t]
 
-                # Motivated cognition weight
-                mc_weight = (p['lambda'] ** p['k']) / (p['lambda'] ** p['k'] + discrepancy ** p['k'])
+            ai = current_opinions[i_vec]
+            aj = current_opinions[j_vec]
+            discrepancy = np.abs(aj - ai)
 
-                # Change according to opinion dynamics
-                delta = mc_weight * p['alpha'] * (aj - p['rho'] * ai)
-                output[i] += delta
+            k = int(p['k'])
+            lambda_k = p['lambda'] ** k
+            mc_weight = lambda_k / (lambda_k + discrepancy ** k)
 
-                # Clip to allowed range
-                output[i] = np.clip(output[i], -0.5, 10.5)
+            delta = mc_weight * p['alpha'] * (aj - p['rho'] * ai)
+            output[i_vec] += delta
 
-        # Discretise to Likert scale
-        return np.round(output).astype(int)
+            # Overwrite with idiosyncratic values where applicable
+            idiosyncrasy_mask = idiosyncrasy_prob_draws[t] < p['theta']
+            output[idiosyncrasy_mask] = idiosyncrasy_value_draws[t][idiosyncrasy_mask]
+
+            # Clip all updated opinions
+            output = np.clip(output, *self.OPINION_RANGE)
+
+        return np.array(output)

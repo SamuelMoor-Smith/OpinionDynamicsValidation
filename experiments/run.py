@@ -13,7 +13,8 @@ from models.deffuant import DeffuantModel
 from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
-from utils.plotting.plotting import produce_figure
+from models.gestefeld_lorenz import GestefeldLorenz
+from utils.plotting.plotting import produce_figure, plot_2_datasets_snapshots
 
 from utils.differences import dataset_difference
 
@@ -101,8 +102,12 @@ if __name__ == "__main__":
         noise = MAX_NOISE * (trial / TOTAL_TRIALS) if experiment == "noise" else 0
         trial_info["noise"] = noise
 
+        start_time = time.time()
+
         # Create the true data
         true_data = Dataset.create_with_model_from_initial_opinions(true_model, initial_opinions, num_steps=STEPS, noise=noise)
+
+        print(f"True data created in {time.time() - start_time} seconds")
 
         # Create zero data (just the last opinion to predict the next one) and
         # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
@@ -113,6 +118,14 @@ if __name__ == "__main__":
         # For self-consistency, create TRIAL_SC datasets with the `true_model` and the `true_data` as the input
         baseline_predictions = [Dataset.create_with_model_from_true(true_model, true_data.get_data()) for _ in range(TRIAL_SC)]
         trial_info["mean_loss_baseline"], trial_info["std_loss_baseline"] = calculate_mean_std(true_data, baseline_predictions)
+
+        plot_2_datasets_snapshots(
+            true_data,
+            baseline_predictions[0],
+            path="./results/tmp"
+        )
+
+        print(f"Baseline predictions created in {time.time() - start_time} seconds")
 
         if experiment != "reproducibility": # We will use the optimizer for all other experiments
 

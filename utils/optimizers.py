@@ -11,6 +11,7 @@ logger = logging.getLogger("hyperopt.tpe")
 logger.setLevel(logging.ERROR)
 
 MAX_EVALS = 250
+SC_TRIALS = 5
 T_OPT = 5
 
 def get_optimizer():
@@ -34,7 +35,7 @@ def hyperopt_objective(true: Dataset, model: Model, model_params):
     """Objective function for Hyperopt to minimize"""
     model.set_normalized_params(model_params)
     diffs = []
-    for _ in range(T_OPT):
+    for _ in range(SC_TRIALS):
         scores = run_and_score_optimal(true, model)
         diffs.append(np.sum(scores))
     return {
