@@ -143,13 +143,13 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
 
     # Compute max y-value per row for consistent scaling
     row_y_max = [0 for _ in range(rows)]
-    for i in range(n_snapshots):
+    for i in range(9):
         row = i // cols
-        h1, _, _ = np.histogram(data1[i], bins=100, range=op_range)
-        h2, _, _ = np.histogram(data2[i], bins=100, range=op_range)
+        h1, _ = np.histogram(data1[i], bins=100, range=op_range)
+        h2, _ = np.histogram(data2[i], bins=100, range=op_range)
         row_y_max[row] = max(row_y_max[row], h1.max(), h2.max())
 
-    for i, ax in enumerate(axes.flat[:n_snapshots]):
+    for i, ax in enumerate(axes.flat[:9]):
         ax.hist(data1[i], bins=100, range=op_range, alpha=0.5, label='Data1')
         ax.hist(data2[i], bins=100, range=op_range, alpha=0.5, label='Data2')
 
@@ -168,7 +168,20 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
     fig.supxlabel("Opinion Value", fontsize=18)
     fig.supylabel("Frequency", fontsize=18)
 
-    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for title
+    # plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for title
+    # ---- Add full-width bottom legend with model params ----
+    param_str_1 = f"Ground Truth Params:\n{d1.get_params()}"
+    param_str_2 = f"Optimized Params:\n{d2.get_params()}"
+    full_legend_text = f"{param_str_1}\n\n{param_str_2}"
+
+    # Add the full-width text box at the bottom
+    fig.text(
+        0.5, -0.04, full_legend_text,
+        ha='center', va='top',
+        fontsize=10, wrap=True, family='monospace'
+    )
+
+    plt.tight_layout(rect=[0, 0.1, 1, 0.95])  # leave room for the bottom text and title
 
     os.makedirs(path, exist_ok=True)
     timestamp = time.strftime("%Y%m%d-%H%M%S")
