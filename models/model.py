@@ -55,6 +55,7 @@ class Model:
     def get_model_plotting_info(cls):
         return {
             "deffuant": ("Deffuant Model", "C0"),
+            "deffuant_with_repulsion": ("Deffuant with Repulsion Model", "C7"),
             "hk_averaging": ("HK Averaging Model", "C1"),
             "ed": ("ED Model", "C4"),
             "duggins": ("Duggins Model", "C2"),

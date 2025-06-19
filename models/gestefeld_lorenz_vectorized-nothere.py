@@ -8,16 +8,16 @@ class GestefeldLorenz(Model):
     OPINION_RANGE = (-5, 5)
     PARAM_RANGES = {
         # Core opinion change parameters
-        'alpha': (0.1,0.3),  # strength of change
-        'rho': (0.1,0.9),    # assimilation
-        # 'timesteps': (90, 90),  # number of timesteps
+        'alpha': (0.3,0.3),  # strength of change
+        'rho': (0.7,0.7),    # assimilation
+        'timesteps': (800, 800),  # number of timesteps
         # # Modtivated cognition parameters
-        'lambda': (1, 5),     # latitude of acceptance
-        'k': (2, 50),         # sharpness of acceptance
+        'lambda': (2, 2),     # latitude of acceptance
+        'k': (50, 50),         # sharpness of acceptance
         # Idiosyncrasy parameters
-        'theta': (0.04, 0.10),  # idiosyncrasy probability
-        # 'mean_idiosyncrasy': (-1, 1),  # mean idiosyncrasy probability
-        'std_idiosyncrasy': (1, 3),   # standard deviation of idiosyncrasy probability
+        'theta': (0.07, 0.07),  # idiosyncrasy probability
+        'mean_idiosyncrasy': (0, 0),  # mean idiosyncrasy probability
+        'std_idiosyncrasy': (2.5, 2.5),   # standard deviation of idiosyncrasy probability
     }
 
     @classmethod
@@ -32,9 +32,6 @@ class GestefeldLorenz(Model):
 
         n = len(input)
         p = self.params if p is None else p
-
-        p['timesteps'] = 90
-        p['mean_idiosyncrasy'] = 0
 
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
@@ -58,33 +55,33 @@ class GestefeldLorenz(Model):
         sender_matrix = np.random.randint(0, n - 1, size=(iterations, n)) # n-1 is included
 
         for t in range(iterations):
-            for i in range(n):
+            
+            current_opinions = output.copy()
+            i_vec = recipient_matrix[t]
+            j_vec = sender_matrix[t]
 
-                agent_i = recipient_matrix[t][i]
-                agent_j = sender_matrix[t][i]
+            ai = current_opinions[i_vec]
+            aj = current_opinions[j_vec]
+            discrepancy = np.abs(aj - ai)
 
-                ai = output[agent_i]
-                aj = output[agent_j]
+            # print(discrepancy)
 
-                if p['lambda'] > 4:
-                    mc_weight = 1
-                else:
-                    k = int(p['k'])
-                    lambda_k = p['lambda'] ** k
-                    discrepancy = np.abs(aj - ai)
-                    mc_weight = lambda_k / (lambda_k + discrepancy ** k)
+            # k = int(p['k'])
+            # lambda_k = p['lambda'] ** k
+            # mc_weight = lambda_k / (lambda_k + discrepancy ** k)
 
-                delta = mc_weight * p['alpha'] * (aj - p['rho'] * ai)
+            mc_weight = 1
+            delta = mc_weight * p['alpha'] * (aj - p['rho'] * ai)
 
-                # print(delta.size)
+            # print(delta.size)
 
-                output[agent_i] += delta
+            output[i_vec] += delta
 
-                # Overwrite with idiosyncratic values where applicable
-                if idiosyncrasy_prob_draws[t][i] < theta:
-                    output[agent_i] = idiosyncrasy_value_draws[t][i]
+            # Overwrite with idiosyncratic values where applicable
+            idiosyncrasy_mask = idiosyncrasy_prob_draws[t] < theta
+            output[idiosyncrasy_mask] = idiosyncrasy_value_draws[t][idiosyncrasy_mask]
 
-                # Clip all updated opinions
-                output = np.clip(output, *self.OPINION_RANGE)
+            # Clip all updated opinions
+            output = np.clip(output, *self.OPINION_RANGE)
 
         return np.array(output)

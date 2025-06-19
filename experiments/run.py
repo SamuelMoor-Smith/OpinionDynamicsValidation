@@ -14,7 +14,8 @@ from models.hk_averaging import HKAveragingModel
 from models.carpentras import CarpentrasModel
 from models.duggins import DugginsModel
 from models.gestefeld_lorenz import GestefeldLorenz
-from utils.plotting.plotting import produce_figure, plot_2_datasets_snapshots
+from models.deffuant_with_repulsion import DeffuantWithRepulsionModel
+from utils.plotting.plotting import produce_figure, plot_2_datasets_snapshots, plot_dataset_snapshots
 
 from utils.differences import dataset_difference
 
@@ -28,8 +29,10 @@ if __name__ == "__main__":
     parser.add_argument("--prediction_model", type=str, default="same_as_true")
     parser.add_argument("--distort_prediction", action="store_true")
 
-    parser.add_argument("--experiment", type=str, default="reproducibility", choices=["reproducibility", "noise", "optimized"])
+    parser.add_argument("--experiment", type=str, default="plot_true", choices=["plot_true", "reproducibility", "noise", "optimized"])
     parser.add_argument("--seed", type=int, default=0)
+
+    parser.add_argument("--plot_datasets", action="store_true", help="Plot the datasets after each trial")
 
     args = parser.parse_args()
 
@@ -109,6 +112,14 @@ if __name__ == "__main__":
 
         print(f"True data created in {time.time() - start_time} seconds")
 
+        if args.experiment == "plot_true":
+            plot_dataset_snapshots(
+                true_data,
+                path="./results/tmp",
+                bins=10
+            )
+            break
+
         # Create zero data (just the last opinion to predict the next one) and
         # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
         null_model_data = Dataset.create_null_model_dataset(true_data, true_model)
@@ -119,11 +130,12 @@ if __name__ == "__main__":
         baseline_predictions = [Dataset.create_with_model_from_true(true_model, true_data.get_data()) for _ in range(TRIAL_SC)]
         trial_info["mean_loss_baseline"], trial_info["std_loss_baseline"] = calculate_mean_std(true_data, baseline_predictions)
 
-        plot_2_datasets_snapshots(
-            true_data,
-            baseline_predictions[0],
-            path="./results/tmp"
-        )
+        if args.plot_datasets:
+            plot_2_datasets_snapshots(
+                true_data,
+                baseline_predictions[0],
+                path="./results/tmp"
+            )
 
         print(f"Baseline predictions created in {time.time() - start_time} seconds")
 
@@ -155,10 +167,11 @@ if __name__ == "__main__":
         
         print(f"Trial {trial + 1}/{TOTAL_TRIALS} completed.\n\n\n")
 
-    # Plot the results
-    produce_figure(
-        model=prediction_model_name,
-        filepath=results_file,
-        experiment=experiment
-    )
+    if args.experiment != "plot_true":
+        # Plot the results
+        produce_figure(
+            model=prediction_model_name,
+            filepath=results_file,
+            experiment=experiment
+        )
 

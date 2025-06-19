@@ -10,6 +10,9 @@ from models.model import Model
 from utils.plotting.plotting_utils import get_yx_fit_y_lower_upper, calculate_explained_variance
 import json
 
+sns.set_style("whitegrid")
+sns.set_context("talk")  # larger fonts
+
 def produce_figure(model, filepath, experiment):
 
     # Get x parameter
@@ -153,6 +156,9 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
         ax.hist(data1[i], bins=100, range=op_range, alpha=0.5, label='Data1')
         ax.hist(data2[i], bins=100, range=op_range, alpha=0.5, label='Data2')
 
+        # sns.histplot(data1[i], bins=100, binrange=op_range, ax=ax, kde=False, color='blue', label='Data1', alpha=0.5, element="step")
+        # sns.histplot(data2[i], bins=100, binrange=op_range, ax=ax, kde=False, color='orange', label='Data2', alpha=0.5, element="step")
+
         ax.set_title(f'Round {i+1}', fontsize=16)
         ax.set_xlim(*op_range)
         ax.set_ylim(0, row_y_max[i // cols])
@@ -185,6 +191,70 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
 
     os.makedirs(path, exist_ok=True)
     timestamp = time.strftime("%Y%m%d-%H%M%S")
-    filename = f"d1_vs_d2_snapshots_{timestamp}.png"
+    filename = f"{name}_{timestamp}.png"
+    plt.savefig(os.path.join(path, filename), dpi=300, bbox_inches="tight")
+    plt.close()
+
+def plot_dataset_snapshots(d: Dataset, path, bins=100):
+    """
+    Plots snapshots of one dataset with histograms per time step.
+    """
+    data = d.get_data()
+    op_range = d.get_opinion_range()
+    n_snapshots = len(data)
+
+    rows, cols = 3, 3
+
+    fig, axes = plt.subplots(rows, cols, figsize=(12, 10))
+    name = d.model.get_model_name().capitalize() if d.model else "Raw Dataset?"
+    fig.suptitle(
+        f"{name} Model: Optimized vs. Ground-Truth Over Time",
+        fontsize=24
+    )
+
+    # Compute max y-value per row for consistent scaling
+    row_y_max = [0 for _ in range(rows)]
+    for i in range(9):
+        row = i // cols
+        h, _ = np.histogram(data[i], bins=bins, range=op_range)
+        row_y_max[row] = max(row_y_max[row], h.max())
+
+    for i, ax in enumerate(axes.flat[:9]):
+
+        ax.hist(data[i], bins=bins, range=op_range, alpha=0.5, label='Data')
+        # sns.histplot(data[i], bins=bins, binrange=op_range, ax=ax, kde=False, color='blue', label='Data', alpha=0.5, element="step")
+
+        ax.set_title(f'Round {i+1}', fontsize=16)
+        ax.set_xlim(*op_range)
+        ax.set_ylim(0, row_y_max[i // cols])
+        ax.tick_params(axis='both', labelsize=12)
+
+        # Hide redundant ticks
+        if i // cols < rows - 1:
+            ax.set_xticklabels([])
+        if i % cols != 0:
+            ax.set_yticklabels([])
+
+    # Global axis labels
+    fig.supxlabel("Opinion Value", fontsize=18)
+    fig.supylabel("Frequency", fontsize=18)
+
+    # plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for title
+    # ---- Add full-width bottom legend with model params ----
+    param_str_1 = f"Ground Truth Params:\n{d.get_params()}"
+    full_legend_text = f"{param_str_1}"
+
+    # Add the full-width text box at the bottom
+    fig.text(
+        0.5, -0.04, full_legend_text,
+        ha='center', va='top',
+        fontsize=10, wrap=True, family='monospace'
+    )
+
+    plt.tight_layout(rect=[0, 0.1, 1, 0.95])  # leave room for the bottom text and title
+
+    os.makedirs(path, exist_ok=True)
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    filename = f"{name}_{timestamp}.png"
     plt.savefig(os.path.join(path, filename), dpi=300, bbox_inches="tight")
     plt.close()
