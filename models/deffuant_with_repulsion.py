@@ -8,7 +8,7 @@ class DeffuantWithRepulsionModel(Model):
     OPINION_RANGE = (0, 1)
     PARAM_RANGES = {
         'mu': (0, 0.5),
-        'beta': (1, 4),
+        'beta': (0, 3),
         'interactions': (300, 700)
     }
 
