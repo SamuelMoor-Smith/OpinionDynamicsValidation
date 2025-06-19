@@ -1,4 +1,5 @@
 import numpy as np
+from numba import njit
 
 def add_noise(input, output, noise, model):
     """
@@ -20,15 +21,23 @@ def variance(input, output):
     """
     return np.sum((output - input) ** 2) 
 
-def keep_value_in_range(value, model):
+@njit
+def clip_value_in_range(value, min_val, max_val):
     """
     Keep a value in the opinion range [min_val, max_val] by reflecting out-of-range values back into the range.
     """
-    if model is None:
-        min_val = -1
-        max_val = 1
-    else:
-        min_val, max_val = model.get_opinion_range()
+
+    if value < min_val:
+        return min_val
+    if value > max_val:
+        return max_val
+    return value
+
+@njit
+def keep_value_in_range(value, min_val, max_val):
+    """
+    Keep a value in the opinion range [min_val, max_val] by reflecting out-of-range values back into the range.
+    """
 
     if value < min_val:
         return (min_val - value) + min_val

@@ -1,6 +1,8 @@
 import numpy as np
 from models.model import Model
 from utils import rand_gen
+from numba import njit
+from utils.noise import clip_value_in_range
 
 class DeffuantWithRepulsionModel(Model):
 
@@ -12,21 +14,16 @@ class DeffuantWithRepulsionModel(Model):
         'interactions': (300, 700)
     }
 
-    def run(self, input, p=None):
-
-        n = len(input)
-        p = self.params if p is None else p
-
-        # Create a copy of the input to avoid modifying it
-        output = np.copy(input)
-
-        # Number of steps will be the number of desired interactions divided by epsilon
-        # E[interactions] = steps * epsilon
-        steps = int(p['interactions'])
-
-        # Generate random pairs of interactors beforehand to save time
-        random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
-
+    @staticmethod
+    @njit
+    def run_main_loop_with_njit(opinions,
+                                random_pairs,
+                                mu, beta, steps,
+                                min_val = 0,
+                                max_val = 1,
+                            ):
+        
+        n = len(opinions)
         for idx in range(steps):
 
             # Select two random interactors
@@ -35,16 +32,40 @@ class DeffuantWithRepulsionModel(Model):
                 j = np.random.randint(0, n)
 
             # Calculate the difference between the opinions
-            opinion_difference = abs(output[i] - output[j])
-            influence = p['mu'] * (1 - p['beta'] * opinion_difference)
+            opinion_difference = abs(opinions[i] - opinions[j])
+            influence = mu * (1 - beta * opinion_difference)
 
-            update_to_i = influence * (output[j] - output[i])
-            update_to_j = influence * (output[i] - output[j])
-            output[i] += update_to_i
-            output[j] += update_to_j
+            update_to_i = influence * (opinions[j] - opinions[i])
+            update_to_j = influence * (opinions[i] - opinions[j])
+            opinions[i] += update_to_i
+            opinions[j] += update_to_j
 
-            output[i] = np.clip(output[i], *self.OPINION_RANGE)
-            output[j] = np.clip(output[j], *self.OPINION_RANGE)
+            clip_value_in_range(opinions[i], min_val, max_val)
+            clip_value_in_range(opinions[j], min_val, max_val)
 
-        return np.array(output)
+        return opinions
+
+    def run(self, input, p=None):
+
+        n = len(input)
+        p = self.params if p is None else p
+
+        # Create a copy of the input to avoid modifying it
+        opinions = np.copy(input)
+
+        # Number of steps will be the number of desired interactions divided by epsilon
+        # E[interactions] = steps * epsilon
+        steps = int(p['interactions'])
+
+        # Generate random pairs of interactors beforehand to save time
+        random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
+
+        return DeffuantWithRepulsionModel.run_main_loop_with_njit(
+            opinions,
+            random_pairs,
+            p['mu'],
+            p['beta'],
+            steps
+        )
+
 

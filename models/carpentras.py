@@ -2,6 +2,7 @@ import numpy as np
 from models.model import Model
 from utils import rand_gen
 from utils.noise import keep_value_in_range
+from numba import njit
 
 class CarpentrasModel(Model):
 
@@ -14,6 +15,47 @@ class CarpentrasModel(Model):
         'mob_max': (0.15, 0.30),
         'iterations': (5000, 10000)
     }
+
+    @staticmethod
+    @njit
+    def run_main_loop_with_njit(opinions, 
+                    iterations, 
+                    random_pairs, 
+                    mobility_range, 
+                    standard_noises, 
+                    flip_draws,
+                    mob_max,
+                    flip_prob,
+                    shift_amount,
+                    min_val=-1,
+                    max_val=1
+                ):
+
+        n=len(opinions)
+        for idx in range(iterations):
+            # Select a random pair of agents
+            i, j = random_pairs[idx]
+            while j == i:
+                j = np.random.randint(0, n)
+            
+            # 1. Agent i shifts their opinion with normally distributed random noise based on their certainty
+            noise_sd = mob_max - mobility_range * np.abs(opinions[i])
+            opinions[i] += standard_noises[idx] * noise_sd
+            
+            # Keep opinion within range
+            keep_value_in_range(opinions[i], min_val, max_val)
+
+            # 2. Agent i flips their opinion with a 4% chance (unless the sign already changed? does this matter?)
+            if flip_draws[idx] < flip_prob:
+                opinions[i] = -opinions[i]
+
+            # 3. Agent i shifts their opinion by 0.03 in the direction of agent j's opinion
+            opinions[i] += shift_amount * np.sign(opinions[j] - opinions[i])
+
+            # Keep opinion within range
+            keep_value_in_range(opinions[i], min_val, max_val)
+
+        return opinions
     
     def run(self, input, p=None):
 
@@ -32,27 +74,14 @@ class CarpentrasModel(Model):
 
         mobility_range = p['mob_max'] - p['mob_min']
 
-        for idx in range(iterations):
-            # Select a random pair of agents
-            i, j = random_pairs[idx]
-            while j == i:
-                j = np.random.randint(0, n)
-            
-            # 1. Agent i shifts their opinion with normally distributed random noise based on their certainty
-            noise_sd = p['mob_max'] - mobility_range * np.abs(output[i])
-            output[i] += standard_noises[idx] * noise_sd
-            
-            # Keep opinion within range
-            output[i] = keep_value_in_range(output[i], self)
-
-            # 2. Agent i flips their opinion with a 4% chance (unless the sign already changed? does this matter?)
-            if flip_draws[idx] < p['flip_prob']:
-                output[i] = -output[i]
-
-            # 3. Agent i shifts their opinion by 0.03 in the direction of agent j's opinion
-            output[i] += p['shift_amount'] * np.sign(output[j] - output[i])
-
-            # Keep opinion within range
-            output[i] = keep_value_in_range(output[i], self)
-
-        return np.array(output)
+        return CarpentrasModel.run_main_loop_with_njit(
+            opinions=output,
+            iterations=iterations,
+            random_pairs=random_pairs,
+            mobility_range=mobility_range,
+            standard_noises=standard_noises,
+            flip_draws=flip_draws,
+            mob_max=p['mob_max'],
+            flip_prob=p['flip_prob'],
+            shift_amount=p['shift_amount']
+        )

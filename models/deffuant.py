@@ -1,6 +1,7 @@
 import numpy as np
 from models.model import Model
 from utils import rand_gen
+from numba import njit
 
 class DeffuantModel(Model):
 
@@ -12,21 +13,14 @@ class DeffuantModel(Model):
         'interactions': (300, 700)
     }
 
-    def run(self, input, p=None):
-
-        n = len(input)
-        p = self.params if p is None else p
-
-        # Create a copy of the input to avoid modifying it
-        output = np.copy(input)
-
-        # Number of steps will be the number of desired interactions divided by epsilon
-        # E[interactions] = steps * epsilon
-        steps = int(p['interactions']/p['epsilon'])
-
-        # Generate random pairs of interactors beforehand to save time
-        random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
-
+    @staticmethod
+    @njit
+    def run_main_loop_with_njit(self, opinions,
+                                random_pairs,
+                                mu, epsilon, steps
+                            ):
+        
+        n = len(opinions)
         for idx in range(steps):
 
             # Select two random interactors
@@ -35,13 +29,35 @@ class DeffuantModel(Model):
                 j = np.random.randint(0, n)
 
             # Calculate the difference between the opinions
-            opinion_difference = abs(output[i] - output[j])
-            if opinion_difference <= p['epsilon']:
+            opinion_difference = abs(opinions[i] - opinions[j])
+            if opinion_difference <= epsilon:
                 # If the difference is smaller than epsilon, update the opinions
-                update_to_i = p['mu'] * (output[j] - output[i])
-                update_to_j = p['mu'] * (output[i] - output[j])
-                output[i] += update_to_i
-                output[j] += update_to_j
+                update_to_i = mu * (opinions[j] - opinions[i])
+                update_to_j = mu * (opinions[i] - opinions[j])
+                opinions[i] += update_to_i
+                opinions[j] += update_to_j
 
-        return np.array(output)
+        return opinions
+
+
+    def run(self, input, p=None):
+
+        n = len(input)
+        p = self.params if p is None else p
+
+        # Create a copy of the input to avoid modifying it
+        opinions = np.copy(input)
+
+        # Number of steps will be the number of desired interactions divided by epsilon
+        # E[interactions] = steps * epsilon
+        steps = int(p['interactions']/p['epsilon'])
+
+        # Generate random pairs of interactors beforehand to save time
+        random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
+
+        return self.run_main_loop_with_njit(
+            opinions,
+            random_pairs,
+            p['mu'], p['epsilon'], steps
+        )
 

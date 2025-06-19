@@ -16,11 +16,19 @@ class Model:
         self.params = self._complete_params(params)
         print(f"{self.MODEL_NAME} model created with parameters {self.params}")
 
+    def run_main_loop_with_njit(self, opinions, **kwargs):
+        """
+        Run the model with input and additional keyword arguments.
+        This method is intended to be overridden by subclasses.
+        """
+        raise NotImplementedError("Subclasses must implement run_main_loop_with_njit.")
+    
     def run(self, input, p=None):
         """
-        Run the model with input and parameters p.
+        Run the model with input and parameters.
+        This method is intended to be overridden by subclasses.
         """
-        raise NotImplementedError
+        raise NotImplementedError("Subclasses must implement run.")
     
     def _complete_params(self, partial_params):
         """Fill in missing parameters with random values."""
@@ -55,7 +63,7 @@ class Model:
     def get_model_plotting_info(cls):
         return {
             "deffuant": ("Deffuant Model", "C0"),
-            "deffuant_with_repulsion": ("Deffuant with Repulsion Model", "C7"),
+            "deffuant_with_repulsion": ("Deffuant with Repulsion Model", "C8"),
             "hk_averaging": ("HK Averaging Model", "C1"),
             "ed": ("ED Model", "C4"),
             "duggins": ("Duggins Model", "C2"),
