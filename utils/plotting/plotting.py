@@ -7,7 +7,7 @@ import seaborn as sns
 import pandas as pd
 from datasets.ess.header_info import ess_header_info
 from models.model import Model
-from utils.plotting.plotting_utils import get_yx_fit_y_lower_upper, calculate_explained_variance
+from utils.plotting.plotting_utils import get_yx_fit_y_lower_upper, calculate_explained_variance, calculate_explained_variance_real
 import json
 
 sns.set_style("whitegrid")
@@ -88,13 +88,14 @@ def produce_stripplot():
 
     dfs = []
     for model in model_info.keys():
-        df = pd.read_csv(f"paper/real/{model}.csv")
+        df = pd.read_json(f"results/real/{model}.jsonl", lines=True)
         df["Model Title"] = model_info[model][0]
+        df = calculate_explained_variance_real(df)
         dfs.append(df)
 
     # Combine all DataFrames
     df_combined = pd.concat(dfs, ignore_index=True)
-    df_combined["Dataset"] = df_combined["Key"].map(lambda k: f"{k}-{ess_header_info[k]['country'][:2].upper()}")
+    df_combined["Dataset"] = df_combined["ess_key"].map(lambda k: f"{k}-{ess_header_info[k]['country'][:2].upper()}")
 
     # Plot
 
@@ -103,7 +104,7 @@ def produce_stripplot():
     X_LABEL = "ESS Dataset"
 
     plt.figure(figsize=(12, 6))
-    sns.stripplot(data=df_combined, x="Dataset", y="Scaled Optimized Difference", hue="Model Title", dodge="quartile", alpha=0.5, palette=palette, size=5)
+    sns.stripplot(data=df_combined, x="Dataset", y="explained_variance", hue="Model Title", dodge="quartile", alpha=0.5, palette=palette, size=5)
 
     plt.axhline(y=0, color='black', linewidth=2)
 
@@ -115,7 +116,7 @@ def produce_stripplot():
     plt.yticks(fontsize=16)
 
     plt.tight_layout()
-    plt.savefig("paper/figures/real/stripplot.png", dpi=300, bbox_inches="tight")
+    plt.savefig("results/figures/stripplot.png", dpi=300, bbox_inches="tight")
     plt.show()
 
 

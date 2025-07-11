@@ -13,7 +13,7 @@ class CarpentrasModel(Model):
         'flip_prob': (0.01, 0.08),
         'mob_min': (0.00, 0.10),
         'mob_max': (0.15, 0.30),
-        'iterations': (5000, 10000)
+        'iterations': (0, 10000)
     }
 
     @staticmethod

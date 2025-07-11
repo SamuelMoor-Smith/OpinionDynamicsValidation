@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from scipy.interpolate import interp1d
 from scipy.optimize import curve_fit
 
@@ -8,6 +9,15 @@ def calculate_explained_variance(df, method):
     """
     ev_col = f"explained_variance_{method}"
     df[ev_col] = 1 - df[f"mean_loss_{method}"] / df["opinion_drift"]
+    df[ev_col] = df[ev_col].replace([np.inf, -np.inf], np.nan).fillna(df[ev_col].min())
+    return df
+
+def calculate_explained_variance_real(df):
+    """
+    Calculate explained variance for the optimizer or baseline.
+    """
+    ev_col = f"explained_variance"
+    df[ev_col] = 1 - df[f"loss"] / df["opinion_drift"]
     df[ev_col] = df[ev_col].replace([np.inf, -np.inf], np.nan).fillna(df[ev_col].min())
     return df
 
@@ -42,7 +52,9 @@ def get_yx_fit_y_lower_upper(df, experiment, x_param, y_param):
     residuals = df_sorted[y_param] - y_fit
     # # Bin residuals to estimate local variance
     num_bins = 10 
-    bins = np.linspace(df_sorted[x_param].min(), df_sorted[x_param].max(), num_bins + 1)
+    # bins = np.linspace(df_sorted[x_param].min(), df_sorted[x_param].max(), num_bins + 1)
+    df_sorted["bin"], bins = pd.qcut(df_sorted[x_param], q=num_bins, retbins=True, labels=False, duplicates='drop')
+
     bin_centers = 0.5 * (bins[1:] + bins[:-1])
     bin_stds = []
 

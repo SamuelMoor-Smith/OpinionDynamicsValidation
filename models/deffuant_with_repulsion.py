@@ -40,8 +40,8 @@ class DeffuantWithRepulsionModel(Model):
             opinions[i] += update_to_i
             opinions[j] += update_to_j
 
-            clip_value_in_range(opinions[i], min_val, max_val)
-            clip_value_in_range(opinions[j], min_val, max_val)
+            opinions[i] = clip_value_in_range(opinions[i], min_val, max_val)
+            opinions[j] = clip_value_in_range(opinions[j], min_val, max_val)
 
         return opinions
 

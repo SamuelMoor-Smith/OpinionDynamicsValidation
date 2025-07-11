@@ -63,7 +63,10 @@ class Dataset:
             return self.model.get_opinion_range()
 
         if np.array([value < 0 for value in self.data]).any():
-            return (-1,1)
+            if np.array([value < -1 for value in self.data]).any():
+                return (-5,5)
+            else:
+                return (-1,1)
         elif np.array([value > 1 for value in self.data]).any():
             return (0,100)
         else:

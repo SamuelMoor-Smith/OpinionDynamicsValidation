@@ -21,7 +21,7 @@ def hyperopt():
     """
     Get the optimizer function based on the name.
     """
-    best = lambda true, model, obj_f=hyperopt_objective: fmin(
+    best = lambda true, model, obj_f=safe_objective: fmin(
         fn=lambda params: obj_f(true, model, params),
         space={param: hp.uniform(param, 0, 1) for param in model.params.keys()},
         algo=tpe.suggest,
@@ -42,6 +42,13 @@ def hyperopt_objective(true: Dataset, model: Model, model_params):
         'loss': np.mean(diffs),
         'status': STATUS_OK,
     }
+
+def safe_objective(true: Dataset, model: Model, model_params):
+    try:
+        return hyperopt_objective(true, model, model_params)
+    except Exception as e:
+        print(f"Trial failed with error: {e}")
+        return {'loss': 1e6, 'status': STATUS_OK}
 
 def run_and_score_optimal(true: Dataset, model: Model):
     """Run and score the model optimally."""

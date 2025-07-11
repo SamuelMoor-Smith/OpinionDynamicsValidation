@@ -20,8 +20,8 @@ class HKAveragingModel(Model):
     MODEL_NAME = "hk_averaging"
     OPINION_RANGE = (0, 1)
     PARAM_RANGES = {
-        'epsilon': (0.05, 1),
-        'agents': (0.05, 1)
+        'epsilon': (0, 1),
+        'agents': (0, 1)
     }
 
     def __init__(self, params=None, seed=None, method="arithmetic"):
@@ -35,6 +35,8 @@ class HKAveragingModel(Model):
 
         # Create a copy of the input to avoid modifying it
         output = np.copy(input)
+
+        # print(HKAveragingModel.PARAM_RANGES["agents"][0])
 
         # Select agents to update
         num_agents = int(p['agents'] * n)

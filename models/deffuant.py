@@ -15,7 +15,7 @@ class DeffuantModel(Model):
 
     @staticmethod
     @njit
-    def run_main_loop_with_njit(self, opinions,
+    def run_main_loop_with_njit(opinions,
                                 random_pairs,
                                 mu, epsilon, steps
                             ):
@@ -55,7 +55,7 @@ class DeffuantModel(Model):
         # Generate random pairs of interactors beforehand to save time
         random_pairs = rand_gen.generate_multiple_random_pairs(n, steps)
 
-        return self.run_main_loop_with_njit(
+        return DeffuantModel.run_main_loop_with_njit(
             opinions,
             random_pairs,
             p['mu'], p['epsilon'], steps

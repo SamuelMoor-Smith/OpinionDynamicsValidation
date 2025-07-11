@@ -11,6 +11,15 @@ import argparse
 import copy
 import os
 import json
+from scipy import stats
+from models.model import Model
+from models.distortion import DistortionAdaptor, plot_distortion, BetaCDFTransformation
+from models.deffuant import DeffuantModel
+from models.hk_averaging import HKAveragingModel
+from models.carpentras import CarpentrasModel
+from models.duggins import DugginsModel
+from models.gestefeld_lorenz import GestefeldLorenz
+from models.deffuant_with_repulsion import DeffuantWithRepulsionModel
 
 def predict_ess_key_data(key: str):
 
@@ -19,7 +28,7 @@ def predict_ess_key_data(key: str):
     # Get the ESS file
     key_info = ess_header_info[key]
     essfile = ESSFile(
-        f'datasets/ess/full_groups/{key_info["folder"]}',
+        f'datasets/ess/ess_datasets/{key_info["folder"]}',
         key=key,
         key_info=key_info,
         country=key_info["country"],
@@ -30,7 +39,7 @@ def predict_ess_key_data(key: str):
     # Create zero data (just the last opinion to predict the next one) and
     # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
     null_model_data = Dataset.create_null_model_dataset(true_data, None)
-    opinion_drift = dataset_difference(true_data, null_model_data, method="wasserstein")
+    opinion_drift = dataset_difference(true_data, null_model_data)
 
     for trial in range(KEY_SC):
 
@@ -50,7 +59,7 @@ def predict_ess_key_data(key: str):
         # Optimization process and time it
         start = time.time()
         optimizer = optimizers.get_optimizer()
-        best_params = optimizer(true_data, prediction_model, obj_f=optimizers.hyperopt_objective)
+        best_params = optimizer(true_data, prediction_model, obj_f=optimizers.safe_objective)
         print(f"Optimization took {time.time() - start} seconds")
 
         # Set the best parameters
@@ -69,6 +78,9 @@ def predict_ess_key_data(key: str):
             subtrial_info = copy.deepcopy(trial_info)
             subtrial_info["subtrial"] = subtrial
             subtrial_info["loss"] = loss
+            sorted_true_steps = [sorted(step) for step in true_data.get_data()]
+            sorted_predictions_steps = [sorted(step) for step in predictions[subtrial].get_data()]
+            subtrial_info["correlations"] = [stats.pearsonr(sorted_true_steps[i], sorted_predictions_steps[i]) for i in range(len(true_data.get_data()))]
 
             # Save the subtrial info to a file
             with open(results_file, "a") as f:

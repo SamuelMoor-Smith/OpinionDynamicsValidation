@@ -3,20 +3,22 @@ from models.model import Model
 import time
 from numba import njit
 
+from utils.noise import clip_value_in_range
+
 class GestefeldLorenz(Model):
 
     MODEL_NAME = "gestefeld_lorenz"
     OPINION_RANGE = (-5, 5)
     PARAM_RANGES = {
         # Core opinion change parameters
-        'alpha': (0.1,0.3),  # strength of change
+        'alpha': (0,0.3),  # strength of change
         'rho': (0.1,0.9),    # assimilation
-        # 'timesteps': (90, 90),  # number of timesteps
+        'timesteps': (0, 90),  # number of timesteps
         # # Modtivated cognition parameters
         'lambda': (1, 5),     # latitude of acceptance
         'k': (2, 50),         # sharpness of acceptance
         # Idiosyncrasy parameters
-        'theta': (0.04, 0.10),  # idiosyncrasy probability
+        'theta': (0.0, 0.10),  # idiosyncrasy probability
         # 'mean_idiosyncrasy': (-1, 1),  # mean idiosyncrasy probability
         'std_idiosyncrasy': (1, 3),   # standard deviation of idiosyncrasy probability
     }
@@ -41,10 +43,10 @@ class GestefeldLorenz(Model):
 
         n=len(opinions)
         for t in range(iterations):
-            for i in range(n):
+            for step in range(n):
 
-                agent_i = recipient_matrix[t][i]
-                agent_j = sender_matrix[t][i]
+                agent_i = recipient_matrix[t][step]
+                agent_j = sender_matrix[t][step]
 
                 ai = opinions[agent_i]
                 aj = opinions[agent_j]
@@ -56,6 +58,7 @@ class GestefeldLorenz(Model):
                     discrepancy = np.abs(aj - ai)
                     mc_weight = lambda_k / (lambda_k + discrepancy ** k)
 
+                mc_weight = 1
                 delta = mc_weight * alpha * (aj - rho * ai)
 
                 # print(delta.size)
@@ -63,14 +66,11 @@ class GestefeldLorenz(Model):
                 opinions[agent_i] += delta
 
                 # Overwrite with idiosyncratic values where applicable
-                if idiosyncrasy_prob_draws[t][i] < theta:
-                    opinions[agent_i] = idiosyncrasy_value_draws[t][i]
+                if idiosyncrasy_prob_draws[t][step] < theta:
+                    opinions[agent_i] = idiosyncrasy_value_draws[t][step]
 
                 # Clip all updated opinions
-                if opinions[agent_i] > opinion_range[1]:
-                    opinions[agent_i] = opinion_range[1]
-                elif opinions[agent_i] < opinion_range[0]:
-                    opinions[agent_i] = opinion_range[0]
+                opinions[agent_i] = clip_value_in_range(opinions[agent_i], opinion_range[0], opinion_range[1])
 
         return opinions
 
@@ -80,7 +80,10 @@ class GestefeldLorenz(Model):
         n = len(input)
         p = self.params if p is None else p
 
-        p['timesteps'] = 90
+        if int(p['timesteps']) <= 0:
+            return input
+
+        # p['timesteps'] = 90
         p['mean_idiosyncrasy'] = 0
 
         # Create a copy of the input to avoid modifying it

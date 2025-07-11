@@ -63,13 +63,14 @@ class Model:
     def get_model_plotting_info(cls):
         return {
             "deffuant": ("Deffuant Model", "C0"),
-            "deffuant_with_repulsion": ("Deffuant with Repulsion Model", "C8"),
+            # "deffuant_with_repulsion": ("Deffuant with Repulsion Model", "C3"),
             "hk_averaging": ("HK Averaging Model", "C1"),
             "ed": ("ED Model", "C4"),
             "duggins": ("Duggins Model", "C2"),
-            "gestefeld_lorenz": ("Gestefeld-Lorenz Model", "C6"),
-            "distorted_deffuant": ("Distorted Deffuant Model", "C3"),
-            "distorted_hk_averaging": ("Distorted HK Averaging Model", "C5"),
+            "gestefeld_lorenz": ("Gestefeld-Lorenz Model", "C5"),
+
+            # "distorted_deffuant": ("Distorted Deffuant Model", "C6"),
+            # "distorted_hk_averaging": ("Distorted HK Averaging Model", "C7"),
         }
     
     @classmethod

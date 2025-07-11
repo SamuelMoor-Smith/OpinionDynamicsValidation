@@ -92,7 +92,7 @@ if __name__ == "__main__":
         if args.distort_true:
             true_model = DistortionAdaptor(true_model, seed=seed)
             # plot_distortion(BetaCDFTransformation(), a=true_model.params["a"], b=true_model.params["b"], title="Beta CDF Distortion", show_inverse=True)
-        seed += 1
+        if seed is not None: seed += 1
 
         # generate random initial opinions
         initial_opinions = true_model.generate_initial_opinions()
@@ -113,10 +113,11 @@ if __name__ == "__main__":
         print(f"True data created in {time.time() - start_time} seconds")
 
         if args.experiment == "plot_true":
+            # print(true_data.get_data())
             plot_dataset_snapshots(
                 true_data,
                 path="./results/tmp",
-                bins=10
+                bins=100
             )
             break
 
@@ -124,6 +125,13 @@ if __name__ == "__main__":
         # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
         null_model_data = Dataset.create_null_model_dataset(true_data, true_model)
         trial_info["opinion_drift"] = dataset_difference(true_data, null_model_data)
+        if trial_info["opinion_drift"] > 0.5:
+            print(true_model.params)
+            plot_2_datasets_snapshots(
+                true_data,
+                null_model_data,
+                path="./results/high_drift"
+            )
 
         # No matter what we will use test the true model as the prediction model for our baseline data (reproducibility experiment)
         # For self-consistency, create TRIAL_SC datasets with the `true_model` and the `true_data` as the input
@@ -151,7 +159,7 @@ if __name__ == "__main__":
             # Optimization process and time it
             start = time.time()
             optimizer = optimizers.get_optimizer()
-            best_params = optimizer(true_data, prediction_model, obj_f=optimizers.hyperopt_objective)
+            best_params = optimizer(true_data, prediction_model, obj_f=optimizers.safe_objective)
             print(f"Optimization took {time.time() - start} seconds")
 
             # Set the best parameters
