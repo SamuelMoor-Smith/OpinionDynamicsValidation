@@ -69,8 +69,8 @@ class Model:
             "duggins": ("Duggins Model", "C2"),
             "gestefeld_lorenz": ("Gestefeld-Lorenz Model", "C5"),
 
-            # "distorted_deffuant": ("Distorted Deffuant Model", "C6"),
-            # "distorted_hk_averaging": ("Distorted HK Averaging Model", "C7"),
+            "distorted_deffuant": ("Distorted Deffuant Model", "C6"),
+            "distorted_hk_averaging": ("Distorted HK Averaging Model", "C7"),
         }
     
     @classmethod

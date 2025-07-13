@@ -46,8 +46,8 @@ def plot_distortion(transformation, a, b, title="Distortion", show_inverse=False
 class DistortionAdaptor(Model):
 
     TRANSFORM_PARAM_RANGES = {
-        'a': (0.1, 10),
-        'b': (0.1, 10)
+        'a': (0.5, 2),
+        'b': (0.5, 2)
     }
 
     def __init__(self, base_model: Model, params=None, seed=None):
