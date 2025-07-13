@@ -13,7 +13,7 @@ import json
 sns.set_style("whitegrid")
 sns.set_context("talk")  # larger fonts
 
-def produce_figure(model, filepath, experiment):
+def produce_figure(generator, predictor, filepath, experiment):
 
     # Get x parameter
     x_param = "noise" if experiment == "noise" else "opinion_drift"
@@ -32,15 +32,22 @@ def produce_figure(model, filepath, experiment):
 
     fig, ax = plt.subplots(figsize=(12, 10))
 
-    model_plotting_info = Model.get_model_plotting_info()[model]
+    distorted_predictor = "distorted" in predictor
+    distorted_generator = "distorted" in generator
 
-    COLOR = model_plotting_info[1]
+    predictor_plotting_info = Model.get_model_plotting_info()[predictor.removeprefix("distorted_")]
+    generator_plotting_info = Model.get_model_plotting_info()[generator.removeprefix("distorted_")]
+
+    COLOR = predictor_plotting_info[1]
     DATA_TYPE = "Reproduced" if experiment == "reproducibility" else "Optimized"
     FIT_LABEL = f"{DATA_TYPE} Exponential Fit" if experiment == "noise" else f"{DATA_TYPE} Logarithmic Fit"
     RAW_LABEL = f"{DATA_TYPE} Raw Data"
 
     ax.scatter(df[x_param], df[y_param], alpha=0.2, label=RAW_LABEL, color=COLOR)
-    ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR)
+    if distorted_predictor:
+        ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR, linestyle="--")
+    else:
+        ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR)
     ax.fill_between(xfit, ylower, yupper, alpha=0.2, color=COLOR)
 
     if experiment == "optimized":
@@ -50,13 +57,27 @@ def produce_figure(model, filepath, experiment):
         xfit_base, yfit_base, ylower_base, yupper_base = get_yx_fit_y_lower_upper(df, experiment, x_param, "explained_variance_baseline")
 
         ax.scatter(df[x_param], df["explained_variance_baseline"], alpha=0.2, label="Reproduced Raw Data", color="#808080")
-        ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080")
+        if distorted_generator:
+            ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080", linestyle="--")
+        else:
+            ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080")
         ax.fill_between(xfit_base, ylower_base, yupper_base, alpha=0.2, color="#808080")
 
     # Labels and legend
-    TITLE = f"{model_plotting_info[0]} {experiment.capitalize()}"
+    # TITLE = f"{model_plotting_info[0]} {experiment.capitalize()}"
+    generator_name = generator_plotting_info[0]
+    predictor_name = predictor_plotting_info[0]
+
+    if "distorted" in generator:
+        generator_name = f"Distorted {generator_name}"
+    if "distorted" in predictor:
+        predictor_name = f"Distorted {predictor_name}"
+
+    TITLE = f"Generator Model: {generator_name}\nPredictor Model: {predictor_name}"
+
     if experiment == "noise":
-        TITLE = f"{model_plotting_info[0]} with Noise"
+        TITLE = TITLE = f"Generator Model: {generator_name} with Noise\nPredictor Model: {predictor_name}"
+
     Y_LABEL = "Explained Variance"
     X_LABEL = "Noise" if experiment == "noise" else "Opinion Drift"
 
@@ -77,6 +98,7 @@ def produce_figure(model, filepath, experiment):
     plt.tight_layout()
     image_filepath = filepath.replace(".jsonl", ".png")
     plt.savefig(image_filepath, dpi=300, bbox_inches='tight')
+    print(f"Saved figure to {image_filepath}")
 
 
 def produce_stripplot():

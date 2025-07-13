@@ -32,6 +32,7 @@ class CarpentrasModel(Model):
                 ):
 
         n=len(opinions)
+
         for idx in range(iterations):
             # Select a random pair of agents
             i, j = random_pairs[idx]
@@ -43,7 +44,7 @@ class CarpentrasModel(Model):
             opinions[i] += standard_noises[idx] * noise_sd
             
             # Keep opinion within range
-            keep_value_in_range(opinions[i], min_val, max_val)
+            opinions[i] = keep_value_in_range(opinions[i], min_val, max_val)
 
             # 2. Agent i flips their opinion with a 4% chance (unless the sign already changed? does this matter?)
             if flip_draws[idx] < flip_prob:
@@ -53,8 +54,8 @@ class CarpentrasModel(Model):
             opinions[i] += shift_amount * np.sign(opinions[j] - opinions[i])
 
             # Keep opinion within range
-            keep_value_in_range(opinions[i], min_val, max_val)
-
+            opinions[i] = keep_value_in_range(opinions[i], min_val, max_val)
+            
         return opinions
     
     def run(self, input, p=None):

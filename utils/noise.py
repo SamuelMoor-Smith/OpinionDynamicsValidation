@@ -39,11 +39,18 @@ def keep_value_in_range(value, min_val, max_val):
     Keep a value in the opinion range [min_val, max_val] by reflecting out-of-range values back into the range.
     """
 
+    if value > min_val and value < max_val:
+        return value
+
+    res = value
     if value < min_val:
-        return (min_val - value) + min_val
+        res = (min_val - value) + min_val
     if value > max_val:
-        return max_val - (value - max_val)
-    return value
+        res = max_val - (value - max_val)
+
+    assert min_val <= res <= max_val, "Value out of range after clipping."
+
+    return res
 
 def keep_values_in_range(values, model):
     """

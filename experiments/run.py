@@ -178,7 +178,8 @@ if __name__ == "__main__":
     if args.experiment != "plot_true":
         # Plot the results
         produce_figure(
-            model=prediction_model_name,
+            generator=true_model_name,
+            predictor=prediction_model_name,
             filepath=results_file,
             experiment=experiment
         )

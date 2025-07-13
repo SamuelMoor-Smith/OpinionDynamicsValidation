@@ -45,7 +45,7 @@ def get_yx_fit_y_lower_upper(df, experiment, x_param, y_param):
     popt, _ = curve_fit(curve_fit_func, df_sorted[x_param], df_sorted[y_param], p0=initial_guess, maxfev=5000)
 
     # Generate y_fit from the fitted curve on the sorted x
-    x_fit = np.linspace(df_sorted[x_param].min(), df_sorted[x_param].max(), 100)
+    x_fit = np.linspace(df_sorted[x_param].min(), df_sorted[x_param].max(), len(df_sorted))
     y_fit = curve_fit_func(x_fit, *popt)
 
     # Calculate residuals using the fitted curve on sorted x values
@@ -67,16 +67,33 @@ def get_yx_fit_y_lower_upper(df, experiment, x_param, y_param):
             bin_stds.append(np.nan)  # Avoid NaNs in interpolation
 
     print(f"Bins: {bin_stds}")
-    # Interpolate standard deviations
-    interp_std = interp1d(
-        bin_centers[~np.isnan(bin_stds)], 
-        np.array(bin_stds)[~np.isnan(bin_stds)], 
-        bounds_error=False, 
-        fill_value="extrapolate"
-    )
+
+    # Remove NaNs for interpolation
+    valid = ~np.isnan(bin_stds)
+    valid_centers = bin_centers[valid]
+    valid_stds = np.array(bin_stds)[valid]
+
+    if len(valid_centers) < 2:
+        print("Warning: Not enough valid bins for interpolation. Using constant error band.")
+        std_fit = np.full_like(x_fit, 0.1)  # or np.std(residuals)
+    else:
+        interp_std = interp1d(
+            valid_centers,
+            valid_stds,
+            bounds_error=False,
+            fill_value="extrapolate"
+        )
+        std_fit = interp_std(x_fit)
+
+    # # Interpolate standard deviations
+    # interp_std = interp1d(
+    #     bin_centers[~np.isnan(bin_stds)], 
+    #     np.array(bin_stds)[~np.isnan(bin_stds)], 
+    #     bounds_error=False, 
+    #     fill_value="extrapolate"
+    # )
 
     # # Compute confidence band with **localized** standard deviation
-    std_fit = interp_std(x_fit)
     y_upper = y_fit + std_fit
     y_lower = y_fit - std_fit
 
