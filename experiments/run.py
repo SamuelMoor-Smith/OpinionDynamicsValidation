@@ -43,6 +43,15 @@ if __name__ == "__main__":
     experiment = args.experiment
 
     # Get the actual model classes
+    true_hk_type = None
+    prediction_hk_type = None
+    if "hk_averaging-" in true_model_name:
+        true_hk_type = true_model_name.split("-")[1]
+        true_model_name = true_model_name.split("-")[0]
+    if "hk_averaging-" in prediction_model_name:
+        prediction_hk_type = prediction_model_name.split("-")[1]
+        prediction_model_name = prediction_model_name.split("-")[0]
+
     TrueModelClass = Model.get_registry()[true_model_name]
     PredictionModelClass = Model.get_registry()[prediction_model_name]
 
@@ -88,7 +97,11 @@ if __name__ == "__main__":
         }
 
         # Create true model with random parameters
-        true_model: Model = TrueModelClass(seed=seed)
+        if true_hk_type is not None:
+            true_model: Model = TrueModelClass(seed=seed, method=true_hk_type)
+        else:
+            true_model: Model = TrueModelClass(seed=seed)
+
         if args.distort_true:
             true_model = DistortionAdaptor(true_model, seed=seed)
             # plot_distortion(BetaCDFTransformation(), a=true_model.params["a"], b=true_model.params["b"], title="Beta CDF Distortion", show_inverse=True)
@@ -151,10 +164,13 @@ if __name__ == "__main__":
 
             if isinstance(true_model, DugginsModel):
                 prediction_model: Model = DugginsModel(agents=true_model.get_cleaned_agents())
+            elif prediction_hk_type is not None:
+                prediction_model: Model = PredictionModelClass(seed=seed, method=prediction_hk_type)
             else:
                 prediction_model: Model = PredictionModelClass()
-                if args.distort_prediction:
-                    prediction_model = DistortionAdaptor(prediction_model, seed=seed)
+                
+            if args.distort_prediction:
+                prediction_model = DistortionAdaptor(prediction_model, seed=seed)
 
             # Optimization process and time it
             start = time.time()
