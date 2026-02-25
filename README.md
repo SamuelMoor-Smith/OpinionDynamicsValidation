@@ -121,7 +121,6 @@ You can also directly call plotting functions from `utils`.
 
 ## Notes
 
-- All results are saved in `results/`.
-- Optimisation uses TPE (hyperopt).
-- Models and parameter ranges are defined inside `models/`.
+- All results are saved in `results/`. (I have added some of my old results in case they are helpful but looking back through them, I am not sure how helpful they will be. It takes a while to run some of the scripts.)
+- Model specific code and parameter ranges are defined inside `models/`.
 - Distortions (if enabled) are applied before model execution and inverted afterwards.
