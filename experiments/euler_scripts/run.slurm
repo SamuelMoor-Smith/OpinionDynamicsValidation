@@ -34,7 +34,7 @@ echo "Running on: $(hostname)" >> "${LOG_DIR}/${JOB_NAME}.out"
 lscpu | grep "Model name" >> "${LOG_DIR}/${JOB_NAME}.out"
 
 # Construct the command
-CMD="python experiments/run.py --true_model $MODEL --experiment $EXPERIMENT --prediction_model $PRED_MODEL --seed $SEED"
+CMD="python experiments/run_simulated.py --true_model $MODEL --experiment $EXPERIMENT --prediction_model $PRED_MODEL --seed $SEED"
 
 if [[ "$DISTORT_TRUE" == "distort" ]]; then
   CMD="$CMD --distort_true"
