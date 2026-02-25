@@ -167,6 +167,8 @@ cython_debug/
 old/
 results/
 logs/
+.history/
+__MACOS*
 
 datasets/ess/ess_plots/
 datasets/ess/ess_datasets/
