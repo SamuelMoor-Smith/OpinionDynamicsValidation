@@ -1,20 +1,18 @@
-# OpinionDynamicsValidation
-
-# Opinion Dynamics Validation – How to Run
+# Opinion Dynamics Validation
 
 This repository contains the code for running the simulated and ESS experiments from the validation and distortion papers.
 
 ---
 
-# 1. Setup
+## 1. Setup
 
-## Install requirements
+### Install requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Unzip ESS data (required for real experiments)
+### Unzip ESS data (required for real experiments)
 
 ```bash
 unzip datasets/ess/ess_datasets.zip -d datasets/ess
@@ -26,7 +24,7 @@ The dataset keys used in the experiments are defined in `datasets/ess/header_inf
 
 ---
 
-# 2. Main Scripts
+## 2. Main Scripts
 
 You will hopefully only need to use:
 
@@ -48,7 +46,7 @@ Other folders:
 
 ---
 
-# 3. Running Simulated Experiments
+## 3. Running Simulated Experiments
 
 ```bash
 python -m experiments/run_simulated.py --true_model <model> --experiment <experiment>
@@ -79,7 +77,7 @@ This will:
 
 ---
 
-# 4. Running Real ESS Experiments
+## 4. Running Real ESS Experiments
 
 ```bash
 python -m experiments/run_real.py -prediction_modeld <model>
@@ -106,7 +104,7 @@ Make sure `ess_datasets.zip` has been unzipped first.
 
 ---
 
-# 5. Plotting Results
+## 5. Plotting Results
 
 ```bash
 python -m experiments/run_plotting.py
@@ -121,7 +119,7 @@ You can also directly call plotting functions from `utils`.
 
 ---
 
-# Notes
+## Notes
 
 - All results are saved in `results/`.
 - Optimisation uses TPE (hyperopt).
