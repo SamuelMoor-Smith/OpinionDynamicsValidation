@@ -38,7 +38,7 @@ def run():
 
         return True
 
-    filename = 'datasets/ess/full_groups/politics.csv'
+    filename = 'datasets/ess/ess_datasets/media_use_and_trust.csv'
     # filename = 'datasets/ess/combined-feb19.csv'
 
     df = read(filename)
@@ -47,9 +47,11 @@ def run():
         if is_valid(df, variable) and variable not in ['name', 'essround', 'cntry']:
             for country in df['cntry'].unique():
 
-                if country == 'SI' and variable == 'trstun':
+                if country == 'HU' and variable == 'ppltrst':
 
-                    save_folder = 'datasets/ess/ess_data/new'
+                    print("here")
+
+                    save_folder = 'datasets/ess/ess_plots/new'
 
                     save_path = os.path.join(save_folder, f"{variable}_{country}.png")
 
@@ -69,11 +71,11 @@ def run():
                     true = essfile.get_true()
 
                     # Get zero data
-                    zero = Dataset.create_zero_data_from_true(true, None)
-                    zero_diff = dataset_difference(true, zero, method="wasserstein")
+                    null_model_data = Dataset.create_null_model_dataset(true, None)
+                    op_Drift = dataset_difference(true, null_model_data)
 
-                    if zero_diff > 0.3:
-                        print(f"Zero difference for {variable} in {country} is {zero_diff}")
+                    if op_Drift > 0.0:
+                        print(f"Opinion Drift for {variable} in {country} is {op_Drift}")
 
                         # Set up subplots (adjust rows and cols if needed)
                         fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(15, 15))  # 5 rows, 2 columns
@@ -84,7 +86,7 @@ def run():
                         for i in range(10):
                             ax = axes[i]
                             
-                            ax.hist(data1[i], bins=11, alpha=0.7)
+                            ax.hist(data1[i], bins=11, alpha=0.7, color='b', edgecolor='black')
                             ax.set_title(f'ESS Round {i + 1}')
                             ax.set_xlabel(variable)
                             ax.set_ylabel('Frequency')

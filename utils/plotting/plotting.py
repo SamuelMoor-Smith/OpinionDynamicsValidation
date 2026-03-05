@@ -50,18 +50,18 @@ def produce_figure(generator, predictor, filepath, experiment):
         ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR)
     ax.fill_between(xfit, ylower, yupper, alpha=0.2, color=COLOR)
 
-    if experiment == "optimized":
+    # if experiment == "optimized":
 
-        # Compute explained variance for baseline
-        df = calculate_explained_variance(df, method="baseline")
-        xfit_base, yfit_base, ylower_base, yupper_base = get_yx_fit_y_lower_upper(df, experiment, x_param, "explained_variance_baseline")
+    #     # Compute explained variance for baseline
+    #     df = calculate_explained_variance(df, method="baseline")
+    #     xfit_base, yfit_base, ylower_base, yupper_base = get_yx_fit_y_lower_upper(df, experiment, x_param, "explained_variance_baseline")
 
-        ax.scatter(df[x_param], df["explained_variance_baseline"], alpha=0.2, label="Reproduced Raw Data", color="#808080")
-        if distorted_generator:
-            ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080", linestyle="--")
-        else:
-            ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080")
-        ax.fill_between(xfit_base, ylower_base, yupper_base, alpha=0.2, color="#808080")
+    #     ax.scatter(df[x_param], df["explained_variance_baseline"], alpha=0.2, label="Reproduced Raw Data", color="#808080")
+    #     if distorted_generator:
+    #         ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080", linestyle="--")
+    #     else:
+    #         ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080")
+    #     ax.fill_between(xfit_base, ylower_base, yupper_base, alpha=0.2, color="#808080")
 
     # Labels and legend
     # TITLE = f"{model_plotting_info[0]} {experiment.capitalize()}"
@@ -83,6 +83,7 @@ def produce_figure(generator, predictor, filepath, experiment):
 
     ax.set_title(TITLE, fontsize=24)
     plt.xlabel(X_LABEL, fontsize=22)
+    plt.xlim(left=0)
     plt.ylabel(Y_LABEL, fontsize=22)
     ax.tick_params(axis='both', labelsize=16)
     ax.axhline(y=0, color='black', linewidth=2)

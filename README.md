@@ -1,25 +1,126 @@
-# OpinionDynamicsValidation
+# Opinion Dynamics Validation
 
-## Models
+This repository contains the code for running the simulated and ESS experiments from the validation and distortion papers.
 
-The models are all given in the model folder. Currently implemented are Deffuant, HK-averaging (with different means) and Carpentras
+---
 
-## Datasets
+## 1. Setup
 
-The dataset.py file allows the user to create different snapshot datasets via various methods. The main one is with an initial opinion distribution and a model for updating
+### Install requirements
 
-## Experiments
+```bash
+pip install -r requirements.txt
+```
 
-The experiments folder contains the plot-generating experiment code. Right now one experiment tests the optimizer on no-noise updates and the other looks at the optimizers capability with various amounts of noise (standardized with the explained variance of that amount of noise)
+### Unzip ESS data (required for real experiments)
 
-## Utils
+```bash
+unzip datasets/ess/ess_datasets.zip -d datasets/ess
+```
 
-Utils contains all utility code ie to calculate differences, add noise, optimizer calls, plotting, and the random generation code.
+If this is not unzipped, `run_real.py` will fail.
 
-## Plots
+The dataset keys used in the experiments are defined in `datasets/ess/header_info.py`.
 
-Contained in plot folder under model and no_noise/noise
+---
 
-## Results
+## 2. Main Scripts
 
-Contains extra "write_to_file" info - mainly whether optimizer does better than the true parameters or not.
+You will hopefully only need to use:
+
+```
+experiments/run_simulated.py
+experiments/run_real.py
+experiments/run_plotting.py
+
+Note: experiments/euler_scripts has old scripts I used to use to run on euler but I can't test those now so not sure if they are working.
+```
+
+Other folders:
+
+- `models/` → model implementations
+- `utils/` → utilities (metrics, optimisation, plotting)
+- `exploratory_experiments/` → testing code and old experiments (can likely ignore)
+- `SSC2025/` → results from SSC (likely can ignore)
+- `results/` → all outputs are saved here. this folder will be accessed when running `experiments/run_plotting.py`
+
+---
+
+## 3. Running Simulated Experiments
+
+```bash
+python -m experiments/run_simulated.py --true_model <model> --experiment <experiment>
+```
+
+You must specify `--true_model`.
+
+Model list: `deffuant, deffuant_with_repulsion, hk_averaging, ed, duggins, gestefeld_lorenz`
+
+Other useful flags:
+
+```
+--prediction_model <model> (will default to same as true model if not added)
+--experiment [plot_true | reproducibility | noise | optimized]
+--distort_true (generator model is distorted (beta values are randomly generated))
+--distort_prediction (prediction model is distorted (beta values are also optimizable))
+
+--seed <int>
+--plot_datasets (plots datasets after each trial -- used for debugging)
+```
+
+This will:
+
+- Generate synthetic datasets
+- Optimise parameters
+- Validate on held-out waves
+- Save results to `results/`
+
+---
+
+## 4. Running Real ESS Experiments
+
+```bash
+python -m experiments/run_real.py -prediction_modeld <model>
+```
+
+You must specify `--prediction_model`.
+
+Model list: `deffuant, deffuant_with_repulsion, hk_averaging, ed, duggins, gestefeld_lorenz`
+
+Other useful flags:
+
+```
+--distort_prediction (prediction model is distorted (beta values are also optimizable))
+```
+
+This will:
+
+- Load ESS data
+- Run optimisation
+- Evaluate prediction performance
+- Save results to `results/`
+
+Make sure `ess_datasets.zip` has been unzipped first.
+
+---
+
+## 5. Plotting Results
+
+```bash
+python -m experiments/run_plotting.py
+```
+
+The `produce_stripplot()` function should produce a stripplot if you have all model data.
+The  `produce_figure(...)` function will produce more specific figures
+
+This reads saved files from `results/` and generates the plots.
+
+You can also directly call plotting functions from `utils`.
+
+---
+
+## Notes
+
+- All results are saved in `results/`. (I have added some of my old results in case they are helpful but looking back through them, I am not sure how helpful they will be. It takes a while to run some of the scripts.)
+- Model specific code and parameter ranges are defined inside `models/`.
+- Distortions (if enabled) are applied before model execution and inverted afterwards.
