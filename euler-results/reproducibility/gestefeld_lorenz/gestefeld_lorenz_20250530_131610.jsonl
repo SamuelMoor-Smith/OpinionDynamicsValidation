@@ -1,0 +1,4 @@
+{"trial": 0, "true_model": "gestefeld_lorenz", "prediction_model": "gestefeld_lorenz", "seed": 0, "experiment": "reproducibility", "noise": 0, "opinion_drift": 0.49540275195225114, "mean_loss_baseline": 0.0, "std_loss_baseline": 0.0}
+{"trial": 1, "true_model": "gestefeld_lorenz", "prediction_model": "gestefeld_lorenz", "seed": 1, "experiment": "reproducibility", "noise": 0, "opinion_drift": 0.49647858574648257, "mean_loss_baseline": 0.0, "std_loss_baseline": 0.0}
+{"trial": 2, "true_model": "gestefeld_lorenz", "prediction_model": "gestefeld_lorenz", "seed": 2, "experiment": "reproducibility", "noise": 0, "opinion_drift": 0.4953157675529366, "mean_loss_baseline": 0.0, "std_loss_baseline": 0.0}
+{"trial": 3, "true_model": "gestefeld_lorenz", "prediction_model": "gestefeld_lorenz", "seed": 3, "experiment": "reproducibility", "noise": 0, "opinion_drift": 0.498377411667021, "mean_loss_baseline": 0.1, "std_loss_baseline": 0.30000000000000004}

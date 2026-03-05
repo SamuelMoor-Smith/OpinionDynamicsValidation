@@ -1,0 +1,1 @@
+{"trial": 0, "true_model": "deffuant_with_repulsion", "prediction_model": "deffuant_with_repulsion", "seed": 0, "experiment": "reproducibility", "noise": 0, "opinion_drift": NaN, "mean_loss_baseline": NaN, "std_loss_baseline": NaN}

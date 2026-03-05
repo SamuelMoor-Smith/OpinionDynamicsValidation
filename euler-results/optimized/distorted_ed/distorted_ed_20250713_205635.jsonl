@@ -1,0 +1,1 @@
+{"trial": 0, "true_model": "distorted_ed", "prediction_model": "distorted_ed", "seed": 0, "experiment": "optimized", "noise": 0, "opinion_drift": 0.22846081848877303, "mean_loss_baseline": 0.08854332033631554, "std_loss_baseline": 0.011376833199443147, "mean_loss_optimizer": 0.10209688753792179, "std_loss_optimizer": 0.012825745461902143}
