@@ -103,6 +103,8 @@ def produce_figure(generator, predictor, filepath, experiment):
 
 def produce_stripplot():
 
+    sns.set_context("notebook")
+
     model_info = Model.get_model_plotting_info()
 
     # Create palette based on model_info
@@ -110,7 +112,7 @@ def produce_stripplot():
 
     dfs = []
     for model in model_info.keys():
-        df = pd.read_json(f"results/real/{model}.jsonl", lines=True)
+        df = pd.read_json(f"results/real/distorted_{model}_20250713_211951.jsonl", lines=True)
         df["Model Title"] = model_info[model][0]
         df = calculate_explained_variance_real(df)
         dfs.append(df)
@@ -121,12 +123,37 @@ def produce_stripplot():
 
     # Plot
 
-    TITLE = f"Model Performance on ESS Data"
+    TITLE = f"Distorted Models Performance on ESS Data"
     Y_LABEL = "Explained Variance"
     X_LABEL = "ESS Dataset"
 
     plt.figure(figsize=(12, 6))
-    sns.stripplot(data=df_combined, x="Dataset", y="explained_variance", hue="Model Title", dodge="quartile", alpha=0.5, palette=palette, size=5)
+    sns.stripplot(
+        data=df_combined, 
+        x="Dataset", 
+        y="explained_variance", 
+        hue="Model Title", 
+        dodge="quartile", 
+        alpha=0.35, 
+        palette=palette, 
+        size=5)
+    # 2. Overlay Pointplot: mean and error bars (std)
+    # sns.pointplot(
+    #     data=df_combined,
+    #     x="Dataset",
+    #     y="explained_variance",
+    #     hue="Model Title",
+    #     dodge=0.7,  # Align with stripplot
+    #     join=False,
+    #     markers="D",
+    #     scale=1.0,
+    #     ci="sd",  # standard deviation; use "se" for standard error, or None for no bars
+    #     # palette=palette,
+    #     color='black',  # Use a single color for the pointplot
+    #     errwidth=2,
+    #     zorder=10,
+    #     legend=False
+    # )
 
     plt.axhline(y=0, color='black', linewidth=2)
 
