@@ -17,7 +17,7 @@ MODEL=$1
 # Optional arguments
 DISTORT_PRED=$2      # "distort" or empty
 
-JOB_NAME="real_${MODEL}_${SLURM_JOB_ID}"
+JOB_NAME="real_${MODEL}_${DISTORT_PRED}_${SLURM_JOB_ID}"
 LOG_DIR="logs"
 mkdir -p $LOG_DIR
 

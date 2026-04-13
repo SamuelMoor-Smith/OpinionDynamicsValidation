@@ -1,23 +1,20 @@
-import os
-import json
-import time
 import argparse
+import json
 
 from datasets.dataset import Dataset
-from utils.differences import calculate_mean_std
-from utils import optimizers
-
-from models.model import Model
-from models.distortion import DistortionAdaptor, plot_distortion, BetaCDFTransformation
-from models.deffuant import DeffuantModel
-from models.hk_averaging import HKAveragingModel
-from models.carpentras import CarpentrasModel
+from experiments.common import (build_model, create_preds_w_mean_std, distort_name, get_model_class, run_optimizer, save_high_drift)
 from models.duggins import DugginsModel
-from models.gestefeld_lorenz import GestefeldLorenz
-from models.deffuant_with_repulsion import DeffuantWithRepulsionModel
-from utils.plotting.plotting import produce_figure, plot_2_datasets_snapshots, plot_dataset_snapshots
-
+from models.model import Model
 from utils.differences import dataset_difference
+from utils.noise import get_noise
+from utils.paths import res_file, use_path
+from utils.plotting.plotting import (plot_2_datasets_snapshots, plot_dataset_snapshots, produce_figure)
+from utils.rand_gen import increment_seed
+
+SAVE_HIGH_DRIFT = False
+TOTAL_TRIALS = 100
+TRIAL_SC = 10
+STEPS = 9
 
 if __name__ == "__main__":
 
@@ -38,54 +35,29 @@ if __name__ == "__main__":
 
     # Extract the arguments
     true_model_name = args.true_model
-    prediction_model_name = true_model_name if args.prediction_model == "same_as_true" else args.prediction_model
-    starting_seed = args.seed
+    if args.prediction_model == "same_as_true":
+        prediction_model_name = true_model_name
+        args.distort_prediction = args.distort_true
+    else:
+        prediction_model_name = args.prediction_model
+    seed = args.seed
     experiment = args.experiment
 
     # Get the actual model classes
-    true_hk_type = None
-    prediction_hk_type = None
-    if "hk_averaging-" in true_model_name:
-        true_hk_type = true_model_name.split("-")[1]
-        true_model_name = true_model_name.split("-")[0]
-    if "hk_averaging-" in prediction_model_name:
-        prediction_hk_type = prediction_model_name.split("-")[1]
-        prediction_model_name = prediction_model_name.split("-")[0]
-
-    TrueModelClass = Model.get_registry()[true_model_name]
-    PredictionModelClass = Model.get_registry()[prediction_model_name]
+    TrueModelClass, true_hk_type = get_model_class(true_model_name)
+    PredictionModelClass, prediction_hk_type = get_model_class(prediction_model_name)
 
     # Add distortion to the names if needed
-    if args.distort_true:
-        true_model_name = f"distorted_{true_model_name}"
-        if args.prediction_model == "same_as_true":
-            # Which means we need to distort it as well
-            args.distort_prediction = True
-
-    if args.distort_prediction:
-        prediction_model_name = f"distorted_{prediction_model_name}"
-
-    TOTAL_TRIALS = 100
-    TRIAL_SC = 10
-    STEPS = 9
-    MAX_NOISE = 0.5
+    true_model_name = distort_name(true_model_name, args.distort_true)
+    prediction_model_name = distort_name(prediction_model_name, args.distort_prediction)
 
     # Create the results directory if it doesn't exist
-    results_path = f"results/{experiment}/{true_model_name}"
-    if not os.path.exists(results_path):
-        os.makedirs(results_path)
+    results_path = use_path(f"results/{experiment}/{true_model_name}")
+    results_file = res_file(results_path, true_model_name, prediction_model_name)
 
-    # Create the results file name with timestamp
-    from datetime import datetime
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    if prediction_model_name != true_model_name:
-        results_file = f"{results_path}/{true_model_name}_{prediction_model_name}_{timestamp}.jsonl"
-    else:
-        results_file = f"{results_path}/{true_model_name}_{timestamp}.jsonl"
-
-    seed = starting_seed
     for trial in range(TOTAL_TRIALS):
 
+        seed = increment_seed(seed, trial)
         print(f"Running trial {trial + 1}/{TOTAL_TRIALS} with seed {seed}")
 
         trial_info = {
@@ -97,36 +69,22 @@ if __name__ == "__main__":
         }
 
         # Create true model with random parameters
-        if true_hk_type is not None:
-            true_model: Model = TrueModelClass(seed=seed, method=true_hk_type)
-        else:
-            true_model: Model = TrueModelClass(seed=seed)
-
-        if args.distort_true:
-            true_model = DistortionAdaptor(true_model, seed=seed)
-            # plot_distortion(BetaCDFTransformation(), a=true_model.params["a"], b=true_model.params["b"], title="Beta CDF Distortion", show_inverse=True)
-        if seed is not None: seed += 1
+        true_model: Model = build_model(TrueModelClass, args.distort_true, seed, hk_type=true_hk_type)
 
         # generate random initial opinions
-        initial_opinions = true_model.generate_initial_opinions()
-
+        initial_opinions = true_model.generate_initial_opinions(seed=seed)
         # Sample ISC for agents if the model is Duggins
         if isinstance(true_model, DugginsModel):
             true_model.sample_isc_for_agents(initial_opinions)
 
         # Is the experiment with noise?
-        noise = MAX_NOISE * (trial / TOTAL_TRIALS) if experiment == "noise" else 0
+        noise = get_noise(trial, TOTAL_TRIALS, max_noise=0.5) if experiment == "noise" else 0
         trial_info["noise"] = noise
-
-        start_time = time.time()
 
         # Create the true data
         true_data = Dataset.create_with_model_from_initial_opinions(true_model, initial_opinions, num_steps=STEPS, noise=noise)
 
-        print(f"True data created in {time.time() - start_time} seconds")
-
         if args.experiment == "plot_true":
-            # print(true_data.get_data())
             plot_dataset_snapshots(
                 true_data,
                 path="./results/tmp",
@@ -138,18 +96,13 @@ if __name__ == "__main__":
         # Calculate the `opinion_drift` of the dataset - the difference between the true and null model datasets
         null_model_data = Dataset.create_null_model_dataset(true_data, true_model)
         trial_info["opinion_drift"] = dataset_difference(true_data, null_model_data)
-        if trial_info["opinion_drift"] > 0.5:
-            print(true_model.params)
-            plot_2_datasets_snapshots(
-                true_data,
-                null_model_data,
-                path="./results/high_drift"
-            )
+        if SAVE_HIGH_DRIFT:
+            save_high_drift(trial_info, true_model, true_data, null_model_data)
 
         # No matter what we will use test the true model as the prediction model for our baseline data (reproducibility experiment)
         # For self-consistency, create TRIAL_SC datasets with the `true_model` and the `true_data` as the input
-        baseline_predictions = [Dataset.create_with_model_from_true(true_model, true_data.get_data()) for _ in range(TRIAL_SC)]
-        trial_info["mean_loss_baseline"], trial_info["std_loss_baseline"] = calculate_mean_std(true_data, baseline_predictions)
+        baseline_predictions, trial_info["mean_loss_baseline"], trial_info["std_loss_baseline"] = \
+            create_preds_w_mean_std(true_model, true_data, trials=TRIAL_SC, group="Baseline")
 
         if args.plot_datasets:
             plot_2_datasets_snapshots(
@@ -158,33 +111,19 @@ if __name__ == "__main__":
                 path="./results/tmp"
             )
 
-        print(f"Baseline predictions created in {time.time() - start_time} seconds")
-
         if experiment != "reproducibility": # We will use the optimizer for all other experiments
-
+            
+            agents = None
             if isinstance(true_model, DugginsModel):
-                prediction_model: Model = DugginsModel(agents=true_model.get_cleaned_agents())
-            elif prediction_hk_type is not None:
-                prediction_model: Model = PredictionModelClass(seed=seed, method=prediction_hk_type)
-            else:
-                prediction_model: Model = PredictionModelClass()
-                
-            if args.distort_prediction:
-                prediction_model = DistortionAdaptor(prediction_model, seed=seed)
+                agents = true_model.get_cleaned_agents()
+            prediction_model: Model = build_model(PredictionModelClass, args.distort_prediction, seed, hk_type=prediction_hk_type, agents=agents)
 
-            # Optimization process and time it
-            start = time.time()
-            optimizer = optimizers.get_optimizer()
-            best_params = optimizer(true_data, prediction_model, obj_f=optimizers.safe_objective)
-            print(f"Optimization took {time.time() - start} seconds")
-
-            # Set the best parameters
-            prediction_model.set_normalized_params(best_params)
-            print("Best parameters: ", prediction_model.params)
+            # Optimization process
+            run_optimizer(true_data, prediction_model)
 
             # For self-consistency, create TRIAL_SC datasets with the `prediction_model` and the `true_data` as the input
-            optimizer_predictions = [Dataset.create_with_model_from_true(prediction_model, true_data.get_data()) for _ in range(TRIAL_SC)]
-            trial_info["mean_loss_optimizer"], trial_info["std_loss_optimizer"] = calculate_mean_std(true_data, optimizer_predictions)
+            optimizer_predictions, trial_info["mean_loss_optimizer"], trial_info["std_loss_optimizer"] = \
+                create_preds_w_mean_std(prediction_model, true_data, trials=TRIAL_SC, group="Optimizer")
 
         with open(results_file, "a") as f:
             f.write(json.dumps(trial_info) + "\n")
@@ -199,4 +138,3 @@ if __name__ == "__main__":
             filepath=results_file,
             experiment=experiment
         )
-

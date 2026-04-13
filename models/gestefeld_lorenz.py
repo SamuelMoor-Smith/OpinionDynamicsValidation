@@ -14,7 +14,7 @@ class GestefeldLorenz(Model):
         'alpha': (0,0.3),  # strength of change
         'rho': (0.1,0.9),    # assimilation
         'timesteps': (0, 90),  # number of timesteps
-        # # Modtivated cognition parameters
+        # # Motivated cognition parameters
         'lambda': (1, 5),     # latitude of acceptance
         'k': (2, 50),         # sharpness of acceptance
         # Idiosyncrasy parameters
@@ -24,8 +24,9 @@ class GestefeldLorenz(Model):
     }
 
     @classmethod
-    def generate_initial_opinions(cls):
-        return np.random.normal(
+    def generate_initial_opinions(cls, seed=None):
+        rng = np.random.default_rng(seed)
+        return rng.normal(
             loc=0,  # mean opinion
             scale=2.5,  # standard deviation
             size=1000  # number of agents
@@ -58,7 +59,7 @@ class GestefeldLorenz(Model):
                     discrepancy = np.abs(aj - ai)
                     mc_weight = lambda_k / (lambda_k + discrepancy ** k)
 
-                mc_weight = 1
+                # mc_weight = 1
                 delta = mc_weight * alpha * (aj - rho * ai)
 
                 # print(delta.size)
@@ -104,7 +105,7 @@ class GestefeldLorenz(Model):
 
         # Create agent order updates
         recipient_matrix = np.array([np.random.permutation(n) for _ in range(iterations)])
-        sender_matrix = np.random.randint(0, n - 1, size=(iterations, n)) # n-1 is included
+        sender_matrix = np.random.randint(0, n, size=(iterations, n)) # n-1 is included
 
         return GestefeldLorenz.run_main_loop_with_njit(
             opinions, 

@@ -2,7 +2,6 @@ import numpy as np
 from models.model import Model
 from scipy.stats import beta
 import matplotlib.pyplot as plt
-import random
 import os
 
 def plot_distortion(transformation, a, b, title="Distortion", show_inverse=False):
@@ -85,19 +84,18 @@ class DistortionAdaptor(Model):
         if self.PARAM_RANGES is None:
             raise NotImplementedError("PARAM_RANGES must be defined in subclass.")
 
-        np.random.seed(self.seed)
+        rng = np.random.default_rng(self.seed)
         complete = {}
 
         for name, (low, high) in self.PARAM_RANGES.items():
             if partial_params and name in partial_params:
                 complete[name] = partial_params[name]
             elif name == 'a' or name == 'b':
-                rand1 = np.random.uniform(low, 1)
-                rand2 = np.random.uniform(1, high)
-
-                complete[name] = rand1 if random.random() < 0.5 else rand2
+                rand1 = rng.uniform(low, 1)
+                rand2 = rng.uniform(1, high)
+                complete[name] = rand1 if rng.random() < 0.5 else rand2
             else:
-                complete[name] = np.random.uniform(low, high)
+                complete[name] = rng.uniform(low, high)
 
         return complete
     

@@ -166,8 +166,10 @@ cython_debug/
 
 old/
 results/
-logs/
+logs*
 .history/
+.codex
+.ruff_cache/
 __MACOS*
 
 datasets/ess/ess_plots/

@@ -12,12 +12,13 @@ from hyperopt import hp
 GRID_SIZE = 1000
 ITERS = 10
 
-def create_agents(n):
+def create_agents(n, seed=None):
     """Create agents with random positions and social reaches. These will stay constant with the model."""
 
+    rng = np.random.default_rng(seed)
     agents = []
-    x_positions = np.random.uniform(0, GRID_SIZE, n)
-    y_positions = np.random.uniform(0, GRID_SIZE, n)
+    x_positions = rng.uniform(0, GRID_SIZE, n)
+    y_positions = rng.uniform(0, GRID_SIZE, n)
     # social_reaches = np.maximum(np.random.normal(22.0, 4.0, n), 0)
 
     # Create agents
@@ -127,7 +128,7 @@ class DugginsModel(Model):
         # print(f"Duggins model created with parameters {self.params}")
         if agents is None:
             # print("No agents provided, creating new agents.")
-            self.agents = create_agents(n)
+            self.agents = create_agents(n, seed=seed)
     
     def sample_isc_for_agents(self, initial_opinions):
 
@@ -200,6 +201,6 @@ class DugginsModel(Model):
         return agents_copy
     
     def create_fresh_duggins_model(self, initial_opinions):
-        model = DugginsModel(params=self.params, agents=self.get_cleaned_agents())
+        model = DugginsModel(params=self.params, seed=self.seed, agents=self.get_cleaned_agents())
         model.sample_isc_for_agents(initial_opinions)
         return model

@@ -2,17 +2,33 @@ from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 import logging
 from datasets.dataset import Dataset
 import numpy as np
+import random
 from utils.differences import snapshot_difference
 from models.model import Model
 from models.duggins import DugginsModel
+from contextlib import contextmanager
 
 # Set Hyperopt logger to display only errors
 logger = logging.getLogger("hyperopt.tpe")
 logger.setLevel(logging.ERROR)
 
-MAX_EVALS = 250
+MAX_EVALS = 1250
 SC_TRIALS = 5
 T_OPT = 5
+
+
+@contextmanager
+def seeded_random_state(seed):
+    """Temporarily fix Python and NumPy RNG state for reproducible scoring."""
+    np_state = np.random.get_state()
+    py_state = random.getstate()
+    np.random.seed(seed)
+    random.seed(seed)
+    try:
+        yield
+    finally:
+        np.random.set_state(np_state)
+        random.setstate(py_state)
 
 def get_optimizer():
     return hyperopt()
@@ -35,8 +51,11 @@ def hyperopt_objective(true: Dataset, model: Model, model_params):
     """Objective function for Hyperopt to minimize"""
     model.set_normalized_params(model_params)
     diffs = []
-    for _ in range(SC_TRIALS):
-        scores = run_and_score_optimal(true, model)
+    base_seed = 0 if model.seed is None else model.seed
+    for trial_idx in range(SC_TRIALS):
+        trial_seed = base_seed + trial_idx
+        with seeded_random_state(trial_seed):
+            scores = run_and_score_optimal(true, model)
         diffs.append(np.sum(scores))
     return {
         'loss': np.mean(diffs),

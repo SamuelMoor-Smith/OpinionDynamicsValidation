@@ -35,14 +35,14 @@ class Model:
         if self.PARAM_RANGES is None:
             raise NotImplementedError("PARAM_RANGES must be defined in subclass.")
 
-        np.random.seed(self.seed)
+        rng = np.random.default_rng(self.seed)
         complete = {}
 
         for name, (low, high) in self.PARAM_RANGES.items():
             if partial_params and name in partial_params:
                 complete[name] = partial_params[name]
             else:
-                complete[name] = np.random.uniform(low, high)
+                complete[name] = rng.uniform(low, high)
 
         return complete
 
@@ -79,6 +79,11 @@ class Model:
         return cls.OPINION_RANGE
     
     @classmethod
-    def generate_initial_opinions(cls):
+    def generate_initial_opinions(cls, seed=None):
         op_range = cls.get_opinion_range()
-        return create_random_opinion_distribution(N=1000, min_val=op_range[0], max_val=op_range[1])
+        return create_random_opinion_distribution(
+            N=1000,
+            min_val=op_range[0],
+            max_val=op_range[1],
+            seed=seed,
+        )

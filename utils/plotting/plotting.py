@@ -13,6 +13,8 @@ import json
 sns.set_style("whitegrid")
 sns.set_context("talk")  # larger fonts
 
+FAMILY = "sans-serif"
+
 def produce_figure(generator, predictor, filepath, experiment):
 
     # Get x parameter
@@ -21,7 +23,11 @@ def produce_figure(generator, predictor, filepath, experiment):
     y_param = f"explained_variance_{method}"
 
     with open(filepath, "r") as f:
-        json_data = [json.loads(line) for line in f if line.strip()]
+        json_data = [
+            json.loads(line)
+            for line in f
+            if line.strip() and not line.lstrip().startswith("//")
+        ]
     df = pd.DataFrame(json_data)
 
     # Compute explained variance for optimizer
@@ -39,41 +45,52 @@ def produce_figure(generator, predictor, filepath, experiment):
     generator_plotting_info = Model.get_model_plotting_info()[generator.removeprefix("distorted_")]
 
     COLOR = predictor_plotting_info[1]
-    DATA_TYPE = "Reproduced" if experiment == "reproducibility" else "Optimized"
+    DATA_TYPE = "Generator" if experiment == "reproducibility" else "Predictor"
     FIT_LABEL = f"{DATA_TYPE} Exponential Fit" if experiment == "noise" else f"{DATA_TYPE} Logarithmic Fit"
     RAW_LABEL = f"{DATA_TYPE} Raw Data"
 
-    ax.scatter(df[x_param], df[y_param], alpha=0.2, label=RAW_LABEL, color=COLOR)
+    ax.scatter(df[x_param], df[y_param], alpha=0.2, label=RAW_LABEL, color=COLOR, rasterized=True)
     if distorted_predictor:
         ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR, linestyle="--")
     else:
         ax.plot(xfit, yfit, label=FIT_LABEL, color=COLOR)
     ax.fill_between(xfit, ylower, yupper, alpha=0.2, color=COLOR)
 
-    # if experiment == "optimized":
+    if experiment == "optimized":
 
-    #     # Compute explained variance for baseline
-    #     df = calculate_explained_variance(df, method="baseline")
-    #     xfit_base, yfit_base, ylower_base, yupper_base = get_yx_fit_y_lower_upper(df, experiment, x_param, "explained_variance_baseline")
+        # Compute explained variance for baseline
+        df = calculate_explained_variance(df, method="baseline")
+        xfit_base, yfit_base, ylower_base, yupper_base = get_yx_fit_y_lower_upper(df, experiment, x_param, "explained_variance_baseline")
 
-    #     ax.scatter(df[x_param], df["explained_variance_baseline"], alpha=0.2, label="Reproduced Raw Data", color="#808080")
-    #     if distorted_generator:
-    #         ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080", linestyle="--")
-    #     else:
-    #         ax.plot(xfit_base, yfit_base, label="Reproduced Logarithmic Fit", color="#808080")
-    #     ax.fill_between(xfit_base, ylower_base, yupper_base, alpha=0.2, color="#808080")
+        ax.scatter(df[x_param], df["explained_variance_baseline"], alpha=0.2, label="Generator Raw Data", color="#808080", rasterized=True)
+        if distorted_generator:
+            ax.plot(xfit_base, yfit_base, label="Generator Logarithmic Fit", color="#808080", linestyle="--")
+        else:
+            ax.plot(xfit_base, yfit_base, label="Generator Logarithmic Fit", color="#808080")
+        ax.fill_between(xfit_base, ylower_base, yupper_base, alpha=0.2, color="#808080")
 
     # Labels and legend
     # TITLE = f"{model_plotting_info[0]} {experiment.capitalize()}"
-    generator_name = generator_plotting_info[0]
-    predictor_name = predictor_plotting_info[0]
+    generator_name = generator_plotting_info[0] # .strip(" Model")
+    predictor_name = predictor_plotting_info[0].strip(" Model")
 
-    if "distorted" in generator:
-        generator_name = f"Distorted {generator_name}"
-    if "distorted" in predictor:
-        predictor_name = f"Distorted {predictor_name}"
+    # print(generator_name, predictor_name)
+    # if "distorted" in generator:
+    #     generator_name = f"Distorted {generator_name}"
+    # if "distorted" in predictor:
+    #     predictor_name = f"Distorted {predictor_name}"
 
-    TITLE = f"Generator Model: {generator_name}\nPredictor Model: {predictor_name}"
+    # # TITLE = f"Generator Model: {generator_name}\nPredictor Model: {predictor_name}"
+    # generator_label = "Generator"
+    # predictor_label = "Predictor"
+
+    # label_width = max(len(generator_label), len(predictor_label))
+    # model_width = max(len(generator_name), len(predictor_name))
+    # TITLE = "\n".join([
+    #     f"{generator_label.rjust(label_width)}: {generator_name.ljust(model_width)}",
+    #     f"{predictor_label.rjust(label_width)}: {predictor_name.ljust(model_width)}",
+    # ])
+    TITLE = generator_name
 
     if experiment == "noise":
         TITLE = TITLE = f"Generator Model: {generator_name} with Noise\nPredictor Model: {predictor_name}"
@@ -81,11 +98,17 @@ def produce_figure(generator, predictor, filepath, experiment):
     Y_LABEL = "Explained Variance"
     X_LABEL = "Noise" if experiment == "noise" else "Opinion Drift"
 
-    ax.set_title(TITLE, fontsize=24)
-    plt.xlabel(X_LABEL, fontsize=22)
+    ax.set_title(TITLE, fontsize=50, fontfamily=FAMILY, fontweight='medium', pad=20)
+    plt.xlabel(X_LABEL, fontsize=40, fontfamily=FAMILY)
     plt.xlim(left=0)
-    plt.ylabel(Y_LABEL, fontsize=22)
-    ax.tick_params(axis='both', labelsize=16)
+    show_y_axis = "deffuant" in TITLE.lower() and "repulsion" not in TITLE.lower()
+    if show_y_axis:
+        plt.ylabel(Y_LABEL, fontsize=40, fontfamily=FAMILY)
+    else:
+        ax.tick_params(axis='y', which='both', left=False, labelleft=False)
+    ax.tick_params(axis='x', labelsize=30)
+    if show_y_axis:
+        ax.tick_params(axis='y', labelsize=30)
     ax.axhline(y=0, color='black', linewidth=2)
     ax.grid(True)
 
@@ -95,14 +118,18 @@ def produce_figure(generator, predictor, filepath, experiment):
     # ax.set_xlim(left=X_RANGE[0], right=X_RANGE[1])
     ax.set_ylim(bottom=Y_RANGE[0], top=Y_RANGE[1])
 
-    plt.legend(loc="lower right", fontsize=14)
+    ax.legend(loc="lower right", prop={"family": FAMILY, "size": 26})
     plt.tight_layout()
     image_filepath = filepath.replace(".jsonl", ".png")
-    plt.savefig(image_filepath, dpi=300, bbox_inches='tight')
+    plt.savefig(image_filepath, dpi=200, bbox_inches='tight')
+    # plt.savefig(
+    #     image_filepath,
+    #     bbox_inches='tight'
+    # )
     print(f"Saved figure to {image_filepath}")
 
 
-def produce_stripplot():
+def produce_stripplot(distorted=False):
 
     sns.set_context("notebook")
 
@@ -113,8 +140,11 @@ def produce_stripplot():
 
     dfs = []
     for model in model_info.keys():
-        df = pd.read_json(f"results/real/distorted_{model}_20250713_211951.jsonl", lines=True)
-        df["Model Title"] = model_info[model][0]
+        if distorted:
+            df = pd.read_json(f"results/real/distorted_{model}_3.jsonl", lines=True)
+        else:
+            df = pd.read_json(f"results/real/{model}_3.jsonl", lines=True)
+        df["Model Type"] = model_info[model][0]
         df = calculate_explained_variance_real(df)
         dfs.append(df)
 
@@ -124,49 +154,69 @@ def produce_stripplot():
 
     # Plot
 
-    TITLE = f"Distorted Models Performance on ESS Data"
+    if distorted:
+        TITLE = f"Distorted Models Performance on ESS Data"
+    else:
+        TITLE = f"Previous Models Performance on ESS Data"
     Y_LABEL = "Explained Variance"
     X_LABEL = "ESS Dataset"
 
-    plt.figure(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     sns.stripplot(
         data=df_combined, 
         x="Dataset", 
         y="explained_variance", 
-        hue="Model Title", 
-        dodge="quartile", 
-        alpha=0.35, 
+        hue="Model Type", 
+        dodge=True, 
+        alpha=0.5, 
         palette=palette, 
-        size=5)
-    # 2. Overlay Pointplot: mean and error bars (std)
-    # sns.pointplot(
-    #     data=df_combined,
-    #     x="Dataset",
-    #     y="explained_variance",
-    #     hue="Model Title",
-    #     dodge=0.7,  # Align with stripplot
-    #     join=False,
-    #     markers="D",
-    #     scale=1.0,
-    #     ci="sd",  # standard deviation; use "se" for standard error, or None for no bars
-    #     # palette=palette,
-    #     color='black',  # Use a single color for the pointplot
-    #     errwidth=2,
-    #     zorder=10,
-    #     legend=False
-    # )
+        legend=not distorted,
+        size=5,
+        ax=ax)
+    
+    sns.pointplot(
+        data=df_combined,
+        x="Dataset",
+        y="explained_variance",
+        hue="Model Type",
+        dodge=0.64, 
+        join=False,
+        markers="D",
+        scale=1.0,
+        ci="sd",  # standard deviation; use "se" for standard error, or None for no bars
+        # palette=palette,
+        color='black',  # Use a single color for the pointplot
+        errwidth=2,
+        zorder=10,
+        legend=False,
+        ax=ax
+    )
+
+    legend = ax.get_legend()
+    if legend is not None:
+        legend.set_title(legend.get_title().get_text(), prop={"family": FAMILY, "size": 14})
+        for text in legend.get_texts():
+            text.set_fontfamily(FAMILY)
+            text.set_fontsize(12)
 
     plt.axhline(y=0, color='black', linewidth=2)
 
-    plt.title(TITLE, fontsize=20)
+    plt.title(TITLE, fontsize=20, fontfamily=FAMILY)
 
-    plt.ylabel(Y_LABEL, fontsize=18)
-    plt.xlabel(X_LABEL, fontsize=18)
-    plt.xticks(rotation=45, fontsize=16)
-    plt.yticks(fontsize=16)
+    plt.ylabel(Y_LABEL, fontsize=18, fontfamily=FAMILY)
+    plt.xlabel(X_LABEL, fontsize=18, fontfamily=FAMILY)
+    plt.xticks(rotation=45, fontsize=16, fontfamily=FAMILY)
+    plt.yticks(fontsize=16, fontfamily=FAMILY)
+
+    plt.ylim(-0.7, 0.3)
 
     plt.tight_layout()
-    plt.savefig("results/figures/stripplot.png", dpi=300, bbox_inches="tight")
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    if distorted:
+        SAVE_FILE = f"results/figures/stripplot_distorted_{timestamp}.pdf"
+    else:
+        SAVE_FILE = f"results/figures/stripplot_{timestamp}.pdf"
+    plt.savefig(SAVE_FILE, bbox_inches="tight")
     plt.show()
 
 
@@ -192,7 +242,8 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
     name = d2.model.get_model_name().capitalize()
     fig.suptitle(
         f"{name} Model: Optimized vs. Ground-Truth Over Time",
-        fontsize=24
+        fontsize=24,
+        fontfamily=FAMILY
     )
 
     # Compute max y-value per row for consistent scaling
@@ -210,7 +261,7 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
         # sns.histplot(data1[i], bins=100, binrange=op_range, ax=ax, kde=False, color='blue', label='Data1', alpha=0.5, element="step")
         # sns.histplot(data2[i], bins=100, binrange=op_range, ax=ax, kde=False, color='orange', label='Data2', alpha=0.5, element="step")
 
-        ax.set_title(f'Round {i+1}', fontsize=16)
+        ax.set_title(f'Round {i+1}', fontsize=16, fontfamily=FAMILY)
         ax.set_xlim(*op_range)
         ax.set_ylim(0, row_y_max[i // cols])
         ax.tick_params(axis='both', labelsize=12)
@@ -235,8 +286,11 @@ def plot_2_datasets_snapshots(d1: Dataset, d2: Dataset, path):
     fig.text(
         0.5, -0.04, full_legend_text,
         ha='center', va='top',
-        fontsize=10, wrap=True, family='monospace'
+        fontsize=10, wrap=True, family=FAMILY
     )
+
+    fig.supxlabel("Opinion Value", fontsize=18, fontfamily=FAMILY)
+    fig.supylabel("Frequency", fontsize=18, fontfamily=FAMILY)
 
     plt.tight_layout(rect=[0, 0.1, 1, 0.95])  # leave room for the bottom text and title
 
@@ -299,8 +353,11 @@ def plot_dataset_snapshots(d: Dataset, path, bins=100):
     fig.text(
         0.5, -0.04, full_legend_text,
         ha='center', va='top',
-        fontsize=10, wrap=True, family='monospace'
+        fontsize=10, wrap=True, family=FAMILY
     )
+
+    fig.supxlabel("Opinion Value", fontsize=18, fontfamily=FAMILY)
+    fig.supylabel("Frequency", fontsize=18, fontfamily=FAMILY)
 
     plt.tight_layout(rect=[0, 0.1, 1, 0.95])  # leave room for the bottom text and title
 

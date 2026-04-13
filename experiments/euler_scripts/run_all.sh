@@ -3,9 +3,9 @@
 models=(
   "deffuant" 
   "hk_averaging"
-  # "carpentras"
+  "ed"
   # "duggins"
-  # "gestefeld_lorenz"
+  "gestefeld_lorenz"
   "deffuant_with_repulsion"
 )
 experiments=("optimized")
@@ -20,8 +20,8 @@ for model in "${models[@]}"; do
     prediction_model="$model"
 
     # Distortion flags
-    distort_true=""
-    distort_prediction="distort"
+    distort_true="distort"
+    distort_prediction=""
 
     # Optional plotting (only for certain experiments if needed)
     plot_flag=""
@@ -30,7 +30,7 @@ for model in "${models[@]}"; do
     seed=$((base_seed + RANDOM % 1000))
 
     echo "Submitting $model with $experiment (seed=$seed)"
-    sbatch experiments/run.slurm "$model" "$experiment" "$distort_true" "$prediction_model" "$distort_prediction" "$seed" "$plot_flag"
+    sbatch experiments/euler_scripts/run.slurm "$model" "$experiment" "$distort_true" "$prediction_model" "$distort_prediction" "$seed" "$plot_flag"
 
   done
 done

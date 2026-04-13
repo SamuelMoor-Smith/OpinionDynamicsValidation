@@ -1,6 +1,9 @@
 import numpy as np
 from numba import njit
 
+def get_noise(t, total, max_noise=0.5):
+    return max_noise * (t / total)
+
 def add_noise(input, output, noise, model):
     """
     Add noise to the outputs.
