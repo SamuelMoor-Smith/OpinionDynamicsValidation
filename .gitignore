@@ -165,7 +165,7 @@ cython_debug/
 # **/__pycache__/
 
 old/
-results/
+ignored_results/
 logs*
 .history/
 .codex
